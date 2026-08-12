@@ -1,0 +1,20 @@
+iSpeak Confidence V17.0.0 — Quality Foundation
+
+Built from protected V16.3.3 baseline.
+
+QUALITY UPGRADES
+- Unit mastery upgraded from 2-item checks to substantive 8–12 task multimodal checkpoints.
+- Mastery now mixes comprehension, listening, active recall and independent typed production.
+- Stories upgraded to 3-stage Dialogue Missions: comprehension + listening + production.
+- Library repeated chapter-heading UI fixed.
+- Library now includes a reading notebook: highlight useful phrases, save them, and jump back to source pages.
+- No forced spaced-repetition queue was added.
+- Tutor times are now displayed automatically in the learner's device timezone while preserving Cambodia-time server booking values.
+- Production teacher portal now requires TEACHER_PORTAL_PIN; the local development fallback remains for local testing only.
+- Production persistent-storage warnings strengthened.
+- Offline cache moved to V17 and includes Jessica/Sievly profile assets and intro videos.
+- V16.3.3 teacher names/photos/intros and improved availability system preserved.
+- Khmer curriculum text was not independently added or changed.
+
+NEXT CONTENT PHASE
+The architecture is now stronger, but genuine top-tier depth still requires a larger authored curriculum bank, especially more unique expressions per unit and a full IELTS content diversification pass.

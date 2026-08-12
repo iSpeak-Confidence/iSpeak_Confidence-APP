@@ -1,0 +1,89 @@
+iSpeak Confidence V16.0.7 — IELTS Professional Rebuild QA Audit
+================================================================
+
+LEGAL / SOURCE APPROACH
+- Official IELTS.org resources are linked externally for learners.
+- Official IELTS questions, passages, recordings, graphics and model material are NOT copied into the app.
+- iSpeak Confidence IELTS practice passages, scripts, questions and prompts are original practice content.
+- The IELTS page states that iSpeak Confidence is independent and is not affiliated with or endorsed by the IELTS Partners.
+- Before a commercial public launch, trademark/branding usage should still receive appropriate legal review.
+
+OFFICIAL ALIGNMENT USED
+- Listening: 4 parts, 10 questions per part, 40 total.
+- Reading: 40 questions, 60-minute format.
+- Academic Reading full mocks: about 2,650 words each across 3 passages.
+- Writing: Task 1 minimum 150 words / about 20 minutes; Task 2 minimum 250 words / about 40 minutes.
+- Writing feedback uses the four published IELTS criteria; Task 2 is weighted more heavily.
+- Speaking: 3 parts, 11–14 minutes; Part 2 includes preparation and an extended response.
+- Academic and General Training Reading/Writing use separate mock material.
+
+IELTS CONTENT REBUILD
+- 6 progressive IELTS levels.
+- 72 total IELTS study units.
+- Each level now has distinct topics rather than recycling the same 12 topics under a new band label.
+- Difficulty increases from test literacy/foundation skills through inference, synthesis, nuance and advanced argument control.
+- 6 full mock tests: 3 Academic + 3 General Training.
+- Every mock has 40 Listening and 40 Reading questions.
+- Listening mock scripts are substantially longer and use distinct social / orientation / academic discussion / lecture contexts.
+- Reading mocks are full-length practice sets rather than short mini-passages.
+- Listening and Reading mock questions are now answerable and scoreable inside the app.
+- Practice band guides are explicitly labelled approximate, not official results.
+- Device text-to-speech is labelled as practice simulation audio, not official/native IELTS recording.
+
+REPETITION AUDIT — IELTS
+Exact duplicates found after rebuild:
+- IELTS unit topics: 0
+- IELTS unit Reading passages: 0
+- IELTS unit Reading sentences: 0
+- IELTS unit Listening scripts: 0
+- IELTS unit Reading question prompts: 0
+- IELTS unit Listening question prompts: 0
+- IELTS vocabulary targets: 0
+- Full-mock Listening question prompts: 0
+- Full-mock Reading question prompts: 0
+- Full-mock Listening scripts: 0
+- Full-mock Reading passages: 0
+
+MOCK SIZE CHECK
+Academic Mock 1: Listening 40 unique questions; Reading 40 unique questions; Reading ~2,685 words.
+Academic Mock 2: Listening 40 unique questions; Reading 40 unique questions; Reading ~2,656 words.
+Academic Mock 3: Listening 40 unique questions; Reading 40 unique questions; Reading ~2,671 words.
+General Training Mock 1: Listening 40 unique questions; Reading 40 unique questions; Reading ~2,465 words.
+General Training Mock 2: Listening 40 unique questions; Reading 40 unique questions; Reading ~2,466 words.
+General Training Mock 3: Listening 40 unique questions; Reading 40 unique questions; Reading ~2,461 words.
+
+TECHNICAL QA
+- app.js syntax: PASS
+- ielts-data.js syntax: PASS
+- curriculum-data.js syntax: PASS
+- server.js syntax: PASS
+- sw.js syntax: PASS
+- Main page server response: PASS (HTTP 200)
+- IELTS data server response: PASS (HTTP 200)
+- Service-worker cache bumped to V16.0.7 so old IELTS data is not retained.
+- Package version bumped to 16.0.7.
+
+WHAT IS STILL SHALLOW OUTSIDE IELTS
+The main seven-language curriculum still needs a separate expansion before it can honestly be marketed as a full beginner-to-high-level language course:
+- Khmer: 60 unique target anchors across 30 units (2 per unit).
+- English: 60 unique target anchors across 30 units (2 per unit).
+- Mandarin: 60 unique target anchors across 30 units (2 per unit).
+- Spanish: 60 unique target anchors across 30 units (2 per unit).
+- French: 60 unique target anchors across 30 units (2 per unit).
+- Japanese: 60 unique target anchors across 30 units (2 per unit).
+- Arabic: 120 unique target anchors across 30 units (4 per unit).
+
+The last 10 units do contain harder free-production/conversation challenges, but the amount of explicitly taught new target language is still too small to justify calling the complete language courses B2/C1 mastery pathways.
+
+IMPORTANT KHMER CONSTRAINT
+No new Khmer learner-facing language was invented in this rebuild. Khmer expansion should continue only from user-approved Khmer source material.
+
+OTHER REMAINING PUBLISHING ITEMS
+- AI features remain inactive until the Gemini environment variables are configured.
+- Email remains inactive until SMTP environment variables are configured.
+- Production user accounts should use persistent DATA_DIR storage / persistent disk or a database.
+- Human-recorded multi-speaker IELTS mock audio would still be a quality upgrade over browser TTS.
+- A final trademark/branding review is advisable before a commercial public launch.
+
+CONCLUSION
+The IELTS section is no longer the main shallow/repetition problem. Its structure, progression, mock length, question counts and content variety are now substantially closer to a professional preparation product. The next major content bottleneck is the seven-language curriculum depth, not IELTS.

@@ -1,0 +1,24 @@
+iSpeak Confidence V16.0.6 — Placement & Learning Hardening
+
+Fixed in this cycle
+- Games selector crash repaired.
+- Guided Listening Lab answer binding repaired.
+- Course day/unit numbering corrected.
+- All visible/runtime/cache/package version markers moved to V16.0.6.
+- Mastery no longer deliberately asks every anchor twice in the same checkpoint.
+- Q21–30 advanced conversational placement architecture now applies to all seven languages.
+- Advanced course response-building, communication-pattern and conversation scenarios now apply to all seven languages in Units 21–30.
+- Advanced placement AI evaluation endpoint generalized to all seven languages.
+- Real-life missions now require AI communication validation instead of accepting any non-empty text.
+- Khmer unit titles/goals were realigned to the actual packaged anchor meanings; no new Khmer phrases were invented.
+- Full IELTS mock Writing now marks Task 1 and Task 2 separately and combines them with Task 2 weighted twice as heavily.
+- Existing double-pass IELTS AI marking and reconciliation retained.
+- Offline cache/version launcher metadata updated.
+
+Still intentionally not claimed as complete
+- The 30-unit curriculum is still a beta-sized curriculum, not the eventual 100+ module mature course target.
+- Grammar, stories and sentence-building still require larger language-specific vetted content banks to reach the intended final depth.
+- Khmer course expansion must continue from user-supplied/verified Khmer material; V16.0.6 does not invent learner-facing Khmer.
+- Browser TTS remains in use for several non-Khmer listening activities.
+- Writing Academy validates drawing effort/progression, not true stroke/shape correctness.
+- Public release still needs production account/database/email/security/store hardening.

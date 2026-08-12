@@ -1,0 +1,21 @@
+iSpeak Confidence V17.2.0 QA Report
+
+Static/runtime checks completed:
+- node --check app.js: PASS
+- node --check server.js: PASS
+- npm run qa: 17/17 PASS
+- Teacher availability API: PASS
+- 60-day availability horizon: PASS
+- Non-Cambodia teacher timezone (Europe/Dublin): PASS
+- Account registration + authenticated booking ownership: PASS
+- Signed-in My Bookings server refresh: PASS
+- Applicant registration/save: PASS
+- Applicant photo/video/certificate file-signature validation path: PASS
+- Public profile photo access: PASS
+- Private certificate anonymous access rejected (403): PASS
+- Applicant access to own qualification file: PASS
+- Admin approval path: PASS
+- Approved teacher appears in /api/approved-teachers: PASS
+
+Important scope note:
+This release is the first V17.2 hardening pass. It does not claim to finish the full long-term content roadmap. AI and SMTP/email configuration remain intentionally unconfigured. Major curriculum expansion, IELTS de-templating, database migration, native-audio production and full cross-device browser automation remain future passes.

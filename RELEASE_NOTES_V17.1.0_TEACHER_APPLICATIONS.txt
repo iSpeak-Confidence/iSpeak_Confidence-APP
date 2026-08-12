@@ -1,0 +1,16 @@
+iSpeak Confidence V17.1.0 — Teacher Application Centre
+
+- Added Apply to Teach entry from teacher page.
+- Applicant account registration/login and 30-day token sessions.
+- Save-and-return multi-step application.
+- Professional profile, languages, headline, biography, experience and education.
+- Headshot, intro-video and certificate uploads with type/size validation.
+- Weekly availability and requested hourly rate.
+- Profile readiness score and submission validation.
+- Application states: draft, under review, changes requested, approved, rejected.
+- Admin applications dashboard with review notes and decisions.
+- Approval automatically creates a teacher scheduling record.
+- Approved-teachers API for future dynamic publishing.
+- Production admin review disabled unless ADMIN_PORTAL_PIN is configured.
+
+Design informed by current tutor onboarding patterns researched from official Preply documentation, but implemented specifically for iSpeak Confidence.

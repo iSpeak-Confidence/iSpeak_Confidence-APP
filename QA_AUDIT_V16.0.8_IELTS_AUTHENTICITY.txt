@@ -1,0 +1,23 @@
+iSpeak Confidence V16.0.8 — IELTS Authenticity & Polish Pass
+
+LEGAL SOURCE DECISIONS
+- Official IELTS.org is used as the authoritative benchmark for format, timing, question types and public scoring criteria.
+- Official IELTS sample passages/questions/audio are linked, NOT copied or lightly paraphrased.
+- OpenStax was reviewed but its current library is CC BY-NC-SA; because iSpeak Confidence may be commercial, current OpenStax textbook content was NOT embedded.
+- NASA confirms that U.S. Government works are generally not copyrighted in the U.S., but NASA pages can contain third-party copyrighted material. Only confirmed government-origin facts/public-domain material should be used as factual inspiration; third-party credited text/images are excluded.
+- The in-app practice bank remains original iSpeak Confidence content.
+
+REFINEMENT
+- Replaced machine-like vocabulary combinations such as “basic understanding detail” and “methodological assessment detail”.
+- Vocabulary now uses natural IELTS-relevant terms/collocations at each progression level.
+- Rewrote generic vocabulary definitions/examples into usable academic-English explanations.
+- Reworked grammar/vocabulary practice instructions so they train paraphrase, qualification, cohesion and precision naturally.
+- Added explicit provenance/source policy metadata and authenticity notice.
+- Retained the V16.0.7 professional mock structure: 6 mocks, 40 Listening + 40 Reading items each, Academic/General separation and full-length Academic Reading practice.
+- No copyrighted official IELTS sample test content has been embedded.
+
+IMPORTANT QUALITY LIMIT
+The browser-generated/TTS listening remains a simulation. For a premium IELTS product, professionally recorded multi-speaker human audio with multiple English accents is still the biggest IELTS quality upgrade available.
+
+NEXT NON-IELTS BOTTLENECK
+The seven general language curricula remain shallower than the IELTS centre. They need a separate beginner-to-advanced curriculum expansion before the whole app can credibly claim comprehensive B2/C1 pathways.

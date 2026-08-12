@@ -1,0 +1,8 @@
+iSpeak Confidence V17.5.0 — Support-language coverage status
+
+Architecture: all 42 base-language → learning-language selections render safely and independently.
+English support: complete for every current course anchor because the curriculum meanings are authored in English.
+Spanish/French/Mandarin/Japanese/Arabic support: uses exact verified translations already present in the corresponding course plus a verified common-expression layer. Missing phrase translations deliberately fall back to English rather than inventing a wrong translation.
+Khmer support: only Khmer translations already present in user-approved Khmer material are reused. No new Khmer translations are invented.
+
+This file exists so a build is never falsely described as having 100% human-verified translation coverage when it does not.

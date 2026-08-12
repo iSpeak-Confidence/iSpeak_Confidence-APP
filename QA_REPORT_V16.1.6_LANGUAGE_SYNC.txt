@@ -1,0 +1,5 @@
+V16.1.6 — Library Language Sync Bug Fix
+
+Root cause: the visible header language selector changed uiLanguage only, while the Library used state.language. The interface could show English while the Library stayed Khmer.
+
+Fixed: header selector, home course selector, and profile language selector now keep uiLanguage and state.language synchronized. The Library has no separate language button and renders from the single selected learning language.

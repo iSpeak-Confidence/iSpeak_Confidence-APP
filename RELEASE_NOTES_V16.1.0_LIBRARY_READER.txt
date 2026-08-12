@@ -1,0 +1,31 @@
+V16.1.0 — Internal Digital Reader
+
+Implemented exactly for the Library without redesigning the rest of the dashboard:
+- Replaced the plain Library visual with a detailed glowing open-book emblem/banner.
+- Redesigned only the Library shelf/cards to be richer and more attractive.
+- Removed external Read Book navigation for bundled books.
+- Added an internal two-page book reader.
+- Working First / Previous / Next / Last page controls.
+- Working progress slider.
+- Working bookmark saved locally.
+- Working A-/A+ font sizing.
+- Working Serif/Sans switch.
+- Working Day/Night reader mode.
+- Reading position and reader preferences persist locally.
+- Added start-v16-1-0.bat.
+- No premium/paid Library section.
+
+LEGAL SAFETY:
+- Only texts bundled in this build are old public-domain English works.
+- No modern translations were copied.
+- Non-English shelves deliberately do NOT embed a book until the exact edition is verified for redistribution. Their planned famous classics are shown in the code/catalog but not falsely bundled.
+- Khmer remains empty rather than adding unapproved Khmer learner-facing content.
+
+QA:
+- app.js, ielts-data.js, curriculum-data.js, server.js and sw.js pass Node syntax checks.
+- Local server returns HTTP 200.
+- Library has no Standard Ebooks/Wikisource outbound Read Book URLs.
+- Reader control bindings and persistence paths checked.
+
+IMPORTANT:
+The English bundled reader currently contains selected opening reading sections, not complete novels. Full complete texts require obtaining/processing the exact legally redistributable source edition files. This build does not pretend otherwise.

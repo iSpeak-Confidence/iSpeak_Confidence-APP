@@ -1,0 +1,14 @@
+Khmer Library Source & Licence — V16.1.2
+
+Title: ប្រជុំរឿងព្រេងខ្មែរ — ភាគទី១
+Publisher credited by Wikisource: វិទ្យាស្ថានពុទ្ធសាសនបណ្ឌិត្យ (Buddhist Institute)
+Contents: 34 authentic Khmer folktales.
+Source transcription: Wikisource.
+Source page states that the text was supplied by the Open Institute, retyped from the original books in cooperation with Cambodia's Ministry of Cults and Religion.
+Wikisource page licence: Creative Commons Attribution-ShareAlike (CC BY-SA).
+This build includes the text locally for offline reading and preserves source attribution.
+
+No AI-generated Khmer text or AI translation was inserted into the book.
+Only export/page-number noise was removed from the downloaded text; the Khmer story text itself was not rewritten.
+
+Important: The CC BY-SA source text remains under its source licence. iSpeak Confidence's separate software code/assets are not being declared CC BY-SA by this notice.

@@ -1,0 +1,43 @@
+iSpeak Confidence V16.1.7 — Real Flag Selector QA
+=================================================
+
+CHANGE
+- Replaced Unicode flag emoji in the main language selector with actual local SVG flag images.
+- This fixes Windows/browser cases where 🇬🇧 can appear as the letters “GB”.
+- The selector still shows the language name beside the flag.
+- Flags are stored locally and work offline.
+
+FLAGS
+English -> United Kingdom flag
+Khmer -> Cambodia flag
+Mandarin -> China flag
+Spanish -> Spain flag
+French -> France flag
+Japanese -> Japan flag
+Arabic -> Saudi Arabia flag
+
+SYNC
+The single main language selector continues to update:
+- app/interface language
+- learning language
+- matching mascot
+- Library shelf
+
+The Library still has no separate language-change control.
+
+QA
+47 checks performed: 47 PASS / 0 FAIL.
+- app.js syntax PASS
+- server.js syntax PASS
+- sw.js syntax PASS
+- curriculum-data.js syntax PASS
+- ielts-data.js syntax PASS
+- all 7 flag files exist and parse as SVG text
+- all 7 language-to-flag mappings verified
+- all 7 Library shelf mappings verified
+- selector uses local image flags, not the old emoji span
+- language selector updates both uiLanguage and language
+- Library rerender path verified
+- all 7 flag files included in offline service-worker cache
+- homepage HTTP 200
+- all 7 flag assets HTTP 200

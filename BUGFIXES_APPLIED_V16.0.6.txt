@@ -1,0 +1,23 @@
+iSpeak Confidence V16.0.6 - Bugfix Patch
+
+Applied fixes:
+1. Advanced placement evaluation status now displays the selected target language instead of always saying Khmer.
+2. Dariya mascot profile corrected from "Elephant" to "Cambodian girl".
+3. Placement result metadata corrected from version 16.04 to 16.0.6.
+4. Browser progress now saves under isc-v16-0-6, with automatic fallback migration from isc-v15 / older keys so existing progress is preserved.
+5. Manual offline preparation now includes Khmer Common Voice data, app icons, all active mascot images, and tutor photos.
+6. Service-worker core cache now matches the expanded offline asset set.
+7. Production server now warns when DATA_DIR is not configured, helping prevent accidental use of ephemeral account storage on hosts such as Render.
+
+Not changed by request:
+- Gemini/API key configuration remains optional and can be added later via .env locally or environment variables in production.
+- SMTP/email configuration remains optional and can be added later via environment variables.
+
+Verification performed:
+- app.js syntax: PASS
+- server.js syntax: PASS
+- sw.js syntax: PASS
+- referenced newly cached assets: PASS / all present
+- local server startup: PASS
+- GET /: HTTP 200
+- GET /api/status: PASS

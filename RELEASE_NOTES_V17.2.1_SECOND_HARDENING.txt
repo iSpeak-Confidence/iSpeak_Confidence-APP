@@ -1,0 +1,20 @@
+iSpeak Confidence V17.2.1 — Second Hardening Pass
+
+This build continues from V17.2.0 and fixes additional issues found during the deeper audit.
+
+Key fixes:
+- Blocks accidental public access to .env, data/, application uploads, node_modules and server/package files.
+- Uses safe path containment and handles malformed encoded URLs without crashing the server.
+- Adds basic browser security headers.
+- Certificate email now requires a signed-in learner and verifies the saved server-side 240-block course record before issuing a server-generated certificate ID.
+- Fixes IELTS Mastery wording so the interface accurately says it is an 8-question mixed checkpoint.
+- IELTS vocabulary and grammar blocks now require meaningful written responses before completion.
+- IELTS Writing now rejects obvious filler/repeated-word submissions even when the raw word minimum is reached.
+- General free-text course blocks no longer unlock from only 12 arbitrary characters; they require minimally meaningful production.
+- Removes remaining "spaced review" wording and uses diagnostic review terminology instead.
+- Library notes are normalized as an object as well as cloud-synced.
+- Updates stale app/status/placement version labels to V17.2.1.
+- Reduces the automatic PWA install cache by not preloading the full IELTS dataset and every Library book; optional content is cached after online use.
+- Expands automated regression checks to cover these fixes.
+
+AI/API key and SMTP/email configuration were intentionally not changed.

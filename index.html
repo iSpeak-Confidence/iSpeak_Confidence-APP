@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c2347">
+<title>iSpeak Confidence V18.0.1</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+  <button class="brand" data-view="home"><img src="assets/logo.png" alt="iSpeak Confidence"><span>iSpeak Confidence</span></button>
+  <div class="topstats"><span>🔥 <b id="streak">0</b></span><span>⭐ <b id="xp">0</b> XP</span></div><div id="topAuth" class="top-auth"><button id="topLogin" class="top-login">Log In</button><button id="topSignup" class="top-signup">Sign Up</button><button id="topAccount" class="top-account" hidden>My Account</button></div>
+</header>
+
+<main>
+<section id="home" class="view active">
+  <div class="hero">
+    <div class="hero-copy"><span class="eyebrow">SPEAK • LEARN • CONNECT</span><h1>Learn a language. Build real confidence.</h1><p>Interactive lessons, speaking practice, game-style conversation buddies and private lessons with real teachers.</p><div id="guestWelcome" class="guest-welcome"><div><b>Save your progress on every device</b><span>Create a free account or log in to continue where you left off.</span></div><div><button id="heroSignup" class="primary">Create free account</button><button id="heroLogin" class="secondary">Log in</button></div></div><div class="hero-actions"><button class="primary" data-view="learn">Start learning</button><button class="secondary" data-view="teachers">Meet the teachers</button><button class="secondary" data-view="library">📚 Library</button></div></div>
+    <div class="hero-card"><span class="eyebrow">YOUR DAILY GOAL</span><div class="goal-ring"><b id="goalCount">0/3</b><span>lessons</span></div><p id="goalText">Complete 3 lessons today.</p></div>
+  </div>
+  <div id="homeCertificatePreview" class="certificate-preview-home"></div><div class="dual-language-explainer"><div data-direction-summary></div><p id="dualLanguageHint">Your app language explains the lesson. Your learning language is what you practise.</p></div>
+  <div class="section-head"><div><span class="eyebrow">CHOOSE A COURSE</span><h2>What do you want to learn?</h2></div></div>
+  <div id="homeLanguages" class="language-grid"></div>
+  <div class="pet-banner"><div class="mini-pets"><span>🐱</span><span>🐼</span><span>🦊</span><span>🐰</span><span>🐕</span><span>🐘</span></div><div><span class="eyebrow">GAME-STYLE CONVERSATION</span><h2>Your speaking buddies are powered for real AI conversation, fixed voices and voice-controlled movement.</h2><p>Talk naturally by voice or text. Say commands such as “jump”, “run”, “sit down”, “lie down”, “wave”, “dance”, “stand up” or “stop”.</p></div><button class="primary" data-view="mascots">Enter buddy room</button></div>
+</section>
+
+<section id="learn" class="view">
+  <div class="title"><span class="eyebrow">INTERACTIVE COURSES</span><h1>Learn</h1><p>Choose the language you want to study. Course progress is stored separately from the app display language.</p></div>
+  <div data-direction-summary></div><div id="languageSwitch" class="language-switch"></div>
+  <div class="coursehead"><div><span id="courseLabel" class="eyebrow"></span><h2 id="courseTitle"></h2><p id="courseDesc"></p><div class="placement-row"><button id="startNew" class="secondary">I’m completely new</button><button id="writingAcademy" class="secondary">✍️ Writing Academy</button><button id="placementTest" class="secondary">Check my level</button></div></div><span class="pill">30 UNITS • MASTERY PATH</span></div>
+  <div id="path" class="path"></div>
+</section>
+
+
+<section id="library" class="view">
+  <div class="title"><span class="eyebrow">DIGITAL READING LIBRARY</span><h1>Read something great</h1>
+  <p>Famous classics for relaxed reading. Your shelf follows the language you are learning.</p></div>
+  <div class="library-controls"><div id="libraryFilters"><button class="active" data-lib-filter="All">All</button><button data-lib-filter="Beginner">Beginner</button><button data-lib-filter="Intermediate">Intermediate</button><button data-lib-filter="Advanced">Advanced</button></div><input id="librarySearch" placeholder="Search books…"><select id="librarySort"><option value="featured">Featured</option><option value="az">A–Z</option><option value="level">Level</option></select></div>
+  <div id="libraryNotice" class="library-notice"></div>
+  <div id="libraryGrid" class="library-grid"></div>
+</section>
+
+<section id="practice" class="view">
+  <div class="title"><span class="eyebrow">PRACTICE ZONE</span><h1>Train your skills</h1><p id="practiceLanguage"></p></div>
+  <div class="practice-grid">
+    <button data-practice="speech">🎙️<b>Speaking</b><span>Microphone feedback</span></button>
+    <button data-practice="listen">🎧<b>Listening</b><span>Listen & respond</span></button>
+    <button data-practice="cards">🧠<b>Vocabulary Challenge</b><span>One-pass recall & production</span></button>
+    <button data-practice="writing">✍️<b>Writing</b><span id="writingLabel">Character practice</span></button>
+    <button data-practice="games">🎮<b>Games</b><span>Match, build & quick quiz</span></button>
+    <button data-practice="stories">📖<b>Stories</b><span>Short dialogues & comprehension</span></button>
+    <button class="dark" data-view="mascots">💬<b>Chat</b><span>Conversation + movement</span></button>
+  </div>
+</section>
+
+<section id="mascots" class="view">
+  <div class="title buddy-title"><span class="eyebrow">AI BUDDY WORLD</span><h1>Talk, play and learn with your buddy</h1><p>A game-style language room inspired by virtual-pet interaction: your mascot stays centre stage while lessons, voice chat and actions happen around them.</p></div>
+  <div id="buddyTarget" class="buddy-target" aria-live="polite"></div><div id="mascotPick" class="mascot-pick"></div>
+  <div class="pet-game-shell">
+    <div class="pet-stage">
+      <div class="pet-hud">
+        <div class="hud-pill"><span>⭐</span><b id="petXP">XP</b></div>
+        <div class="hud-pill"><span>🪙</span><b id="petCoins">0</b></div>
+        <div class="hud-pill"><span>😊</span><b id="petMood">100%</b></div>
+        <div class="hud-pill"><span>⚡</span><b id="petEnergy">100%</b></div>
+        <div id="aiState" class="ai-state offline">Checking AI…</div>
+      </div>
+      <div class="room-backdrop">
+        <div class="room-window"><span>☀️</span></div>
+        <div class="room-poster">SPEAK<br><b>CONFIDENCE</b></div>
+        <div class="room-shelf"><i>📚</i><i>🌍</i><i>🏆</i></div>
+        <div class="room-floor"></div>
+      </div>
+      <button id="buddyCharacter" class="buddy-character idle" aria-label="Interact with mascot">
+        <span class="buddy-shadow"></span>
+        <img id="buddyImage" class="buddy-image" src="assets/mascots/jess-v13.png" alt="Jess mascot"><span id="buddyAccessory" class="buddy-accessory" aria-hidden="true"></span>
+      </button>
+      <div class="buddy-nameplate"><h2 id="mascotName">Jess</h2><b id="mascotLang"></b><span id="status">Ready</span></div>
+      <div class="side-actions">
+        <button data-action="wave" title="Wave">👋</button>
+        <button data-action="jump" title="Jump">⬆️</button>
+        <button data-action="dance" title="Dance">🎵</button>
+        <button data-action="sit" title="Sit">🪑</button>
+      </div>
+      <div id="actionTray" class="action-tray">
+        <button data-action="wave">👋<span>Wave</span></button><button data-action="jump">⬆️<span>Jump</span></button><button data-action="run">🏃<span>Run</span></button><button data-action="sit">🪑<span>Sit</span></button><button data-action="lie">🛏️<span>Lie down</span></button><button data-action="dance">🎵<span>Dance</span></button><button data-action="stand">🧍<span>Stand</span></button><button data-action="idle">⏹️<span>Stop</span></button>
+      </div>
+<div id="carePanel" class="life-panel">
+    <button data-care="feed">🍎<b>Feed</b><span>+energy</span></button>
+    <button data-care="play">🎾<b>Play</b><span>+mood</span></button>
+    <button data-care="rest">🌙<b>Rest</b><span>restore energy</span></button>
+    <button data-care="encourage">💛<b>Encourage</b><span>cheer up</span></button>
+  </div>
+  <div id="wardrobePanel" class="wardrobe-panel">
+    <button data-accessory="none"><span>✨</span><b>No accessory</b><small>Owned</small></button>
+    <button data-accessory="star"><span>⭐</span><b>Star badge</b><small>30 coins</small></button>
+    <button data-accessory="cap"><span>🎓</span><b>Study cap</b><small>80 coins</small></button>
+  </div>
+      <div class="room-nav">
+        <button data-room="talk" class="active"><span>💬</span><b>Talk</b></button>
+        <button data-room="learn"><span>📚</span><b>Learn</b></button>
+        <button data-room="practice"><span>🎙️</span><b>Practice</b></button>
+        <button data-room="care"><span>❤️</span><b>Care</b></button>
+        <button data-room="wardrobe"><span>👕</span><b>Wardrobe</b></button>
+        <button data-room="actions"><span>🎮</span><b>Actions</b></button>
+      </div>
+    </div>
+    <aside id="chatPanel" class="chat-panel open">
+      <div class="chathead"><div><span class="eyebrow">LIVE LANGUAGE BUDDY</span><b>Conversation</b><small id="mascotDesc"></small></div><div><button id="voice" class="icon-btn" title="Voice">🔊</button><button id="clear" class="icon-btn" title="Clear">↻</button></div></div>
+      <div class="ai-connect-row"><button id="aiConnect" class="primary">✨ Connect Gemini AI</button><small>Gemini-powered conversation with one fixed mascot voice. No canned fallback replies.</small></div>
+      <div id="log" class="log"><div class="empty">Connect Gemini AI, then speak naturally or type. Voice commands also control the mascot: jump, run, sit down, lie down, wave, dance, stand up or stop.</div></div>
+      <div id="prompts" class="prompts"></div>
+      <form id="chatForm" class="chat-input"><input id="chatText" autocomplete="off" placeholder="Type a message…"><button class="send" aria-label="Send">➤</button></form>
+      <button id="talk" class="talkbtn">🎙️ <b>Hold to talk</b><small>Hold, speak, then release</small></button>
+    </aside>
+    <aside class="mascot-profile-panel">
+      <div class="profile-top">
+        <img id="profileMascotImage" src="assets/mascots/jess-v13.png" alt="Selected mascot">
+        <div><h2 id="profileMascotName">Jess</h2><p id="profileMascotLanguage">🇬🇧 English</p></div>
+        <span class="profile-heart">♥</span>
+      </div>
+      <div class="profile-detail"><span>👤</span><div><b>Personality</b><p id="profileMascotPersonality">Cheerful, kind and encouraging</p></div></div>
+      <div class="profile-detail"><span>🔊</span><div><b>Voice</b><p>Fixed mascot voice</p></div></div>
+      <div class="profile-detail"><span>💬</span><div><b>Strengths</b><p>Conversation, pronunciation and confidence</p></div></div>
+      <div class="whats-new"><span class="eyebrow">V18.0.1</span><h3>International Learning Core</h3><p>✓ Support language and learning language stay independent</p><p>✓ Learner intelligence tracks accuracy, independent production and transfer</p><p>✓ Weak/strong skill evidence now guides progress</p><p>✓ Learning intelligence and errors sync across signed-in devices</p></div>
+    </aside>
+  </div>
+</section>
+
+
+<section id="teachers" class="view">
+  <div class="teacher-showcase-head">
+    <div>
+      <span class="eyebrow">REAL 1-ON-1 LESSONS</span>
+      <h1>Meet your teachers</h1>
+      <p>Choose a teacher, check real available times, and book a lesson that fits your schedule.</p>
+    </div>
+    <div class="teacher-head-actions"><button id="applyTeacherBtn" class="primary">Apply to Teach</button><button id="teacherPortalBtn" class="teacher-ghost">Teacher Portal</button><button id="applicationAdminBtn" class="teacher-ghost" hidden>Applications Admin</button><div class="teacher-price-chip"><small>TRIAL LESSON</small><b>$6</b><span>Regular lessons $11/hour</span></div></div>
+  </div>
+
+  <div class="teacher-showcase" id="teacherShowcase">
+    <button class="teacher-arrow teacher-prev" id="teacherPrev" aria-label="Previous teacher">‹</button>
+
+    <div class="teacher-cinema-grid">
+      <article class="teacher-cinema-card active" data-teacher-card="Nathan">
+        <img src="assets/nathan.jpg" alt="Teacher Nathan">
+        <div class="teacher-cinema-shade"></div>
+        <div class="teacher-cinema-copy">
+          <span class="teacher-language-badge">🇮🇪 ENGLISH</span>
+          <h2>Nathan</h2>
+          <p class="teacher-role">English Teacher</p>
+          <div class="teacher-specialties">
+            <span>Speaking</span><span>IELTS</span><span>Grammar</span><span>Confidence</span>
+          </div>
+          <p class="teacher-quick">6 years teaching experience • TEFL • IELTS Preparation • Primary Education Training</p>
+          <div class="teacher-actions">
+            <button class="teacher-ghost intro-btn" data-intro="Nathan">▶ Watch introduction</button>
+            <button class="teacher-ghost profile-btn" data-profile="Nathan">View profile</button>
+            <button class="primary book-btn" data-teacher="Nathan" data-subject="English">Book Trial — $6</button>
+          </div>
+          <div class="teacher-availability-preview" data-availability-preview="Nathan"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
+        </div>
+      </article>
+
+      <article class="teacher-cinema-card" data-teacher-card="Ounnoun">
+        <img src="assets/ounnoun.jpg" alt="Teacher Ounnoun">
+        <div class="teacher-cinema-shade"></div>
+        <div class="teacher-cinema-copy">
+          <span class="teacher-language-badge khmer">🇰🇭 KHMER</span>
+          <h2>Ounnoun</h2>
+          <p class="teacher-role">Khmer Teacher</p>
+          <div class="teacher-specialties">
+            <span>Conversation</span><span>Everyday Khmer</span><span>Confidence</span><span>Private Lessons</span>
+          </div>
+          <p class="teacher-quick">Friendly private Khmer lessons focused on useful conversation and confident communication.</p>
+          <div class="teacher-actions">
+            <button class="teacher-ghost intro-btn" data-intro="Ounnoun">▶ Watch introduction</button>
+            <button class="teacher-ghost profile-btn" data-profile="Ounnoun">View profile</button>
+            <button class="primary book-btn" data-teacher="Ounnoun" data-subject="Khmer">Book Trial — $6</button>
+          </div>
+          <div class="teacher-availability-preview" data-availability-preview="Ounnoun"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
+        </div>
+      </article>
+
+      <article class="teacher-cinema-card" data-teacher-card="Jessica">
+        <img src="assets/jessica.png" alt="Teacher Jessica">
+        <div class="teacher-cinema-shade"></div>
+        <div class="teacher-cinema-copy">
+          <span class="teacher-language-badge khmer">🇰🇭 KHMER • ENGLISH • CHINESE</span>
+          <h2>Jessica</h2>
+          <p class="teacher-role">Khmer, English & Chinese Teacher</p>
+          <div class="teacher-specialties"><span>Khmer</span><span>English</span><span>Chinese</span><span>Conversation</span></div>
+          <p class="teacher-quick">4+ years teaching • English Literature degree • Khmer & English beginner to advanced • Beginner Chinese</p>
+          <div class="teacher-actions">
+            <button class="teacher-ghost intro-btn" data-intro="Jessica">▶ Watch introduction</button>
+            <button class="teacher-ghost profile-btn" data-profile="Jessica">View profile</button>
+            <button class="primary book-btn" data-teacher="Jessica" data-subject="Khmer / English / Chinese">Book Trial — $6</button>
+          </div>
+          <div class="teacher-availability-preview" data-availability-preview="Jessica"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
+        </div>
+      </article>
+
+      <article class="teacher-cinema-card" data-teacher-card="An Sievly">
+        <img src="assets/an-sievly.png" alt="Teacher An Sievly">
+        <div class="teacher-cinema-shade"></div>
+        <div class="teacher-cinema-copy">
+          <span class="teacher-language-badge khmer">🇰🇭 KHMER • ENGLISH</span>
+          <h2>An Sievly</h2>
+          <p class="teacher-role">Khmer & English Teacher</p>
+          <div class="teacher-specialties"><span>Khmer</span><span>English</span><span>TEFL</span><span>Conversation</span></div>
+          <p class="teacher-quick">Khmer & English homeschool teaching experience • English program graduate</p>
+          <div class="teacher-actions">
+            <button class="teacher-ghost intro-btn" data-intro="An Sievly">▶ Watch introduction</button>
+            <button class="teacher-ghost profile-btn" data-profile="An Sievly">View profile</button>
+            <button class="primary book-btn" data-teacher="An Sievly" data-subject="Khmer / English">Book Trial — $6</button>
+          </div>
+          <div class="teacher-availability-preview" data-availability-preview="An Sievly"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
+        </div>
+      </article>
+    </div>
+
+    <button class="teacher-arrow teacher-next" id="teacherNext" aria-label="Next teacher">›</button>
+  </div>
+
+  <div class="teacher-showcase-dots" aria-label="Teacher selection">
+    <button class="active" data-teacher-dot="0" aria-label="Show Nathan"></button>
+    <button data-teacher-dot="1" aria-label="Show Ounnoun"></button>
+    <button data-teacher-dot="2" aria-label="Show Jessica"></button>
+    <button data-teacher-dot="3" aria-label="Show An Sievly"></button>
+  </div>
+
+  <div class="teacher-trust-strip">
+    <span>✓ Private 1-on-1 lessons</span>
+    <span>✓ English & Khmer</span>
+    <span>✓ Trial lesson $6</span>
+    <span>✓ Requests confirmed by iSpeak Confidence</span>
+  </div>
+</section>
+
+
+<section id="progress" class="view">
+  <div class="title"><span class="eyebrow">YOUR PROGRESS</span><h1>Keep building confidence</h1></div>
+  <div class="stat-grid"><div><span>⭐</span><b id="xp2">0</b><small>Total XP</small></div><div><span>🔥</span><b id="streak2">0</b><small>Day streak</small></div><div><span>✅</span><b id="done">0</b><small>Lessons</small></div><div><span>🎯</span><b id="acc">--</b><small>Quiz accuracy</small></div></div>
+  <div class="progress-card"><h2>Course progress</h2><div id="courseProgress"></div></div>
+  <div class="progress-card"><h2>Skill evidence</h2><p class="muted">Based on completed listening, speaking, writing, grammar, conversation and mastery work—not just total XP.</p><div id="skillGraph" class="skill-graph"></div><div id="learnerInsights" class="learner-insights"></div></div>
+<div class="progress-card"><h2>Achievements</h2><div id="badges" class="badges"></div></div>
+  <div class="progress-card certificate-progress">
+    <div class="certificate-head"><div><span class="eyebrow">DIGITAL AWARDS</span><h2>Certificates of Completion</h2><p>Complete 100% of a language course to unlock its personalized iSpeak Confidence certificate.</p></div><span class="certificate-trophy">🏆</span></div>
+    <div id="certificateGrid" class="certificate-grid"></div>
+  </div>
+  <div class="milestone-section">
+    <div class="section-head"><div><span class="eyebrow">ACHIEVEMENTS</span><h2>Course Milestone Certificates</h2></div></div>
+    <p class="muted">Earn certificates at 25%, 50%, 75% and 100% completion in every language course.</p>
+    <div id="milestoneCertificates" class="milestone-grid"></div>
+  </div>
+</section>
+
+<section id="profile" class="view">
+  <div class="profile-card"><div id="initial" class="avatar">S</div><div><h2 id="profileName">Student</h2><p id="profileSummary"></p></div><button id="edit" class="secondary">Edit</button></div>
+  <div class="settings"><button id="accountCentre">☁️ Account & Cloud Sync <b id="accountStatus">Guest ›</b></button><button id="personalPlan">🧭 My Learning Plan <b>›</b></button><button id="dailyQuests">🏆 Daily Quests <b id="questStatus">›</b></button><button id="realLifeMissions">🌍 Real-Life Missions <b>›</b></button><button id="offlineCentre">⬇️ Offline Learning <b>›</b></button><button id="chooseLang">🌐 Learning language <b id="settingLang"></b></button><button id="toggleGoal">🎯 Daily goal <b id="settingGoal"></b></button><button id="audioCheck">🎙️ Audio & microphone check <b>›</b></button><button id="requests">📅 My lesson requests <b id="requestCount">0 ›</b></button><button id="privacyCentre">🔐 Privacy, Safety & Terms <b>›</b></button></div>
+</section>
+
+<section id="page-ielts" class="page">
+ <div class="ielts-hero">
+  <div>
+   <span class="eyebrow">SELF-STUDY IELTS PREPARATION</span>
+   <h1>IELTS Preparation</h1>
+   <p>A structured, progressive preparation system for Academic and General Training. Build all four skills, practise every major task type, track weaknesses and take timed mock tests.</p>
+   <div class="ielts-actions"><button class="primary" id="ieltsDiagnostic">Take Diagnostic</button><button class="secondary" id="ieltsMocks">Mock Test Centre</button></div>
+  </div>
+  <div class="ielts-score-card"><small>CURRENT STUDY PATH</small><b id="ieltsCurrentLevel">Foundation</b><span>Listening • Reading • Writing • Speaking</span><i>Practice band estimates are not official IELTS scores.</i></div>
+ </div>
+ <div class="ielts-stat-grid">
+  <article><b>6</b><span>Progressive levels</span></article><article><b>72</b><span>Structured units</span></article>
+  <article><b>576</b><span>Core lesson blocks</span></article><article><b>6</b><span>Full mock tests</span></article>
+ </div>
+ <div class="ielts-mode-tabs"><button class="active" data-ielts-mode="academic">Academic</button><button data-ielts-mode="general">General Training</button></div>
+ <div class="section-head"><div><span class="eyebrow">YOUR PATH</span><h2>Choose your IELTS level</h2></div></div>
+ <div id="ieltsLevels" class="ielts-level-grid"></div>
+ <div class="section-head"><div><span class="eyebrow">TRAIN BY SKILL</span><h2>IELTS Skills Lab</h2></div></div>
+ <div id="ieltsSkills" class="ielts-skill-grid"></div>
+ <div class="ielts-mock-banner"><div><span class="eyebrow">EXAM SIMULATION</span><h2>Mock Test Centre</h2><p>Timed mini mocks plus full Academic and General Training simulations with answer review and score history.</p></div><button class="primary" id="ieltsMocks2">Open Mock Tests</button></div>
+ <div class="ielts-official-resources">
+   <div class="section-head"><div><span class="eyebrow">OFFICIAL EXTERNAL RESOURCES</span><h2>Practise with the IELTS partners</h2></div></div>
+   <p class="muted">iSpeak Confidence uses original practice content aligned to the published IELTS format. Official IELTS sample materials are copyrighted, so we link to them rather than copying them into the app.</p><p class="muted"><strong>Independent preparation:</strong> iSpeak Confidence is not affiliated with, approved by, or endorsed by the IELTS Partners. IELTS is a trade mark of the IELTS Partners.</p>
+   <div class="ielts-resource-links">
+    <a class="secondary" target="_blank" rel="noopener noreferrer" href="https://ielts.org/take-a-test/preparation-resources/sample-test-questions/academic-test">Official Academic samples ↗</a>
+    <a class="secondary" target="_blank" rel="noopener noreferrer" href="https://ielts.org/take-a-test/preparation-resources/sample-test-questions/general-training-test">Official General Training samples ↗</a>
+    <a class="secondary" target="_blank" rel="noopener noreferrer" href="https://ielts.org/take-a-test/your-results/ielts-scoring-in-detail">Official scoring guide ↗</a>
+    <a class="secondary" target="_blank" rel="noopener noreferrer" href="https://ielts.org/take-a-test/preparation-resources/writing-test-resources">Official Writing criteria ↗</a>
+   </div>
+ </div>
+</section>
+
+</main>
+
+<nav class="bottom-nav"><button data-view="home" class="active">⌂<span>Home</span></button><button data-view="learn">📚<span>Learn</span></button><button data-view="practice">🎙️<span>Practice</span></button><button data-view="ielts">🎯<span>IELTS</span></button><button data-view="mascots">🎮<span>Chat</span></button><button data-view="teachers">👩‍🏫<span>Teachers</span></button></nav>
+<aside id="drawer"><button id="closeDrawer" class="drawer-close" aria-label="Close menu">×</button><img src="assets/logo.png" alt="">
+<button data-view="home">Home</button>
+<button data-view="learn">Learn</button>
+<button data-view="practice">Practice</button>
+<button data-view="ielts">IELTS Prep</button>
+<button data-view="mascots">Chat</button>
+<button data-view="teachers">Teachers</button>
+<button data-view="library">Library</button>
+<button data-view="progress">Progress</button>
+<button data-view="profile">Profile & Settings</button></aside><div id="scrim"></div>
+
+<dialog id="modal"><button id="modalClose" class="modal-close" aria-label="Close dialog">×</button><div id="modalBody"></div></dialog>
+<dialog id="booking" class="booking-dialog"><button id="bookingClose" class="modal-close" aria-label="Close booking dialog">×</button><form id="bookingForm"><span class="eyebrow">LIVE TUTOR AVAILABILITY</span><h2 id="bookingTitle">Book a lesson</h2><p id="bookingSub"></p><div class="booking-layout"><section><h3>1. Choose a day</h3><div id="bookingDays" class="booking-days"></div><h3>2. Choose an available time</h3><div id="bookingSlots" class="booking-slots"><p class="booking-hint">Select a day to see times.</p></div><div id="bookingTimeZone" class="booking-timezone"></div></section><section class="booking-details"><h3>3. Your details</h3><label>Your name<input id="bookName" required></label><label>Email<input id="bookEmail" type="email" required></label><input id="bookDate" type="hidden" required><input id="bookTime" type="hidden" required><label>Lesson<select id="bookType"><option>Trial lesson — $6</option><option>60 minutes — $11</option></select></label><div id="bookingSelection" class="booking-selection">No time selected yet.</div><label>Message<textarea id="bookMessage" rows="3" placeholder="Goals, level, or anything your teacher should know."></textarea></label><button type="submit" class="primary wide" id="bookingSubmit" disabled>Book selected time</button></section></div></form></dialog>
+<div id="toast"></div>
+<script src="curriculum-data.js"></script>
+<script src="curriculum-expansion-v17-4.js"></script>
+<script src="ielts-data.js"></script>
+<script src="khmer-commonvoice-data.js"></script>
+<script src="language-support-v17-5.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+iSpeak Confidence V17.3.0 — Learning Engine Rebuild, Phase 1
+
+This version starts the deeper product rebuild after V17.2.1 hardening.
+
+Learning changes
+- Adds Can-Do outcomes to every unit in every supported course.
+- Adds a distinct transfer challenge to every unit so learners must use the skill in a new situation rather than recycle the same sentence.
+- Replaces generic grammar guidance with 30-unit language-specific grammar maps for English, Spanish, French, Mandarin, Japanese and Arabic.
+- Keeps Khmer learner-facing content unchanged; Khmer pedagogy continues to rely on user-approved source material only.
+- Expands the English course from roughly 60 core targets to 170+ unique target expressions as the first curriculum-depth tranche.
+- Adds usage/culture notes for the six non-Khmer curriculum tracks.
+
+Stories & games
+- Rebuilds Stories as four-stage interactive missions: understand, decide, listen, transfer.
+- Final Story responses must be original rather than copied from the displayed dialogue.
+- Expands games from four recognition-heavy modes to eight modes, adding Dictation, Reconstruction, Error Detective and independent Production.
+- Game results now contribute to skill evidence and errors can be recorded without forcing scheduled repetition.
+
+Progress intelligence
+- Adds a Skill Evidence panel for Listening, Speaking, Reading & Writing, Grammar, Vocabulary & Meaning, Conversation, and Transfer & Mastery.
+- Completion of a learning block now contributes evidence to the relevant skill rather than only XP/completion percentage.
+- Adds an error-history foundation for future diagnostic recommendations; errors are not automatically scheduled for repetition.
+
+Compatibility
+- Migrates V17.2.1 local progress into the V17.3.0 state schema.
+- Preserves teacher applications, approved-teacher marketplace, booking, tutor videos, Library, IELTS, security hardening and language/interface separation.
+- AI and email configuration are intentionally unchanged.
+
+QA
+- 23 automated V17.3 learning-engine checks.
+- JavaScript syntax checks pass for app.js and server.js.

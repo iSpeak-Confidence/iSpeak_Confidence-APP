@@ -1,0 +1,10 @@
+iSpeak Confidence V16.3.0 — Tutor Booking & Teacher Portal
+
+- Replaced free-text preferred time with live selectable tutor availability.
+- Added 14-day booking calendar and available time slots.
+- Selected slots are held immediately to prevent double-booking.
+- Added Teacher Portal from the Teachers page.
+- Teachers can manage weekly availability and booking statuses.
+- Booking data stored in data/teachers.json.
+- Teacher portal protected by TEACHER_PORTAL_PIN (development default 2468; change before launch).
+- Booking email notifications remain supported.

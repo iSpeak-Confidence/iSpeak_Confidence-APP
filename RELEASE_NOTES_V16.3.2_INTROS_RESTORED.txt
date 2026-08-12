@@ -1,0 +1,7 @@
+iSpeak Confidence V16.3.2
+
+- Restored the original teacher introduction/profile action placement so intro buttons remain clearly visible.
+- Preserved Nathan and Ounnoun introduction videos unchanged from V16.3.0.
+- Preserved Jessica name and CV portrait.
+- Preserved V16.3.1 live tutor availability and booking improvements.
+- No curriculum or unrelated teacher profile content changed.

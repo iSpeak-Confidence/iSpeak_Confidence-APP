@@ -1,0 +1,17 @@
+Khmer human speech used in iSpeak Confidence V16.0.2
+
+Source package supplied to the project:
+Common Voice Scripted Speech 26.0 — Khmer (km), corpus dated 2026-06-12.
+
+Selection method:
+- Read validated.tsv from the supplied corpus.
+- Kept only recordings present in the supplied clips directory.
+- Kept one recording per exact NFC-normalized Khmer transcript.
+- When the same transcript had multiple validated recordings, retained one and removed duplicate transcript entries from the in-app pathway.
+- 121 unique validated Khmer sentence recordings are bundled in this build.
+- Course vocabulary audio uses exact transcript matching only. If no exact human recording exists, Khmer synthetic speech is not substituted by the course audio helper.
+
+License record supplied by the user for the dataset/audio:
+CC0-1.0 (Creative Commons Zero v1.0 Universal).
+
+Keep the original downloaded corpus/license records archived with project records.

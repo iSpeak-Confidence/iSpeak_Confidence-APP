@@ -1,0 +1,16 @@
+iSpeak Confidence V16.0.7
+=========================
+IELTS Professional Rebuild
+
+- Rebuilt 72 IELTS units with distinct progressive content.
+- Removed repeated band-level topic recycling.
+- Rebuilt 6 full IELTS mocks (3 Academic, 3 General Training).
+- Added 40 answerable/scored Listening questions per mock.
+- Added 40 answerable/scored Reading questions per mock.
+- Expanded mock Listening scripts and full Reading text length.
+- Added official IELTS external resource links without redistributing copyrighted official material.
+- Added independent-preparation / non-endorsement notice.
+- Added approximate practice score guidance.
+- Improved Speaking timing guidance and Writing criteria notices.
+- Bumped PWA cache and package version to 16.0.7.
+- Added comprehensive QA audit.

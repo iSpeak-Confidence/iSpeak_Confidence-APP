@@ -1,0 +1,20 @@
+iSpeak Confidence V16.0.4 — Advanced Khmer Conversation Progression
+
+KHMER PLACEMENT
+- Q1–8 remain beginner-friendly with Khmer script plus English-letter romanisation.
+- Q9–14 are verified human Common Voice listening questions.
+- Q15–20 bridge from supported reading into independent Khmer reading.
+- Q21–30 are now progressively harder real-world conversation tasks rather than simple translation prompts.
+- The final ten cover changed plans, reasoned opinions, past experiences, consequences/advice, polite disagreement, clarification, balanced advice, complaints/negotiation, persuasion/compromise and a very advanced multi-part conversation.
+- Advanced responses have no single memorised answer. Gemini evaluates communicative task completion, connected Khmer, detail and appropriateness.
+- Q30 requires reconstructing a complicated situation, clarifying intent, taking responsibility where appropriate, disagreeing politely, proposing a fair solution and asking a relevant follow-up question.
+
+KHMER COURSE
+- Units 21–30 now add a progressively harder advanced conversation challenge to the Sentence Builder, Patterns/Grammar and AI Conversation blocks.
+- Advanced tasks require connected responses, reasons, consequences, clarification, politeness, negotiation and independent communication.
+- Romanisation/model answers are deliberately not supplied inside these advanced challenge blocks.
+- Beginner course support remains unchanged; advanced difficulty is introduced only in the later course.
+
+IMPORTANT
+- No new learner-facing Khmer phrases were invented for this change. Advanced scenarios/instructions are English task prompts; the learner supplies the Khmer.
+- Existing supplied Khmer curriculum material remains the source of learner-facing Khmer teaching content.

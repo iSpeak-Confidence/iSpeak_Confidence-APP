@@ -1,0 +1,16 @@
+iSpeak Confidence V18.0.0 — International Learning Core
+
+Major verified changes
+- Schema upgraded to 1800 with migration from prior local state.
+- Learner intelligence model now records attempts, successes, independent production, transfer evidence and errors by skill/language.
+- Skill confidence is based on accuracy plus independent/transfer evidence instead of simple completion increments.
+- Error history expanded to 250 recent diagnostic events without forced spaced repetition.
+- skillEvidence, errorHistory, learnerModel and translationFallbacks now sync to cloud accounts.
+- Fixed remaining UTC/yesterday streak bug in quick lesson completion.
+- Added verified translation coverage reporting for the selected support→learning direction.
+- Progress screen now surfaces weakest/strongest evidence and translation coverage.
+- Server/status, placement metadata, service worker and release identifiers updated to V18.0.0.
+- Old start BAT files removed; V18 BAT runs QA before server startup.
+
+Important content boundary
+This release improves the international architecture and learner model. It does not fabricate missing Khmer translations. Unverified support meanings continue to show a visible English fallback marker.

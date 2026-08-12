@@ -1,0 +1,12 @@
+iSpeak Confidence V16.3.3
+
+Changes:
+- Separated App/Interface Language from Learning Language.
+- Top flag selector now changes ONLY the app interface language.
+- Course/language cards and Profile > Learning language now change ONLY the language being learned.
+- Learning-course changes preserve the chosen interface language.
+- Per-language course progress remains stored independently through the existing language-keyed progress system.
+- Added Jessica's supplied introduction video.
+- Added An Sievly's supplied introduction video.
+- Added Watch introduction buttons to Jessica and An Sievly cards.
+- Preserved Jessica's CV photo/name and V16.3.x teacher booking/availability system.
