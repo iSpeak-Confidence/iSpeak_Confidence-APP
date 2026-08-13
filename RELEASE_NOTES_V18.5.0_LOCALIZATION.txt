@@ -1,0 +1,22 @@
+iSpeak Confidence V18.5.0 — Full Interface Localization
+
+Purpose
+Fix mixed-language interface text when a learner chooses Spanish, French, Mandarin Chinese, Japanese, Arabic or Khmer as the app/support language.
+
+Repairs
+- Added one comprehensive localization layer for static and dynamically rendered interface text.
+- Added MutationObserver coverage so dialogs and newly-rendered controls follow the selected interface language.
+- Localized top Log In / Sign Up / My Account controls.
+- Localized learning-language names in course cards and the header language menu while preserving each language's native name.
+- Localized session/study-day progress labels.
+- Localized Buddy World banner, controls, status text, mascot language labels and descriptions.
+- Localized teacher discovery/booking controls and key profile labels.
+- Localized account/authentication controls and key IELTS navigation/booking controls.
+- Preserved target-language learning content instead of translating the material the learner is supposed to practise.
+- Arabic interface remains RTL.
+
+QA
+67/67 automated release checks passed. npm audit reports 0 known vulnerabilities. JavaScript syntax checks passed.
+
+Important
+Teacher-written bios and learner target-language course content are treated as content, not interface chrome. The interface language does not overwrite the language a learner is intentionally studying.

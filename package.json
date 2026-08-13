@@ -1,12 +1,15 @@
 {
-  "name": "ispeak-confidence-v18-0-1",
-  "version": "18.0.1",
+  "name": "ispeak-confidence-v18-7-0",
+  "version": "18.7.1",
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "qa": "node qa-v18.js"
+    "qa": "node qa-v18-7-0.js"
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
   }
 }

@@ -1,0 +1,33 @@
+iSpeak Confidence V18.5.0 — Portal & Classroom Upgrade
+13 August 2026
+
+PORTALS
+- /admin now renders as a dedicated full-screen admin page rather than a small popup over the learner app.
+- /teacher now renders as a dedicated full-screen teacher page rather than a small popup.
+- Learner navigation is hidden while either portal route is active.
+- Teacher Portal and Admin Portal buttons navigate to their dedicated routes.
+- First-time learner onboarding is disabled on both portal routes.
+
+CLASSROOM
+- Existing authenticated iSpeak Classroom remains tied to the real teacher/student booking.
+- Classroom access is available from the lesson record at any time rather than only around the scheduled start time.
+- Teacher lesson cards now expose a direct Join classroom action.
+- Student My Lessons uses a clear Join classroom anytime action.
+- Video, microphone, screen sharing, chat, shared notes, attendance, protected recordings, admin observer mode and verified reviews are preserved.
+
+SHARED WHITEBOARD
+- Added a fourth classroom tool: Whiteboard.
+- Teacher and student can draw collaboratively in the same persisted board.
+- Pen, highlighter, eraser, stroke-size control, undo and clear are included.
+- Whiteboard coordinates are normalized so drawings resize with the classroom panel.
+- Board state syncs through the authenticated classroom API and is saved with the classroom.
+- Admin monitoring sees the whiteboard read-only.
+- Server validates and limits whiteboard payloads/strokes/points before persistence.
+
+CACHE / QA
+- Service-worker cache revision changed so browsers refresh the upgraded files.
+- Existing V18.5.0 QA suite: 67 passed / 0 failed.
+- app.js syntax: PASS.
+- server.js syntax: PASS.
+- /admin HTTP route: PASS.
+- /teacher HTTP route: PASS.

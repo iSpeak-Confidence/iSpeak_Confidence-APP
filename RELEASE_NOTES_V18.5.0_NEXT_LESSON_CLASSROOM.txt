@@ -1,0 +1,14 @@
+iSpeak Confidence V18.5.0 — Next Lesson Classroom UX
+
+- Student and teacher classroom centres now highlight the correct next booked lesson.
+- Shows a live relative label such as "Lesson with Nathan in 50 minutes".
+- Each lesson button opens only that booking's secure classroom; test/practice rooms remain separate.
+- Pre-join camera/microphone preview starts automatically.
+- Enter Classroom controls remain visible in a sticky bottom action bar; no scrolling is required.
+- Pre-join page now uses the classroom dark theme even when opened from /teacher.
+- Local video is marked connected immediately after entry so users see themselves.
+- Booked rooms show "Waiting for student" / "Waiting for teacher" until the correct other participant arrives.
+- Test rooms explicitly say no other participant is expected instead of pretending to connect.
+- Existing classroom ownership checks remain enforced server-side.
+
+QA: 68/68 existing checks passed. Additional access checks: unauthenticated booked room, student test room and teacher test room all return HTTP 403.

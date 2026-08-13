@@ -1,4 +1,4 @@
-iSpeak Confidence V18.0.1 — Release Readiness QA
+iSpeak Confidence V18.0.2 — Release Readiness QA
 Date: 12 August 2026
 
 Scope tested (AI/Gemini and SMTP/email delivery intentionally excluded):
@@ -34,7 +34,7 @@ Fixes made during this release-readiness pass:
 4. Improved service-worker offline fallback so missing images/scripts are not replaced with index.html and failed HTTP responses are not cached.
 5. Added missing accessible labels to close controls.
 6. Updated Privacy Policy and Terms for teacher application/profile data and teacher conduct.
-7. Corrected remaining V18.0.0 release/version labels and package metadata to V18.0.1.
+7. Corrected remaining V18.0.0 release/version labels and package metadata to V18.0.2.
 
 Known intentional exclusions:
 - Gemini/AI evaluation, transcription, AI chat and AI TTS were not tested because no AI key is configured.

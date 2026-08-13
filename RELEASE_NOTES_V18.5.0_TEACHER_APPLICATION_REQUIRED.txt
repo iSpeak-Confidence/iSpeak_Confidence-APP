@@ -1,0 +1,11 @@
+iSpeak Confidence V18.5.0 — Teacher Application Readability & Submission Validation
+
+- Reworked the teacher application landing/auth/dashboard styling for the full-page /teacher portal so all text and controls remain readable on the light portal background.
+- Added visible Required markers throughout the application.
+- The Review tab now shows every required item as complete or missing.
+- Submit is disabled until every required item is complete.
+- Server-side submission validation independently enforces every requirement, so browser-side bypasses cannot submit incomplete applications.
+- Required: first/last/public name, country, phone, valid timezone, teaching language, spoken language, headline, about section, experience, education, specialty, qualification/certificate, photo, intro video, weekly availability, requested rate, age/equipment/internet confirmations, and teacher-rules acceptance.
+- Submitted applications are stored with status=submitted and appear immediately in Admin Portal teacher applications.
+- Integration verified: complete application submission returned adminQueue=true and appeared in /api/admin/applications as submitted; incomplete submission was rejected with a full missing-field list.
+- Existing V18.5.0 QA suite: 67/67 passing after changes.

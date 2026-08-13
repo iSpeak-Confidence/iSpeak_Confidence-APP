@@ -1,0 +1,13 @@
+iSpeak Confidence V18.6.2 — Story Library Reliability
+
+- Replaced glitch-prone character/manga drawing presentation with a clean story-book experience.
+- Fixed Story Series navigation under the production Content Security Policy by removing inline onclick handlers and using delegated event listeners.
+- Seven heroes, two connected volumes each (14 stories) remain available.
+- Reader chapter selection, Previous, Next, back-to-hero, back-to-all-heroes, and back-to-library are wired through CSP-safe controls.
+- Hero reading progress now lives in the main learner state and cloud-syncs for signed-in users; old local hero progress is migrated.
+- IELTS progress now lives in the main learner state and cloud-syncs for signed-in users while retaining the local offline copy.
+- Server cloud progress allowlist now accepts heroReadingProgress and ieltsProgress.
+- JSON data persistence now uses atomic writes, a .bak recovery copy, and fallback recovery if the primary JSON file is damaged.
+- Updated service-worker cache key so browsers do not stay stuck on the broken Story/Manga code.
+
+Production note: file-based persistence is safer in this build but a Render persistent disk (DATA_DIR) is still required if using the JSON storage layer. A managed database remains the recommended later scaling step for multi-instance hosting.

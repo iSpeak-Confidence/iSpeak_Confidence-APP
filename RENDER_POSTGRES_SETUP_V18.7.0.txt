@@ -1,0 +1,9 @@
+iSpeak Confidence V18.7.0 — Render PostgreSQL setup
+
+1. Create a Render PostgreSQL database in the same region as the web service.
+2. Add DATABASE_URL to the iSpeak web service using Render's internal database URL.
+3. Keep NATHAN_BETA_PRICE_ENABLED=true while testing Nathan at $0.50. Set it to false after the beta test.
+4. Deploy. The server creates the ispeak_state PostgreSQL table automatically and imports existing JSON data on first connection when the database is empty.
+5. Confirm /api/status reports storage: PostgreSQL.
+
+Local development works without PostgreSQL using the existing atomic JSON + .bak fallback.

@@ -1,0 +1,10 @@
+iSpeak Confidence V18.5.0 — Youth Teacher Safeguarding & Student Conduct
+
+- Removed the previous 18+ only teacher-application requirement.
+- Teacher applicants can select 15–17 or 18+.
+- Applicants aged 15–17 must confirm parent/legal-guardian approval before submission.
+- The Admin application review shows age group and guardian-consent status.
+- Students must accept professional classroom conduct rules before entering an iSpeak Classroom.
+- Rules prohibit harassment, sexual/romantic behaviour, requests for private contact/payment details, off-platform meetings, and unauthorized recording/screenshots.
+- Terms of Use updated with student conduct and youth-teacher safeguarding sections.
+- Browser cache version bumped so the new form and classroom notice load immediately.

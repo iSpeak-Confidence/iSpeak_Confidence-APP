@@ -1,0 +1,8 @@
+iSpeak Confidence V18.5.0 — Classroom Edge Smoothing + Brand Logo
+
+- Adds temporal smoothing to the MediaPipe person confidence mask to reduce shoulder, sleeve and hand flicker.
+- Adds a soft mask expansion/feather around clothing and fast-moving edges.
+- Raises segmentation refresh toward 20 fps for smoother movement while retaining the working MediaPipe engine.
+- Stops closing the shared MediaPipe segmenter when switching previews, preventing retry/switch glitches.
+- Draws the real iSpeak logo asset into a framed wall decoration at render time for a cleaner, consistent brand mark.
+- Keeps only None and iSpeak Classroom background choices.

@@ -1,0 +1,21 @@
+iSpeak Confidence V18.5.0 — Teacher/Classroom Deep Audit Release
+
+Highlights
+- Real person-segmentation background effects for Blur / iSpeak Light / iSpeak Dark when MediaPipe loads.
+- Classroom shared chat UI removed; secure PDF/DOCX lesson-file sharing added.
+- PDF preview and DOCX text preview available inside the live classroom.
+- Stronger DOCX content validation and exact classroom-file authorization.
+- Shared notes + whiteboard remain synchronized.
+- Conversation-only video view and stronger fullscreen/fallback behavior.
+- Teacher profile redesigned in iSpeak navy/teal styling.
+- Teacher Academy expanded to 8 modules, checkpoint quizzes, 10-question final and detailed lesson-plan assessment.
+- Teacher certificate preview + personalized downloadable/printable certificate.
+- Student course certificates now directly downloadable as well as printable/email-able.
+- Classroom background-preview resource leak fixed.
+- Service-worker cache bumped so browsers pick up this release.
+
+Testing
+- Core QA: 68/68 passed.
+- Targeted end-to-end teacher/classroom/API checks: 32/32 passed.
+- Static feature audit: 18/18 passed.
+- HTTP smoke routes: all checked routes returned 200.

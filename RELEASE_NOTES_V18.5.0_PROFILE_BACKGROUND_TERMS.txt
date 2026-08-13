@@ -1,0 +1,11 @@
+iSpeak Confidence V18.5.0 - Profile / Background / Terms continuation
+13 August 2026
+
+- Teacher Profile readability: turquoise/white labels and higher-contrast field/help text.
+- Classroom background fix: BodyPix model weights from storage.googleapis.com are now allowed by CSP. Previously the JS library could load from jsDelivr but the model download could be blocked by the app security policy, causing Background AI to fail.
+- Expanded Terms of Use with clearer intellectual-property, permitted-use, anti-copying/scraping/reverse-engineering language and user-content licensing boundaries.
+- Service-worker cache bumped.
+- node --check app.js/server.js passed.
+- npm run qa: 68 passed, 0 failed.
+
+Revolut Pro integration intentionally not added while the account is under review. No banking secrets are embedded.

@@ -1,0 +1,12 @@
+iSpeak Confidence V18.4.1 — Admin Portal Access Fix
+
+Fixed the missing admin route/access issue found during manual testing.
+
+Changes:
+- /admin now opens the Admin Portal login automatically.
+- Admin Portal button is visible from the Teachers page.
+- Added a proper Admin Dashboard after PIN authentication.
+- Dashboard links to Teachers & Applications and Classroom Monitoring.
+- Existing-teacher account provisioning remains available from Teachers & Applications.
+- Admin PIN field supports Enter-key login and mobile numeric keyboard hints.
+- Local development default remains 1357; production requires ADMIN_PORTAL_PIN.

@@ -1,0 +1,69 @@
+iSpeak Confidence V18.4.0 — Deep Audit QA Report
+=================================================
+Date: 13 August 2026
+
+FINAL AUTOMATED STATUS
+- Release QA: 55 passed / 0 failed
+- JavaScript syntax validation: PASS across runtime and scripts
+- npm production dependency audit: 0 known vulnerabilities reported
+- Clean-server end-to-end teacher/student/admin classroom workflow: PASS
+- Missing local runtime/book references found by audit: 0
+- Curriculum unit-count requirement: PASS (30 units for each of 7 languages)
+- Exact duplicate unit titles: 0
+- Exact repeated curriculum anchor targets within each language: 0
+- Processed library empty pages: 0
+- Processed library exact duplicate pages: 0
+- Library metadata/chapter-count mismatch: 0
+
+AREAS EXERCISED
+- Server startup/status and production security headers
+- Static/runtime resource availability
+- Account registration/authentication and teacher account provisioning
+- Forced first-login password replacement
+- Teacher availability and booking
+- Teacher application/profile/public-profile review paths
+- iSpeak Classroom authorization, attendance, chat/workspace/signaling boundaries
+- Read-only admin observer authorization
+- Lesson completion, verified reviews and duplicate-review protection
+- Recording upload validation and protected replay authorization
+- Offline/PWA core dependency integrity
+- Curriculum structural/repetition checks
+- Processed library structural checks
+- Translation fallback architecture and targeted punctuation issue
+- Basic form-control accessibility labels
+- Package/release/version consistency
+- Removal of retired shared teacher authentication
+
+SECURITY / PRIVACY NOTES
+- Production ADMIN_PORTAL_PIN must be explicitly configured and should be strong/unique.
+- Production classroom recording storage needs persistent storage plus an operational retention/
+  deletion policy and appropriate encryption/access controls at the hosting/storage layer.
+- Monitoring/recording notices exist in the product and policy pages, but applicable legal consent,
+  children's privacy and recording rules still need jurisdiction-specific review before launch.
+- No .env secret file is included in this release; .env.example contains placeholders only.
+
+TRANSLATION LIMITATION (INTENTIONAL, NOT SILENTLY FABRICATED)
+The international support-translation layer does not yet contain human-verified translations for
+every source/target language pair. Where a verified translation is unavailable, the app uses the
+explicit English fallback. In particular, this audit did not invent Khmer learner-facing text. Full
+human localization of every support string in every language remains a separate content/localization
+workstream if complete native-language coverage is required.
+
+EXTERNAL-SERVICE ITEMS THAT REQUIRE REAL PRODUCTION CREDENTIALS/INFRASTRUCTURE
+- Gemini-backed AI functions require GEMINI_API_KEY.
+- Direct server email/certificate delivery requires valid SMTP settings.
+- Production-grade WebRTC reliability on restrictive networks requires a working TURN service.
+These integrations cannot be fully proven without the real configured third-party services.
+
+VISUAL AUTOMATION NOTE
+A Chromium/Playwright visual-navigation attempt was made, but this execution environment blocks
+browser navigation to localhost (ERR_BLOCKED_BY_ADMINISTRATOR). This is an environment restriction,
+not an app response. The release therefore does not claim a completed automated pixel/layout sweep;
+its browser-facing coverage comes from static DOM/reference/accessibility audits plus server/API and
+end-to-end functional validation.
+
+CONCLUSION
+No remaining repair issue was found within the audited/tested scope after the final repair-and-retest
+cycle. No software release can be truthfully guaranteed to contain zero possible defects across every
+device, browser, network, locale and future production configuration; this report records the checks
+actually completed rather than making that unsupported guarantee.

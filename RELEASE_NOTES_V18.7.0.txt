@@ -1,0 +1,3 @@
+iSpeak Confidence V18.7.0
+
+Production-foundation release: PostgreSQL-ready persistence, admin product analytics, Nathan $0.50 server-controlled beta pricing, and mobile tutor-photo zoom fix. Story Series multilingual content and cloud Story/IELTS progress from V18.6.3 are preserved.

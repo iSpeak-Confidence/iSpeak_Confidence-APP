@@ -1,0 +1,65 @@
+
+> ispeak-confidence-v18-4-1@18.4.1 qa
+> node qa-v18.js
+
+PASS V18 schema
+PASS learner model default
+PASS learner evidence helper
+PASS confidence helper
+PASS local yesterday helper used
+PASS no quick UTC yesterday bug
+PASS cloud sync learner model
+PASS cloud sync error history
+PASS cloud sync skill evidence
+PASS translation coverage function
+PASS translation fallback remains visible
+PASS Khmer remains guarded
+PASS server V18.4.1
+PASS placement V18.4.1
+PASS service worker V18.4.1
+PASS V18.4.1 BAT exists
+PASS legacy start BAT removed
+PASS learner insights UI
+PASS no AI key embedded
+PASS no SMTP secret embedded
+PASS classroom authenticated route
+PASS classroom WebRTC client
+PASS classroom recording consent gate
+PASS recording content validation
+PASS admin replay protected
+PASS verified lesson reviews
+PASS monitoring notice in terms
+PASS admin PIN not accepted in URL query
+PASS upload extension derived from MIME
+PASS PNG structural validation
+PASS MP4 structural validation
+PASS CSP header enabled
+PASS sensitive static paths blocked
+PASS no duplicate HTML IDs
+PASS all PWA core files exist
+PASS package metadata synchronized
+PASS visible page title current
+PASS runtime has no stale V18.0.2 marker
+PASS manual offline cache current
+PASS offline core includes /curriculum-data.js
+PASS offline core includes /curriculum-expansion-v17-4.js
+PASS offline core includes /ielts-data.js
+PASS offline core includes /khmer-commonvoice-data.js
+PASS offline core includes /language-support-v17-5.js
+PASS shared teacher PIN UI removed
+PASS shared teacher PIN API removed
+PASS shared teacher PIN config removed
+PASS Arabic common-question punctuation corrected
+PASS library search has accessible name
+PASS library sort has accessible name
+PASS buddy chat input has accessible name
+PASS all local runtime asset/book references exist
+PASS 30-unit curriculum integrity and no exact anchor repetition
+PASS processed library has no empty/duplicate/broken fragment pages
+PASS library metadata chapter counts match files
+PASS visible admin portal button
+PASS /admin route opens admin login
+PASS admin dashboard available
+PASS existing Nathan account provisioning exposed
+
+V18.4.1 QA: 59 passed, 0 failed

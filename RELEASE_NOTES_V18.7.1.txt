@@ -1,0 +1,9 @@
+iSpeak Confidence V18.7.1 — Revolut Beta Checkout
+
+- Nathan's beta lesson remains server-controlled at $0.50 USD.
+- Added the supplied Revolut hosted checkout link for Nathan's beta booking flow.
+- The Revolut URL is returned by the server only for Nathan's $0.50 beta quote.
+- Promo codes are disabled for the $0.50 beta test so the fixed checkout amount cannot mismatch.
+- External Revolut payments are NOT auto-marked paid. Bookings stay payment_pending / pending_verification until manually verified.
+- Other tutors are unchanged and do not receive this beta checkout flow.
+- Service worker cache bumped to V18.7.1.

@@ -1,0 +1,5 @@
+iSpeak Heroes V18.6 foundation
+7 official heroes x 2 connected volumes = 14 manga titles per language.
+English 12 chapters. Chinese/Spanish/French/Japanese/Arabic 10 chapters. Khmer 8 chapter slots; Khmer story text locked pending approved material.
+No repetition: every finished chapter must advance plot, reveal information, cause consequences, change relationships, or develop the hero.
+The current panel renderer is a UI foundation, not final story manuscript/artwork.

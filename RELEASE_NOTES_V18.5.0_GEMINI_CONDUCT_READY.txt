@@ -1,0 +1,11 @@
+iSpeak Confidence V18.5.0 — Gemini Conduct Monitoring Ready
+
+- Defaults Gemini text/conduct model to gemini-2.5-flash.
+- No API key is embedded in the build. Add GEMINI_API_KEY to .env when ready.
+- Teacher direct messages and classroom chat use Gemini intent classification when configured.
+- Without Gemini, the existing conservative rules-based conduct filter remains active.
+- Disclosed classroom recording segments can be analyzed by Gemini for teacher off-platform solicitation when configured.
+- AI audio strikes require a high-confidence teacher-identified violation and are deduplicated by category for 15 minutes.
+- Conduct escalation remains: first confirmed violation warning, second suspension, third termination.
+- AI monitoring events and evidence are retained in the classroom/admin record for review.
+- Classroom disclosures now state that Smart AI may analyze chat and disclosed recordings when enabled.

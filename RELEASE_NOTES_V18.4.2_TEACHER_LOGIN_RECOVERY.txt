@@ -1,0 +1,10 @@
+iSpeak Confidence V18.4.2 — Teacher Login Recovery
+
+Fixes:
+- Admin teacher list now displays the exact teacher login email.
+- Admin can reset an approved teacher's temporary password without deleting the teacher/profile.
+- Password reset forces the teacher to choose their own password after login.
+- Teacher-login failure message now directs Admin to verify the exact email/reset password.
+
+Verified flow:
+Admin creates Nathan -> temporary login succeeds -> Admin resets password -> old password rejected/new temporary password succeeds -> first-login password-change flag remains enabled.

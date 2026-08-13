@@ -1,0 +1,9 @@
+iSpeak Confidence V18.5.0 — Teacher Login Reliability Fix
+
+- Teacher login is now a centered full-page portal card with clear readable colors.
+- Login button has an explicit click handler, Enter-key support, loading state and visible inline errors.
+- Local teacher/app/student/classroom data now defaults to persistent OS app data instead of being trapped inside each extracted version folder.
+- On first run, the server looks for the newest prior iSpeak data in Downloads and migrates it when persistent data is empty.
+- This prevents teacher accounts from disappearing each time a new ZIP is extracted.
+- Service-worker cache bumped so browsers do not keep the previous broken portal JavaScript.
+- Server integration checked: teacher creation, login, forced password change, dashboard, availability, booking update, classroom access, classroom join, chat, lesson workspace, whiteboard and profile-change submission.

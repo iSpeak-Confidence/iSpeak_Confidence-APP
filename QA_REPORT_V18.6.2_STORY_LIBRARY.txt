@@ -1,0 +1,26 @@
+iSpeak Confidence V18.6.2 — QA Report
+
+PASS 1 — JavaScript syntax
+- app.js: node --check PASS
+- server.js: node --check PASS
+- sw.js: node --check PASS
+
+PASS 2 — Story Series structure/wiring
+- 7 heroes present
+- 2 volumes per hero
+- no inline onclick handlers in the new Story Series section
+- CSP-safe delegated handlers present for hero shelf, volume open, previous/next, chapter selector, and back controls
+- no character <img> elements generated in the Story Series/reader
+- Story reader and responsive CSS present
+- Hero and IELTS state included in learner cloud state
+
+PASS 3 — persistence/recovery
+- Account register test PASS
+- Cloud save/load of heroReadingProgress PASS
+- Cloud save/load of ieltsProgress PASS
+- Server restart + login + progress reload PASS
+- atomic JSON save PASS
+- .bak corruption-recovery path PASS
+
+Browser-environment note:
+The container Chromium policy returns net::ERR_BLOCKED_BY_ADMINISTRATOR for localhost, so an automated visual Chromium click-through cannot be truthfully marked PASS in this environment. The original failure was identified as a CSP conflict: the production CSP disallows inline event handlers, while V18.6.1 generated inline onclick controls. V18.6.2 removes those inline handlers entirely and uses external app.js event listeners, which matches the active CSP.

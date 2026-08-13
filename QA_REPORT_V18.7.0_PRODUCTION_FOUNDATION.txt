@@ -1,0 +1,31 @@
+iSpeak Confidence V18.7.0 — Production Foundation QA
+
+UPGRADES INCLUDED
+- Optional Render PostgreSQL persistence via DATABASE_URL with automatic table creation and first-run import of existing app state.
+- Atomic JSON + .bak fallback retained for local/offline development.
+- Nathan temporary beta lesson price: $0.50, validated by the server. Other tutors remain $13.
+- Mobile tutor photos use full-portrait containment on phone/tablet layouts to prevent zoom cropping.
+- Built-in Admin > User Analytics dashboard for total/new/active users, sessions, page/click activity, tutor booking funnel, Story/Library/IELTS/lesson usage, language choices, device type, referral source, and approximate country/city when hosting headers provide it.
+- Analytics does not store raw IP addresses and hashes account identifiers used for signup/login telemetry.
+
+CHECK PASS 1 — STATIC / SECURITY
+16/16 targeted checks passed (node qa-v18-7-0.js). JavaScript syntax checks passed for server.js and app.js.
+
+CHECK PASS 2 — LOCAL RUNTIME / PERSISTENCE
+- Created a fresh test student account.
+- Saved XP + Spanish Story progress + IELTS progress.
+- Restarted server.
+- Logged back in successfully.
+- Confirmed saved Story and IELTS progress survived restart.
+- Confirmed analytics endpoint and admin analytics summary returned expected data.
+- Confirmed raw test email was NOT present in analytics.json.
+- Confirmed Nathan availability API returned $0.50 and Ounnoun returned $13.00.
+
+CHECK PASS 3 — POSTGRES ADAPTER
+- Started server with DATABASE_URL using a deterministic local pg-driver test double.
+- Server reported PostgreSQL storage ready.
+- Created an account, allowed PostgreSQL write-through, stopped server, deleted the local users file, restarted, and successfully logged in from PostgreSQL-backed state.
+- A real Render PostgreSQL network connection cannot be exercised until a Render database URL is supplied; deployment instructions are included in RENDER_POSTGRES_SETUP_V18.7.0.txt.
+
+FINAL NOTE
+The production database code is implemented. To actually use PostgreSQL on Render, create the Render Postgres database and set DATABASE_URL. Without DATABASE_URL, the app deliberately falls back to atomic local JSON storage for local development.

@@ -1,0 +1,12 @@
+iSpeak Confidence V18.5.0 — Teacher Messaging, Academy & Conduct Safeguards
+
+- Added Teacher Portal Messages section for students who have booked with that teacher.
+- Added learning-needs quick prompts and private in-platform message threads.
+- Added server-side teacher conduct monitoring for off-platform contact/payment/private-lesson solicitation patterns.
+- Escalation: first confirmed trigger = warning, second = teacher account suspended, third = teacher account terminated.
+- Conduct events are persisted on the teacher application record for admin/audit use.
+- Classroom teacher chat uses the same conduct monitoring.
+- Added Teacher Academy: Professional Teaching Foundations with six modules, final knowledge assessment, lesson-plan assessment, 80% pass requirement, and printable iSpeak Confidence Certified Tutor certificate.
+- Existing classroom safeguarding, booking-room ownership, payments, commission tiers and calendar logic retained.
+
+Important: keyword/context monitoring is a safeguarding aid, not a substitute for human review. Spoken lesson monitoring requires a transcript/audio analysis service; this build applies enforcement to text messages/classroom chat and retains disclosed classroom recording/monitoring infrastructure.
