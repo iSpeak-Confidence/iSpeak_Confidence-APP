@@ -39,7 +39,7 @@
   <div id="libraryHub" class="library-hub-screen">
     <div class="library-hero-head"><span class="eyebrow">YOUR READING ADVENTURE</span><h1>Choose your next story</h1><p>Original iSpeak story adventures or timeless classics — all inside your learning language.</p></div>
     <div class="library-paths">
-      <button id="openHeroesLibrary" class="library-path hero-series-path"><span class="path-kicker">ORIGINAL • 14 STORIES</span><div class="path-character-stack"><img src="assets/mascots/jess-v13-cutout.png" alt="Jess"><img src="assets/mascots/jack-cutout.png" alt="Jack Chen"><img src="assets/mascots/pedro-v13-cutout.png" alt="Pedro"></div><div class="path-copy"><h2>iSpeak Story Series</h2><p>Seven heroes. Two connected story adventures each. Follow every story from Volume 1 into Volume 2.</p><span>Explore Story Series →</span></div></button>
+      <button id="openHeroesLibrary" class="library-path hero-series-path"><span class="path-kicker">ORIGINAL • 14 STORIES</span><div class="path-character-stack two-characters"><img src="assets/mascots/jess-v13-cutout.png" alt="Jess"><img src="assets/mascots/jack-cutout.png" alt="Jack Chen"></div><div class="path-copy"><h2>iSpeak Story Series</h2><p>Seven heroes. Two connected story adventures each. Follow every story from Volume 1 into Volume 2.</p><span>Explore Story Series →</span></div></button>
       <button id="openClassicLibrary" class="library-path classic-library-path"><span class="path-kicker">TIMELESS READING</span><div class="classic-books-art"><i></i><i></i><i></i></div><div class="path-copy"><h2>Classic Library</h2><p>Complete classics, graded readers and famous stories for relaxed reading.</p><span>Explore Classics →</span></div></button>
     </div>
     <div class="library-feature-strip"><b>📖 Built for reading, not drilling.</b><span>Your place, bookmarks and reader settings are saved. No forced repetition queue.</span></div>
@@ -86,7 +86,7 @@
       </div>
       <button id="buddyCharacter" class="buddy-character idle" aria-label="Interact with mascot">
         <span class="buddy-shadow"></span>
-        <img id="buddyImage" class="buddy-image" src="assets/mascots/jess-v13.png" alt="Jess mascot"><span id="buddyAccessory" class="buddy-accessory" aria-hidden="true"></span>
+        <img id="buddyImage" class="buddy-image" src="assets/mascots/jess-v13-cutout.png" alt="Jess mascot"><span id="buddyAccessory" class="buddy-accessory" aria-hidden="true"></span>
       </button>
       <div class="buddy-nameplate"><h2 id="mascotName">Jess</h2><b id="mascotLang"></b><span id="status">Ready</span></div>
       <div class="side-actions">
@@ -128,7 +128,7 @@
     </aside>
     <aside class="mascot-profile-panel">
       <div class="profile-top">
-        <img id="profileMascotImage" src="assets/mascots/jess-v13.png" alt="Selected mascot">
+        <img id="profileMascotImage" src="assets/mascots/jess-v13-cutout.png" alt="Selected mascot">
         <div><h2 id="profileMascotName">Jess</h2><p id="profileMascotLanguage">🇬🇧 English</p></div>
         <span class="profile-heart">♥</span>
       </div>
@@ -146,9 +146,9 @@
     <div>
       <span class="eyebrow">REAL 1-ON-1 LESSONS</span>
       <h1>Meet your teachers</h1>
-      <p>Choose a teacher, check real available times, and book a lesson that fits your schedule.</p>
+      <p>Choose a teacher and message them about the day and time you want. The teacher confirms availability before sending payment.</p>
     </div>
-    <div class="teacher-head-actions"><button id="applyTeacherBtn" class="primary">Apply to Teach</button><button id="teacherPortalBtn" class="teacher-ghost">Teacher Portal</button><button id="studentScheduleBtn" class="teacher-ghost">📅 My Schedule</button><button id="studentClassroomBtn" class="teacher-ghost">🎥 Virtual Classroom</button><div class="teacher-special-offer"><small>🎁 NEW LEARNER OFFER</small><b>30% OFF your first trial lesson with any tutor</b><span>Use code <strong>WELCOMETOISPEAKCONFIDENCE</strong></span></div></div>
+    <div class="teacher-head-actions"><button id="applyTeacherBtn" class="primary">Apply to Teach</button><button id="teacherPortalBtn" class="teacher-ghost">Teacher Portal</button><button id="studentMessagesBtn" class="teacher-ghost">💬 My Messages</button><button id="studentScheduleBtn" class="teacher-ghost">📅 My Schedule</button><button id="studentClassroomBtn" class="teacher-ghost">🎥 Virtual Classroom</button><div class="teacher-special-offer"><small>FIXED LESSON PRICE</small><b>$13 USD · 50-minute private lesson</b><span>Message a teacher first to agree a time.</span></div></div>
   </div>
 
   <div class="teacher-showcase" id="teacherShowcase">
@@ -161,15 +161,15 @@
         <div class="teacher-cinema-copy">
           <span class="teacher-language-badge">🇮🇪 ENGLISH</span>
           <h2>Nathan</h2>
-          <p class="teacher-role">English Teacher</p><p class="teacher-rate" data-teacher-rate="Nathan">$0.50 beta test / 50-minute lesson</p>
+          <p class="teacher-role">English Teacher</p><p class="teacher-rate" data-teacher-rate="Nathan">$13 USD / 50-minute lesson</p>
           <div class="teacher-specialties">
             <span>Speaking</span><span>IELTS</span><span>Grammar</span><span>Confidence</span>
           </div>
           <p class="teacher-quick">6 years teaching experience • TEFL • IELTS Preparation • Primary Education Training</p>
           <div class="teacher-actions">
             <button class="teacher-ghost intro-btn" data-intro="Nathan">▶ Watch introduction</button>
-            <button class="teacher-ghost profile-btn" data-profile="Nathan">View profile</button>
-            <button class="primary book-btn" data-teacher="Nathan" data-subject="English">Book trial lesson</button>
+            <button class="teacher-ghost profile-btn" data-profile="Nathan">View profile</button><button class="teacher-ghost message-teacher-btn" data-message-teacher="Nathan">💬 Message teacher</button>
+            
           </div>
           <div class="teacher-availability-preview" data-availability-preview="Nathan"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
         </div>
@@ -188,8 +188,8 @@
           <p class="teacher-quick">Friendly private Khmer lessons focused on useful conversation and confident communication.</p>
           <div class="teacher-actions">
             <button class="teacher-ghost intro-btn" data-intro="Ounnoun">▶ Watch introduction</button>
-            <button class="teacher-ghost profile-btn" data-profile="Ounnoun">View profile</button>
-            <button class="primary book-btn" data-teacher="Ounnoun" data-subject="Khmer">Book trial lesson</button>
+            <button class="teacher-ghost profile-btn" data-profile="Ounnoun">View profile</button><button class="teacher-ghost message-teacher-btn" data-message-teacher="Ounnoun">💬 Message teacher</button>
+            
           </div>
           <div class="teacher-availability-preview" data-availability-preview="Ounnoun"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
         </div>
@@ -206,8 +206,8 @@
           <p class="teacher-quick">4+ years teaching • English Literature degree • Khmer & English beginner to advanced • Beginner Chinese</p>
           <div class="teacher-actions">
             <button class="teacher-ghost intro-btn" data-intro="Jessica">▶ Watch introduction</button>
-            <button class="teacher-ghost profile-btn" data-profile="Jessica">View profile</button>
-            <button class="primary book-btn" data-teacher="Jessica" data-subject="Khmer / English / Chinese">Book trial lesson</button>
+            <button class="teacher-ghost profile-btn" data-profile="Jessica">View profile</button><button class="teacher-ghost message-teacher-btn" data-message-teacher="Jessica">💬 Message teacher</button>
+            
           </div>
           <div class="teacher-availability-preview" data-availability-preview="Jessica"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
         </div>
@@ -224,8 +224,8 @@
           <p class="teacher-quick">Khmer & English homeschool teaching experience • English program graduate</p>
           <div class="teacher-actions">
             <button class="teacher-ghost intro-btn" data-intro="An Sievly">▶ Watch introduction</button>
-            <button class="teacher-ghost profile-btn" data-profile="An Sievly">View profile</button>
-            <button class="primary book-btn" data-teacher="An Sievly" data-subject="Khmer / English">Book trial lesson</button>
+            <button class="teacher-ghost profile-btn" data-profile="An Sievly">View profile</button><button class="teacher-ghost message-teacher-btn" data-message-teacher="An Sievly">💬 Message teacher</button>
+            
           </div>
           <div class="teacher-availability-preview" data-availability-preview="An Sievly"><div class="availability-preview-head"><b>Next available times</b><span>Live schedule</span></div><div class="availability-preview-slots"><small>Checking availability…</small></div></div>
         </div>
@@ -245,7 +245,7 @@
   <div class="teacher-trust-strip">
     <span>✓ Private 1-on-1 lessons</span>
     <span>✓ English & Khmer</span>
-    <span>✓ Tutor-set pricing from $10 / 50-min lesson</span>
+    <span>✓ Teacher-confirmed booking and payment</span>
     <span>✓ Requests confirmed by iSpeak Confidence</span>
   </div>
 </section>
@@ -320,7 +320,7 @@
 <button data-view="profile">Profile & Settings</button><button id="supportChatBtn">💬 Support</button></aside><div id="scrim"></div>
 
 <dialog id="modal"><button id="modalClose" class="modal-close" aria-label="Close dialog">×</button><div id="modalBody"></div></dialog>
-<dialog id="booking" class="booking-dialog"><button id="bookingClose" class="modal-close" aria-label="Close booking dialog">×</button><form id="bookingForm"><span class="eyebrow">LIVE TUTOR AVAILABILITY</span><h2 id="bookingTitle">Book a lesson</h2><p id="bookingSub"></p><div class="booking-layout"><section><h3>1. Choose a day</h3><div id="bookingDays" class="booking-days"></div><h3>2. Choose an available time</h3><div id="bookingSlots" class="booking-slots"><p class="booking-hint">Select a day to see times.</p></div><div id="bookingTimeZone" class="booking-timezone"></div></section><section class="booking-details"><h3>3. Your details</h3><label>Your name<input id="bookName" required></label><label>Email<input id="bookEmail" type="email" required></label><input id="bookDate" type="hidden" required><input id="bookTime" type="hidden" required><label>Lesson<select id="bookType"><option>Trial lesson — tutor rate</option><option>50 minutes — tutor rate</option></select></label><div class="special-offer"><b>🎁 New learner special offer</b><span>30% off your first trial lesson with code <strong>WELCOMETOISPEAKCONFIDENCE</strong></span></div><label>Promo code<div class="promo-row"><input id="bookPromo" placeholder="Enter promo code"><button type="button" class="secondary" id="applyPromo">Apply</button></div></label><div id="priceSummary" class="price-summary"></div><div id="bookingSelection" class="booking-selection">No time selected yet.</div><label>Message<textarea id="bookMessage" rows="3" placeholder="Goals, level, or anything your teacher should know."></textarea></label><button type="submit" class="primary wide" id="bookingSubmit" disabled>Continue to payment</button></section></div></form></dialog>
+<dialog id="booking" class="booking-dialog" hidden><form id="bookingForm"><input id="bookDate"><input id="bookTime"><input id="bookType" value="50-minute private lesson"><input id="bookName"><input id="bookEmail"><textarea id="bookMessage"></textarea><div id="bookingDays"></div><div id="bookingSlots"></div><div id="bookingTimeZone"></div><div id="priceSummary"></div><div id="bookingSelection"></div><button id="bookingSubmit" type="submit">Message teacher</button></form></dialog>
 <div id="toast"></div>
 <script src="curriculum-data.js"></script>
 <script src="curriculum-expansion-v17-4.js"></script>

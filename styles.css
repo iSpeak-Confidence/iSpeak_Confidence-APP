@@ -991,3 +991,300 @@ dialog.portal-page-dialog{background:linear-gradient(145deg,#061522 0%,#0a2636 5
 .story-divider{text-align:center;color:#0d9a9a;font-size:20px;margin:28px 0}.story-next-tease{font-style:italic;text-align:center;color:#617584!important}
 @media(max-width:700px){.story-profile{align-items:flex-start}.story-cover-symbol.large{width:90px;height:90px;flex-basis:90px;font-size:44px}.story-book-cover{height:330px}.story-toolbar{grid-template-columns:auto 1fr}.story-toolbar select{grid-column:1/-1;width:100%}.story-page{padding:30px 22px;min-height:0}}
 \n/* V18.7.0 mobile tutor-photo correction: show the full portrait instead of zoom-cropping it. */\n@media(max-width:900px){.teacher-cinema-card>img,.teacher-cinema-card[data-teacher-card="Jessica"]>img,.teacher-cinema-card[data-teacher-card="An Sievly"]>img{object-fit:contain!important;object-position:50% 0!important;background:#071725!important}}\n.analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.analytics-panel{border:1px solid #244e63;background:#082334;border-radius:18px;padding:16px}.analytics-panel h3{margin:0 0 10px}.analytics-row{display:flex;justify-content:space-between;gap:15px;padding:8px 0;border-bottom:1px solid #ffffff12}.analytics-row:last-child{border-bottom:0}.analytics-funnel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.analytics-funnel>div{border:1px solid #244e63;background:#082334;border-radius:14px;padding:13px;display:grid;gap:5px}.analytics-funnel b{font-size:22px}@media(max-width:700px){.analytics-grid{grid-template-columns:1fr}.analytics-funnel{grid-template-columns:repeat(2,1fr)}}\n
+
+/* V18.7.2 — booking/payment safety + larger student windows */
+.booking-dialog{width:min(1260px,96vw)!important;max-width:1260px!important;max-height:94vh!important}
+.booking-dialog #bookingForm{padding:38px 42px!important}.booking-layout{grid-template-columns:minmax(0,1.35fr) minmax(360px,.9fr)!important;gap:32px!important}
+.payment-wall.revolut-beta-wall{max-width:720px;margin:auto}.payment-wall.revolut-beta-wall .wide{margin-top:10px}.payment-confirm-ready{border:1px solid rgba(45,212,191,.55)!important}
+dialog.student-schedule-dialog{width:min(1280px,96vw)!important;max-width:1280px!important;height:min(900px,94vh)!important;max-height:94vh!important}
+dialog.student-schedule-dialog #modalBody{padding:42px!important;min-height:100%;overflow:auto}
+dialog.student-classroom-centre-dialog{width:min(1180px,96vw)!important;max-width:1180px!important;height:min(820px,92vh)!important;max-height:92vh!important}
+dialog.student-classroom-centre-dialog #modalBody{padding:42px!important;min-height:100%;overflow:auto}
+.student-schedule .schedule-grid{min-height:430px}.student-classroom-centre .classroom-centre-list{gap:14px}
+@media(max-width:760px){
+ .booking-dialog{width:98vw!important;max-width:none!important;height:96vh!important;max-height:96vh!important;border-radius:16px!important}
+ .booking-dialog #bookingForm{padding:26px 18px 36px!important;overflow:auto}.booking-layout{grid-template-columns:1fr!important;gap:18px!important}.booking-details{padding:14px!important}
+ dialog.student-schedule-dialog,dialog.student-classroom-centre-dialog{width:98vw!important;height:96vh!important;max-width:none!important;max-height:96vh!important;border-radius:16px!important}
+ dialog.student-schedule-dialog #modalBody,dialog.student-classroom-centre-dialog #modalBody{padding:28px 16px 34px!important}
+ .student-schedule .schedule-grid{min-height:360px}.schedule-day{min-height:70px!important}.schedule-week{font-size:11px}
+}
+
+
+/* V18.7.3 — payment claims are not bookings + genuinely larger student prejoin */
+dialog.classroom-dialog .classroom-prejoin{max-width:1320px!important;width:min(1320px,96vw)!important;padding:34px 36px 118px!important}
+dialog.classroom-dialog .prejoin-grid{grid-template-columns:minmax(0,1.45fr) minmax(390px,.8fr)!important;gap:28px!important}
+dialog.classroom-dialog .prejoin-preview{min-height:420px!important;aspect-ratio:auto!important}
+dialog.classroom-dialog .prejoin-settings{padding:24px!important}
+dialog.classroom-dialog .prejoin-settings h3{font-size:26px!important}
+dialog.classroom-dialog .prejoin-settings select{min-height:52px!important;font-size:15px!important}
+dialog.classroom-dialog .prejoin-actionbar{margin-left:-36px!important;margin-right:-36px!important;padding-left:36px!important;padding-right:36px!important}
+@media(max-width:900px){dialog.classroom-dialog .classroom-prejoin{width:100%!important;max-width:none!important;padding:18px 14px 132px!important}dialog.classroom-dialog .prejoin-grid{grid-template-columns:1fr!important;gap:16px!important}dialog.classroom-dialog .prejoin-preview{min-height:240px!important;aspect-ratio:16/9!important}dialog.classroom-dialog .prejoin-settings{padding:18px!important}dialog.classroom-dialog .prejoin-actionbar{margin-left:-14px!important;margin-right:-14px!important;padding-left:14px!important;padding-right:14px!important}}
+
+/* V18.7.4 — true full-screen student booking/schedule/classroom + stable focus mode */
+html:has(dialog[open]){overflow:hidden}
+body:has(dialog[open]){overflow:hidden}
+
+/* Student teacher booking is a real full-viewport workspace, not a small centred popup. */
+dialog.booking-dialog{
+  inset:0!important;
+  width:100vw!important;
+  max-width:none!important;
+  height:100dvh!important;
+  max-height:none!important;
+  margin:0!important;
+  border-radius:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+dialog.booking-dialog #bookingForm{
+  box-sizing:border-box;
+  width:100%;
+  height:100%;
+  max-width:1680px;
+  margin:0 auto;
+  padding:38px clamp(24px,4vw,72px) 48px!important;
+  overflow:auto!important;
+}
+dialog.booking-dialog .booking-layout{
+  grid-template-columns:minmax(0,1.45fr) minmax(420px,.75fr)!important;
+  gap:clamp(28px,4vw,64px)!important;
+  align-items:start;
+}
+dialog.booking-dialog .booking-details{position:sticky;top:0}
+
+/* Student schedule and classroom centre use the whole screen. */
+dialog.student-schedule-dialog,
+dialog.student-classroom-centre-dialog{
+  inset:0!important;
+  width:100vw!important;
+  max-width:none!important;
+  height:100dvh!important;
+  max-height:none!important;
+  margin:0!important;
+  border-radius:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+dialog.student-schedule-dialog #modalBody,
+dialog.student-classroom-centre-dialog #modalBody{
+  box-sizing:border-box;
+  width:100%;
+  height:100%;
+  max-width:1600px;
+  margin:0 auto;
+  padding:42px clamp(22px,4vw,70px)!important;
+  overflow:auto!important;
+}
+
+/* Pre-join and live classroom are full-screen from the start. */
+dialog.classroom-dialog{
+  inset:0!important;
+  width:100vw!important;
+  max-width:none!important;
+  height:100dvh!important;
+  max-height:none!important;
+  margin:0!important;
+  border-radius:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  background:#06111d!important;
+}
+dialog.classroom-dialog #modalBody{height:100%;padding:0!important;overflow:auto!important}
+dialog.classroom-dialog .classroom-prejoin{
+  box-sizing:border-box;
+  width:100%!important;
+  max-width:1600px!important;
+  min-height:100dvh!important;
+  margin:0 auto!important;
+  padding:32px clamp(18px,3.5vw,58px) 118px!important;
+}
+dialog.classroom-dialog .prejoin-grid{
+  grid-template-columns:minmax(0,1.55fr) minmax(420px,.72fr)!important;
+  gap:clamp(24px,3vw,54px)!important;
+}
+dialog.classroom-dialog .prejoin-preview{min-height:min(60vh,620px)!important}
+dialog.classroom-dialog .ispeak-classroom{
+  box-sizing:border-box;
+  width:100%!important;
+  max-width:none!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+}
+dialog.classroom-dialog .ispeak-classroom>main{height:calc(100dvh - 86px)!important;min-height:0!important}
+
+/* Stable CSS-only focus mode: no browser Fullscreen API, so no resize/flicker/glitch. */
+dialog.classroom-dialog.classroom-focus-mode .ispeak-classroom>main{grid-template-columns:1fr!important}
+dialog.classroom-dialog.classroom-focus-mode .classroom-tools{display:none!important}
+dialog.classroom-dialog.classroom-focus-mode .classroom-stage{height:100%!important}
+dialog.classroom-dialog.classroom-focus-mode .classroom-videos{height:calc(100dvh - 180px)!important}
+dialog.classroom-dialog.classroom-focus-mode .classroom-video-tile{min-height:0!important;height:100%!important}
+
+@media(max-width:900px){
+  dialog.booking-dialog #bookingForm{padding:22px 14px 34px!important}
+  dialog.booking-dialog .booking-layout{grid-template-columns:1fr!important;gap:18px!important}
+  dialog.booking-dialog .booking-details{position:static}
+  dialog.student-schedule-dialog #modalBody,
+  dialog.student-classroom-centre-dialog #modalBody{padding:24px 14px 34px!important}
+  dialog.classroom-dialog .classroom-prejoin{padding:18px 12px 132px!important}
+  dialog.classroom-dialog .prejoin-grid{grid-template-columns:1fr!important;gap:16px!important}
+  dialog.classroom-dialog .prejoin-preview{min-height:240px!important;aspect-ratio:16/9!important}
+  dialog.classroom-dialog .ispeak-classroom{overflow:auto!important}
+  dialog.classroom-dialog .ispeak-classroom>main{height:auto!important;min-height:calc(100dvh - 86px)!important}
+  dialog.classroom-dialog.classroom-focus-mode .classroom-videos{height:auto!important}
+}
+
+/* V18.7.6 — compact full-screen booking calendar */
+dialog.booking-dialog #bookingForm{max-width:1480px!important;padding-top:24px!important}
+dialog.booking-dialog .booking-layout{grid-template-columns:minmax(0,1.15fr) minmax(360px,.72fr)!important;gap:clamp(22px,3vw,44px)!important}
+.booking-calendar-panel{max-width:780px;width:100%;margin:0 auto}
+.booking-calendar{display:block!important;overflow:visible!important;padding:0!important}
+.booking-calendar-head{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:12px;margin:8px 0 12px;padding:10px 12px;border:1px solid rgba(104,165,190,.2);border-radius:16px;background:rgba(7,31,46,.7)}
+.booking-calendar-head>div{text-align:center;display:grid;gap:2px}.booking-calendar-head b{font-size:20px}.booking-calendar-head small{opacity:.62}
+.booking-calendar-head button{min-width:44px;min-height:44px;padding:0;font-size:24px;border-radius:12px}
+.booking-calendar-week,.booking-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.booking-calendar-week{padding:0 2px 6px}.booking-calendar-week b{text-align:center;font-size:11px;letter-spacing:.06em;opacity:.62}
+.booking-calendar-day,.booking-calendar-blank{aspect-ratio:1.08/1;min-height:62px;border-radius:13px}
+.booking-calendar-day{border:1px solid rgba(110,159,187,.2);background:#0b2232;color:#e8f7f9;padding:7px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.booking-calendar-day>span{font-size:18px;font-weight:850}.booking-calendar-day small{font-size:9px;opacity:.55;white-space:nowrap}
+.booking-calendar-day.has-times{background:#0c2b3c;border-color:rgba(39,209,193,.35);cursor:pointer}.booking-calendar-day.has-times:hover{transform:translateY(-1px);border-color:#27d1c1}
+.booking-calendar-day.active{background:#12515a;border-color:#35dfce;box-shadow:0 0 0 2px rgba(53,223,206,.14)}
+.booking-calendar-day:disabled{opacity:.3;cursor:default}.booking-calendar-day.has-times:disabled{opacity:.4}
+.booking-slots{grid-template-columns:repeat(4,minmax(0,1fr))!important;min-height:58px!important;margin-bottom:8px}
+.booking-slot{padding:10px 7px!important}
+@media(max-width:900px){
+ dialog.booking-dialog #bookingForm{padding:16px 12px 30px!important}
+ dialog.booking-dialog .booking-layout{grid-template-columns:1fr!important;gap:14px!important}
+ .booking-calendar-panel{max-width:680px}
+ .booking-calendar-head{grid-template-columns:42px 1fr 42px;margin-top:4px;padding:8px}.booking-calendar-head button{min-width:38px;min-height:38px}
+ .booking-calendar-week,.booking-calendar-grid{gap:4px}.booking-calendar-day,.booking-calendar-blank{min-height:48px;border-radius:10px}.booking-calendar-day>span{font-size:16px}.booking-calendar-day small{font-size:8px}
+ .booking-slots{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .booking-details{position:static!important}
+}
+@media(max-width:430px){.booking-calendar-day,.booking-calendar-blank{min-height:43px}.booking-calendar-day small{display:none}.booking-slots{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* V18.8.1 targeted visual cleanup */
+.path-character-stack.two-characters img:nth-child(1){left:5%;z-index:3}
+.path-character-stack.two-characters img:nth-child(2){left:40%;right:auto;height:245px;z-index:2}
+
+/* V18.8.2 — exact three-image visual fixes */
+.buddy-character[data-mascot="jess"] .buddy-image{
+  border-radius:0!important;
+  border:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  filter:drop-shadow(0 15px 16px rgba(0,0,0,.28))!important;
+}
+
+/* Library: exactly two mascots, both fully visible and kept on the left/centre of the art area. */
+.path-character-stack.two-characters{
+  right:2%!important;
+  top:30px!important;
+  width:58%!important;
+  height:245px!important;
+}
+.path-character-stack.two-characters img:nth-child(1){
+  left:8%!important;
+  right:auto!important;
+  height:205px!important;
+  max-width:42%!important;
+}
+.path-character-stack.two-characters img:nth-child(2){
+  left:48%!important;
+  right:auto!important;
+  height:220px!important;
+  max-width:45%!important;
+}
+
+/* V18.8.3 exact visual repair */
+.path-character-stack.two-characters{
+  right:0!important;
+  top:28px!important;
+  width:58%!important;
+  height:250px!important;
+  overflow:visible!important;
+}
+.path-character-stack.two-characters img{
+  object-fit:contain!important;
+  bottom:0!important;
+}
+.path-character-stack.two-characters img:nth-child(1){
+  left:2%!important;
+  right:auto!important;
+  height:215px!important;
+  max-width:44%!important;
+}
+.path-character-stack.two-characters img:nth-child(2){
+  left:45%!important;
+  right:auto!important;
+  height:225px!important;
+  max-width:46%!important;
+}
+
+/* V18.8.5 teacher-led booking workflow */
+.booking-chat-log{max-height:42vh;overflow:auto;display:grid;gap:10px;margin:16px 0;padding:10px;background:#f7fbfc;border-radius:18px}
+.teacher-chat-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.teacher-thread-card{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;padding:16px;margin:10px 0;border:1px solid #d9e7ea;border-radius:16px;background:#fff}
+.teacher-thread-card div{display:grid;gap:4px}.teacher-thread-card span,.teacher-thread-card small{color:#5e7180}
+.payment-check{display:flex!important;gap:10px;align-items:flex-start;margin:16px 0;padding:14px;background:#fff8df;border:1px solid #efd57d;border-radius:14px}
+.payment-check input{width:auto!important;margin-top:3px}
+.open-payment-link{margin:8px 0}
+@media(max-width:700px){.teacher-chat-actions{grid-template-columns:1fr}.teacher-thread-card{align-items:flex-start;gap:10px}}
+
+/* V18.8.6 mobile tutor listing polish */
+@media(max-width:900px){
+  .teacher-cinema-card>img,
+  .teacher-cinema-card[data-teacher-card="Jessica"]>img,
+  .teacher-cinema-card[data-teacher-card="An Sievly"]>img{
+    width:100%!important;
+    height:min(52vh,390px)!important;
+    object-fit:contain!important;
+    object-position:50% 0!important;
+    padding:0!important;
+    background:#071725!important;
+  }
+}
+@media(max-width:520px){
+  .teacher-cinema-card>img,
+  .teacher-cinema-card[data-teacher-card="Jessica"]>img,
+  .teacher-cinema-card[data-teacher-card="An Sievly"]>img{
+    height:330px!important;
+  }
+}
+
+/* V18.8.6 analytics visual summaries */
+.analytics-chart-row{padding:3px 0 8px}
+.analytics-bar{height:8px;background:#102f42;border-radius:999px;overflow:hidden}
+.analytics-bar i{display:block;height:100%;min-width:4px;background:linear-gradient(90deg,#20d6c7,#72e6df);border-radius:999px}
+.analytics-conversion{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 18px}
+.analytics-conversion>div{display:grid;gap:4px;padding:14px;border:1px solid #244e63;background:#082334;border-radius:14px}
+.analytics-conversion span{color:#a9c3d1;font-size:12px;font-weight:800}
+.analytics-conversion b{font-size:24px;color:#7ff8ef}
+@media(max-width:700px){.analytics-conversion{grid-template-columns:1fr}}
+
+/* V18.8.7 full roadmap update */
+.library-ai-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 20px}
+.library-ai-card{display:grid;gap:6px;text-align:left;padding:18px;border:1px solid #cce5e5;border-radius:18px;background:linear-gradient(135deg,#effcfb,#fff);box-shadow:0 8px 24px rgba(18,87,92,.08)}
+.library-ai-card b{font-size:18px}.library-ai-card span{color:#55717a}
+.helper-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.helper-result{margin-top:16px;padding:16px;border-radius:16px;background:#f3fbfb;border:1px solid #cde8e7;white-space:normal}
+.scenario-card{padding:18px;margin:12px 0;border-radius:18px;background:#102f42;color:white;font-weight:800}
+.teacher-ui-language{padding:10px 14px;background:#eef9f8;border-bottom:1px solid #d5e8e6}.teacher-ui-language label{display:flex;align-items:center;gap:10px;justify-content:flex-end}.teacher-ui-language select{width:auto}
+.oversight-list{display:grid;gap:10px}.oversight-list article{display:flex;justify-content:space-between;gap:12px;padding:14px;border:1px solid #dce8ec;border-radius:14px}.oversight-list article div{display:grid;gap:4px}.oversight-list .needs-reply{border-color:#efb64c;background:#fff9e8}.oversight-list .needs-reply strong{color:#a15c00}
+@media(max-width:700px){.library-ai-tools,.helper-grid{grid-template-columns:1fr}.teacher-ui-language label{justify-content:stretch;flex-direction:column;align-items:stretch}}
+
+
+/* V18.8.7 visible full-update feature wiring */
+.library-ai-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 20px}.library-ai-card{padding:18px;border-radius:18px;border:1px solid rgba(72,205,195,.28);background:rgba(8,42,56,.88);color:#eefcfc;text-align:left;display:grid;gap:6px}.library-ai-card b{font-size:18px}.library-ai-card span{opacity:.78}.student-message-list{display:grid;gap:10px;margin:18px 0}.student-message-thread{display:flex;justify-content:space-between;gap:16px;align-items:center;text-align:left;padding:14px;border-radius:14px;border:1px solid rgba(103,169,190,.24);background:#0a2738;color:#effcff}.student-message-thread>div{display:grid;gap:4px}.student-message-thread span,.student-message-thread small{opacity:.7}.teacher-ui-language{display:grid;gap:5px;font-size:12px;font-weight:800}.teacher-ui-language select{min-width:150px}.teacher-chat-actions{display:flex;flex-wrap:wrap;gap:8px}@media(max-width:700px){.library-ai-tools{grid-template-columns:1fr}.student-message-thread{align-items:flex-start;flex-direction:column}}
+
+/* V18.8.11 publish-readiness repair */
+.teacher-head-tools{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;justify-content:flex-end}.teacher-flag-switch{position:relative}.teacher-flag-button{display:flex;align-items:center;gap:8px;border:1px solid #cbdde4;background:#fff;border-radius:12px;padding:8px 11px;color:#0b2940;font-weight:800}.teacher-flag-button span{font-size:24px}.teacher-flag-button small{font-size:12px}.teacher-flag-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:190px;padding:7px;background:#fff;border:1px solid #c9dce3;border-radius:14px;box-shadow:0 16px 34px rgba(3,24,39,.2);display:grid;gap:4px}.teacher-flag-menu[hidden]{display:none}.teacher-flag-menu button{display:flex;align-items:center;gap:10px;text-align:left;border:0;background:transparent;border-radius:9px;padding:8px 10px;color:#0b2940}.teacher-flag-menu button:hover,.teacher-flag-menu button.active{background:#e7f8f7}.teacher-flag-menu span{font-size:22px}.academy-modules article.complete{border-color:#98d9d4;background:#f0fbfa}.academy-modules article h4{margin:2px 0;font-size:16px}.academy-modules article small{color:#149d98;font-weight:800}.academy-certificate-preview{position:relative}.academy-certificate-preview img{width:72px;height:72px;object-fit:contain;margin-bottom:8px}.academy-certificate-preview .certificate-meta{width:100%;display:flex;justify-content:space-between;gap:15px;margin-top:20px;border-top:1px solid #cbdcdb;padding-top:12px}.certificate-name-editor{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin:16px 0;padding:14px;border:1px solid #cbdde4;border-radius:14px;background:#f7fbfc}.certificate-name-editor label{margin:0}.classroom-entry-note{display:block;margin-top:6px;color:#627b89}.classroom-launch.locked-entry{opacity:.65;cursor:not-allowed}.next-classroom-card strong{display:block;margin-top:7px;color:#0b7c78}.teacher-portal[dir=rtl] .teacher-flag-menu{right:auto;left:0}@media(max-width:760px){.teacher-head-tools{justify-content:flex-start}.certificate-name-editor{grid-template-columns:1fr}.academy-certificate-preview .certificate-meta{flex-direction:column;align-items:center}.teacher-flag-menu{right:auto;left:0}}
+
+/* V18.8.12 targeted certificate/admin/test-room polish */
+.pro-tutor-cert-preview{position:relative;overflow:hidden;min-height:560px!important;padding:42px 68px 34px!important;background:linear-gradient(135deg,#fffdfa 0%,#f9fcfb 55%,#f4f8f8 100%)!important;border:3px solid #0b2940!important;outline:2px solid #c79a43;outline-offset:-14px}
+.pro-tutor-cert-preview:before{content:"";position:absolute;inset:24px;border:1px solid rgba(21,159,154,.45);pointer-events:none}.pro-cert-corner{position:absolute;width:180px;height:180px;border-color:#c79a43}.pro-cert-corner.top-left{left:-56px;top:-56px;border-right:6px solid #c79a43;border-bottom:6px solid #c79a43;transform:rotate(45deg)}.pro-cert-corner.bottom-right{right:-56px;bottom:-56px;border-left:6px solid #c79a43;border-top:6px solid #c79a43;transform:rotate(45deg)}
+.pro-cert-ribbon{position:absolute;right:48px;top:38px;width:88px;height:118px;background:#0b2940;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid #c79a43;clip-path:polygon(0 0,100% 0,100% 82%,50% 100%,0 82%);z-index:2}.pro-cert-ribbon b{font:800 30px Georgia!important;color:#f2c66f!important;margin:0!important}.pro-cert-ribbon span{font-size:11px!important;color:#fff!important;letter-spacing:1px!important}
+.pro-cert-brand{display:flex;align-items:center;gap:12px;position:absolute;left:52px;top:38px;text-align:left}.pro-cert-brand img{width:58px!important;height:58px!important;margin:0!important}.pro-cert-brand div{display:grid}.pro-cert-brand b{font:800 20px Arial!important;margin:0!important;color:#0b2940!important}.pro-cert-brand small{font-size:10px!important;letter-spacing:1.3px;color:#159f9a!important;text-transform:uppercase}
+.pro-cert-kicker{margin-top:84px;display:block!important;font:700 24px Georgia!important;letter-spacing:3px!important;color:#b4832f!important}.pro-cert-certifies{margin-top:26px!important;font-size:11px!important;letter-spacing:2px!important;color:#657783!important}.pro-cert-name{font:italic 700 42px Georgia!important;color:#0b2940!important;margin:10px 0 2px!important;border-bottom:1px solid #d9c28e;padding:0 45px 7px}.pro-tutor-cert-preview p{margin:12px 0 4px;color:#63727b}.pro-tutor-cert-preview>strong{font:700 34px Georgia!important;color:#0b2940!important;margin:4px 0 9px!important}.pro-tutor-cert-preview>em{max-width:650px;line-height:1.45;font-size:13px!important;color:#596c77!important}
+.pro-cert-credentials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 18px;margin:22px auto 12px;max-width:640px;text-align:left}.pro-cert-credentials span{font-size:12px!important;letter-spacing:0!important;color:#314d5c!important;font-weight:700}.pro-cert-title{margin:16px auto 6px;padding:8px 22px;border-top:1px solid #159f9a;border-bottom:1px solid #159f9a;color:#159f9a;font-weight:900;letter-spacing:2px;font-size:15px}.pro-tutor-cert-preview .certificate-meta{margin-top:20px!important}.pro-tutor-cert-preview .certificate-meta span{display:grid;gap:4px;letter-spacing:0!important;color:#0b2940!important}.pro-tutor-cert-preview .certificate-meta small{font-size:9px!important;letter-spacing:1.4px;color:#71838d!important}.pro-tutor-cert-preview .certificate-meta b{font:700 12px Arial!important;margin:0!important;color:#0b2940!important}.teacher-certificate-name-editor{max-width:760px;margin:12px auto 22px}.professional-teacher-certificate .academy-certificate-preview{margin-top:0}.professional-teacher-certificate .certificate-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.professional-teacher-certificate .certificate-actions button{min-width:240px}
+@media(max-width:760px){.pro-tutor-cert-preview{padding:110px 28px 28px!important}.pro-cert-brand{left:28px;top:34px}.pro-cert-ribbon{right:24px;top:30px}.pro-cert-kicker{margin-top:30px;font-size:18px!important}.pro-cert-name{font-size:32px!important;padding:0 12px 6px}.pro-tutor-cert-preview>strong{font-size:25px!important}.pro-cert-credentials{grid-template-columns:1fr}.pro-tutor-cert-preview .certificate-meta{flex-direction:column}.professional-teacher-certificate .certificate-actions{display:grid}}

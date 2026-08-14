@@ -1,0 +1,37 @@
+iSpeak Confidence V18.8.12 — Targeted Final Fix
+
+Only the requested areas were changed from V18.8.11:
+
+1. Professional Tutor Certificate
+- Rebuilt the Teacher Academy certificate preview into a premium iSpeak Confidence professional certificate.
+- Clearly states Certificate of Professional Achievement, 120-Hour Professional Tutor Course and Certified Professional Tutor.
+- Shows 20 professional modules, applied teaching tasks, detailed 50-minute lesson plan and 80%+ final assessment standard.
+- Certificate remains locked until all 20 modules, final score >=80%, and lesson plan requirement are complete.
+- After unlocking, the tutor can type the exact professional name to appear on the certificate.
+- Download creates a high-resolution personalized PNG certificate with certificate ID and award date.
+- Print / Save as PDF remains available.
+- Existing student certificate name-entry and download flow was preserved.
+
+2. Admin access
+- Removed the separate Admin PIN screen from the UI.
+- Nathan/Ounnoun owner access is authenticated through the approved teacher account and opens the full Admin Portal with a short-lived owner admin session.
+- Fixed an old missing MIN_TEACHER_RATE constant that could crash the Admin teacher/application list.
+
+3. Teacher test room
+- Added an explicit teacher test-room launcher using the approved teacher session.
+- Runtime verified GET access to the private teacher test classroom.
+
+4. Student display names/privacy
+- Teacher-facing bookings, classroom labels, student lists and message threads resolve the learner's saved display name/username from the student account.
+- Generic legacy "Student" is replaced when a real display name exists.
+- Student email/ownerEmail remain stripped from teacher booking responses.
+- Admin functionality retains the privileged information it needs.
+
+QA
+- app.js syntax: PASS
+- server.js syntax: PASS
+- V18.8.12 targeted QA: 14/14 PASS
+- Runtime teacher test room: PASS
+- Runtime owner admin session: PASS
+- Runtime full admin dashboard API: PASS
+- Runtime student display-name privacy: PASS
