@@ -718,7 +718,7 @@ if(body.action==='teacherCreateBooking'){const studentEmail=resolveTeacherStuden
  }
  return false;
 }
-const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml; charset=utf-8','.mp4':'video/mp4','.webmanifest':'application/manifest+json','.json':'application/json','.txt':'text/plain; charset=utf-8'};
+const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml; charset=utf-8','.mp4':'video/mp4','.webmanifest':'application/manifest+json','.json':'application/json','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8'};
 const server=http.createServer(async(req,res)=>{
  let pathname;try{pathname=decodeURIComponent(url.parse(req.url).pathname)}catch{return send(res,400,'Bad request','text/plain')}
  res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');res.setHeader('X-Frame-Options','SAMEORIGIN');
