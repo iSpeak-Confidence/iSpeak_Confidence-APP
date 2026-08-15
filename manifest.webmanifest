@@ -1,7 +1,7 @@
 {
   "name": "iSpeak Confidence",
-  "short_name": "iSpeak",
-  "description": "Language learning, speaking practice and private tutoring with iSpeak Confidence.",
+  "short_name": "iSpeak Confidence",
+  "description": "Learn English, Chinese, Khmer, Spanish, French, Japanese or Arabic for free. Practice real conversations, build speaking confidence and prepare for IELTS.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

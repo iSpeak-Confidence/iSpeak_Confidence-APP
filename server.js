@@ -199,7 +199,7 @@ function publicState(raw){
  const out={};for(const k of allowed)if(k in raw)out[k]=raw[k];
  return out;
 }
-const CHAT_MODEL=process.env.GEMINI_CHAT_MODEL||'gemini-2.5-flash';
+const CHAT_MODEL=process.env.GEMINI_CHAT_MODEL||'gemini-3.6-flash';
 const CONDUCT_MODEL=process.env.GEMINI_CONDUCT_MODEL||CHAT_MODEL;
 const AI_CONDUCT_ENABLED=String(process.env.AI_CONDUCT_MONITORING||'true').toLowerCase()!=='false';
 const TTS_MODEL=process.env.GEMINI_TTS_MODEL||'gemini-3.1-flash-tts-preview';
@@ -498,7 +498,7 @@ async function handleAPI(req,res,pathname){
  if(pathname==='/api/why-wrong'&&req.method==='POST'){
   const au=authUser(req);if(!au)return json(res,401,{error:'Student login required.'});let body;try{body=JSON.parse(await readBody(req)||'{}')}catch{return json(res,400,{error:'Invalid request.'})}const key=process.env.GEMINI_API_KEY;if(!key)return json(res,503,{error:'Explanation AI is not configured yet.'});const q=String(body.question||'').slice(0,3000),ans=String(body.answer||'').slice(0,3000),target=String(body.target||'').slice(0,3000),lang=String(body.language||'English').slice(0,60);const prompt=`Explain briefly in ${lang} why the learner's answer is wrong or less natural. Teach the grammar/usage, show one better version, then ask them to try again. Do not over-explain. Question/context: ${q}. Learner answer: ${ans}. Expected idea/example: ${target}`;try{const r=await geminiGenerate(key,CHAT_MODEL,{contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:.1,maxOutputTokens:450}}),d=await r.json();return json(res,r.ok?200:r.status,r.ok?{reply:d?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('').trim()}:{error:d?.error?.message||'Could not explain this answer.'})}catch{return json(res,500,{error:'Could not explain this answer.'})}
  }
- if(pathname==='/api/status'&&req.method==='GET')return json(res,200,{aiConfigured:Boolean(process.env.GEMINI_API_KEY),provider:'Gemini',model:CHAT_MODEL,speechInput:'Gemini audio transcription',tts:TTS_MODEL,version:'V18.8.11',storage:POSTGRES_ENABLED?'PostgreSQL':'JSON fallback',nathanBetaPrice:false?STUDENT_LESSON_PRICE:null,bookingEmailConfigured:Boolean(process.env.SMTP_USER&&process.env.SMTP_APP_PASSWORD),emailConfigured:Boolean(process.env.SMTP_USER&&process.env.SMTP_APP_PASSWORD)});
+ if(pathname==='/api/status'&&req.method==='GET')return json(res,200,{aiConfigured:Boolean(process.env.GEMINI_API_KEY),provider:'Gemini',model:CHAT_MODEL,speechInput:'Gemini audio transcription',tts:TTS_MODEL,storage:POSTGRES_ENABLED?'PostgreSQL':'JSON fallback',nathanBetaPrice:false?STUDENT_LESSON_PRICE:null,bookingEmailConfigured:Boolean(process.env.SMTP_USER&&process.env.SMTP_APP_PASSWORD),emailConfigured:Boolean(process.env.SMTP_USER&&process.env.SMTP_APP_PASSWORD)});
  if(pathname==='/api/verify'&&req.method==='GET'){
    const key=process.env.GEMINI_API_KEY;if(!key)return json(res,503,{ok:false,error:'GEMINI_API_KEY is not configured.'});
    try{
@@ -731,7 +731,7 @@ const server=http.createServer(async(req,res)=>{
 let activePort=PORT;
 function listenOn(port){
  activePort=port;
- server.listen(port,()=>{console.log(`\niSpeak Confidence V18.8.12: http://localhost:${port}`);console.log('Revolut payment link: READY — single fixed $13 checkout link');console.log(process.env.GEMINI_API_KEY?`Gemini Smart AI: READY (${CHAT_MODEL})`:'Gemini Smart AI: OFF — add GEMINI_API_KEY to .env');console.log(process.env.GEMINI_API_KEY&&AI_CONDUCT_ENABLED?'Classroom AI conduct monitoring: READY':'Classroom AI conduct monitoring: FALLBACK RULES ONLY');console.log(process.env.SMTP_USER&&process.env.SMTP_APP_PASSWORD?'Certificate Email: READY':'Certificate Email: OFF — add SMTP_USER and SMTP_APP_PASSWORD to .env');console.log('Press Ctrl+C to stop.\n')});
+ server.listen(port,()=>{console.log(`\niSpeak Confidence: http://localhost:${port}`);console.log('Revolut payment link: READY — single fixed $13 checkout link');console.log(process.env.GEMINI_API_KEY?`Gemini Smart AI: READY (${CHAT_MODEL})`:'Gemini Smart AI: OFF — add GEMINI_API_KEY to .env');console.log(process.env.GEMINI_API_KEY&&AI_CONDUCT_ENABLED?'Classroom AI conduct monitoring: READY':'Classroom AI conduct monitoring: FALLBACK RULES ONLY');console.log(process.env.SMTP_USER&&process.env.SMTP_APP_PASSWORD?'Certificate Email: READY':'Certificate Email: OFF — add SMTP_USER and SMTP_APP_PASSWORD to .env');console.log('Press Ctrl+C to stop.\n')});
 }
 server.on('error',e=>{if(e.code==='EADDRINUSE'){console.error(`Port ${PORT} is already in use. Close the older iSpeak server, then run start-v18-8-12.bat again.`);process.exitCode=1}else throw e});
 initializePostgres().then(()=>listenOn(PORT)).catch(e=>{console.error('[iSpeak] Startup failed:',e.message);process.exitCode=1});
