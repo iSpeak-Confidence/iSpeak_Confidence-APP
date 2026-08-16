@@ -1,0 +1,20 @@
+iSpeak Confidence V18.8.6 — Next Update QA
+
+server.js: PASS
+app.js: PASS
+sw.js: PASS
+Nathan beta price server-controlled: PASS
+Admin analytics dashboard: PASS
+Teacher-led booking analytics: PASS
+Mobile tutor photos protected: PASS
+Teacher booking workflow preserved: PASS
+Exact classroom background preserved: PASS
+Library assets preserved: PASS
+
+Changes:
+- Expanded admin analytics to include teacher-chat and payment-link funnel activity.
+- Added visual analytics bars and booking conversion percentages.
+- Preserved server-controlled Nathan $0.50 beta price while other tutors remain unchanged.
+- Hardened Available Teachers portrait rendering on phone/tablet to prevent zoom cropping.
+- Preserved V18.8.5 teacher-led booking/payment/scheduling workflow.
+- Preserved the exact approved classroom background and current Library/character assets.

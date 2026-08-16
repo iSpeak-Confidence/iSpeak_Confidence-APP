@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.0
+- Restored the missing Forgot Password UI used by both student and teacher login.
+- Email reset uses a 6-digit code, 10-minute expiry, max attempts, one-time use, and new-password confirmation.
+- Reset state is stored with the server account so Render restarts/multiple requests do not depend on an in-memory Map.
+- The UI no longer claims an email was sent when SMTP delivery actually failed.
+- Password reset invalidates the previous login token.
+- Non-English classic shelves remain expanded into multiple offline reader volumes.
+- French, Spanish, Mandarin, Japanese, Arabic and Khmer classic shelves now expose more than one difficulty tier instead of every entry being Advanced.
+- Existing English library and previously completed localization/certificate work preserved.

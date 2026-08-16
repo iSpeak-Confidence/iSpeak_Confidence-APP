@@ -1,0 +1,7 @@
+iSpeak Confidence V18.7.9 — Provider-Verified Revolut Payments
+
+Replaced the V18.7.8 beta auto-finish shortcut with server-to-server verification.
+Every checkout now creates a unique Revolut Merchant API order tied internally to the iSpeak booking.
+Bookings remain payment_pending until Revolut itself reports completed and iSpeak verifies order ID, server-calculated amount and currency.
+Added signed webhook handling with timestamp replay protection and direct order-status verification on customer return.
+Removed the fixed Revolut Payment Link from checkout logic.

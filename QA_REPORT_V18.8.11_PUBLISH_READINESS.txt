@@ -1,0 +1,25 @@
+iSpeak Confidence V18.8.11 — Publish Readiness QA
+
+PASS 35/35 targeted release-integrity checks.
+PASS app.js syntax.
+PASS server.js syntax.
+PASS server startup on isolated runtime/data directory.
+PASS /api/status returns V18.8.11.
+PASS legacy direct checkout returns HTTP 410.
+PASS legacy direct student booking returns HTTP 410.
+PASS legacy dynamic Revolut order creation returns HTTP 410.
+PASS exact single $13 payment link configuration.
+PASS no active trial/promo/beta-price wording in app.js/index.html/server.js.
+PASS teacher/student classroom windows encoded server-side and exposed to UI.
+PASS Teacher Academy 20-module renderer + styled card layout + visible certificate preview.
+PASS personalized teacher and student certificate download paths.
+PASS 7-language teacher flag menu and translation mapping.
+PASS student email removed from teacher portal booking/message payloads.
+
+Important deployment dependencies:
+- Gemini features require GEMINI_API_KEY.
+- Certificate email requires SMTP_USER and SMTP_APP_PASSWORD.
+- Production account/booking persistence should use DATABASE_URL or persistent DATA_DIR.
+- The fixed Revolut payment link itself does not require Revolut Merchant API credentials.
+
+This is a comprehensive automated/static/runtime release audit, not a mathematical guarantee that no defect can ever occur on every browser/device or production environment. A final real-device acceptance test after deployment is still recommended before public promotion.

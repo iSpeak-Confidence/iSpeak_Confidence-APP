@@ -1,0 +1,39 @@
+iSpeak Confidence V18.8.7 — Full Update QA
+
+Static/runtime status
+- server.js syntax: PASS
+- app.js syntax: PASS
+- sw.js syntax: PASS
+- package version/name aligned to V18.8.7: PASS
+- npm qa mapped to qa-v18-8-7.js: PASS
+- V18.8.7 integrity suite: 17/17 PASS
+- runtime server boot on alternate test port: PASS
+- homepage HTTP response: 200 PASS
+- privacy page HTTP response: 200 PASS
+
+Feature integrity
+- country + IANA timezone registration: PASS
+- permanent teacher chats: PASS
+- admin message oversight: PASS
+- booking audit trail: PASS
+- 30-minute pending-payment hold: PASS
+- teacher chat payment + schedule workflow: PASS
+- Make Me Speak: PASS
+- Why was I wrong: PASS
+- Homework Helper text/photo: PASS
+- Homework Helper 7 languages: PASS
+- teacher UI language separation: PASS
+- V18.8.6 analytics preserved: PASS
+- mobile teacher photo fix preserved: PASS
+- approved classroom preserved: PASS
+- student schedule preserved: PASS
+- library/character assets preserved: PASS
+
+Important implementation notes
+- Teacher/student chats remain server-persisted.
+- Pending-payment slot holds expire after 30 minutes and are converted when the teacher confirms the paid lesson.
+- Homework Helper accepts typed homework and PNG/JPEG/WebP photo uploads and uses Gemini when configured.
+- Make Me Speak accepts open-ended answers rather than one fixed sentence.
+- Teacher interface language is stored separately from teaching/spoken languages.
+- Existing approved classroom, Library, characters, analytics, mobile tutor-photo fix and teacher-led payment flow were preserved.
+- Live external services remain configuration-dependent: Revolut Merchant API/webhook, Gemini and certificate email require their environment variables.

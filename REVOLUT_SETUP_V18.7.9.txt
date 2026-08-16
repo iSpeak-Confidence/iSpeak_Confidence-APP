@@ -1,0 +1,34 @@
+iSpeak Confidence V18.7.9 — VERIFIED REVOLUT SETUP
+
+No fixed Payment Link is used. No browser action can mark a booking paid.
+
+Required server environment variable:
+REVOLUT_SECRET_API_KEY=<your Merchant API secret key>
+
+Recommended production variables:
+PUBLIC_BASE_URL=https://your-ispeak-domain.example
+REVOLUT_WEBHOOK_SIGNING_SECRET=<signing secret returned by Revolut when webhook is registered>
+REVOLUT_API_VERSION=2026-03-12
+
+For Sandbox testing:
+REVOLUT_API_BASE=https://sandbox-merchant.revolut.com
+REVOLUT_SECRET_API_KEY=<sandbox secret key>
+
+Production webhook URL:
+https://your-ispeak-domain.example/api/payment/revolut/webhook
+Subscribe at minimum to ORDER_COMPLETED. Also configure failed/cancelled events as appropriate.
+
+SECURITY RULES IN THIS BUILD
+- Server creates a unique Revolut order for each lesson.
+- Server calculates amount/currency; browser cannot choose them.
+- Booking starts payment_pending.
+- Closing checkout does not confirm a booking.
+- Return from checkout does not confirm a booking.
+- iSpeak retrieves the Revolut order server-to-server and verifies order ID, amount, currency and completed state.
+- Webhook requests require valid HMAC-SHA256 signature and a timestamp within 5 minutes.
+- Only verified completed orders become confirmed/paid.
+- Pending bookings reserve the selected slot to reduce double-booking races.
+- The V18.7.8 close-tab auto-confirm shortcut is disabled.
+
+IMPORTANT
+A normal Revolut Pro GUI Payment Link cannot provide this verification. This build requires Merchant API access/credentials exposed by your Revolut setup. If your Pro account does not expose a Merchant API secret key, the app intentionally refuses to create a paid booking rather than guessing.

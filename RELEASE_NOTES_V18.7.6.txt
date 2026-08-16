@@ -1,0 +1,9 @@
+iSpeak Confidence V18.7.6
+
+- Full-screen booking remains enabled, but date selection now uses a compact month calendar.
+- Calendar opens on the current month, supports previous/next month navigation, and only available dates can be selected.
+- Time buttons appear only for the selected available day.
+- Nathan beta checkout updated to the new Revolut test-payment link supplied 14 Aug 2026.
+- Server-controlled checkout URL and browser fallback both use the same new link.
+- Non-English classic shelves expanded into non-overlapping offline reader volumes using the already bundled legally-cleared source texts; no placeholder book cards and no repeated sections between volumes.
+- English shelf remains unchanged.

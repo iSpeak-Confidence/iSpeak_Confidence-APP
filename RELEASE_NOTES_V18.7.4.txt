@@ -1,0 +1,5 @@
+iSpeak Confidence V18.7.4
+- Student booking, schedule and classroom dialogs now use the full viewport.
+- Classroom prejoin and live classroom start full-screen inside the app.
+- Replaced browser Fullscreen API with stable CSS focus mode to prevent screen resize/flicker glitches.
+- Payment Booking ID remains internal to iSpeak; the app does not ask students to type it.

@@ -1,0 +1,9 @@
+iSpeak Confidence V18.7.8 — Revolut Pro Beta Auto-Finish
+
+- Keeps the V18.7.7 full Library-interface localization and localized certificate system.
+- Nathan's $0.50 Revolut Pro beta checkout opens in one dedicated payment window.
+- The complete lesson selection is saved before Revolut opens.
+- After the student completes payment and closes the Revolut payment window, iSpeak automatically finalizes the saved lesson as confirmed/paid and adds it to the student's booking state.
+- The old second-step “I paid — request verification” action was removed from the beta flow.
+- If the browser/app is refreshed during payment, the saved lesson can be resumed without selecting the teacher/date/time again.
+- Safety scope: the auto-finish shortcut is server-restricted to Nathan's $0.50 beta quote only. Normal-price public payments still require a provider-verified integration before launch.

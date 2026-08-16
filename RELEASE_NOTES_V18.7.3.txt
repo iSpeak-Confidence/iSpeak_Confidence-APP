@@ -1,0 +1,9 @@
+iSpeak Confidence V18.7.3 — Payment Verification & Student Classroom Size Fix
+
+- A Revolut payment claim is no longer treated as a booked lesson.
+- Backing out of Revolut does not create a lesson.
+- Pressing “I paid — request verification” creates only a payment-verification claim; it is hidden from My Schedule and My Lessons and does not reserve the tutor slot.
+- Classroom access remains unavailable until a real booking exists.
+- Student classroom pre-join content expanded from 1040px to 1320px with a larger camera preview and settings panel.
+- Mobile classroom pre-join remains full-screen and responsive.
+- Service/app version bumped to V18.7.3.

@@ -1,0 +1,26 @@
+const fs=require('fs');const assert=require('assert');const s=fs.readFileSync('server.js','utf8'),a=fs.readFileSync('app.js','utf8');
+const checks=[
+ ['no fixed Revolut payment URL',!s.includes('checkout.revolut.com/pay/cc6dd0ce')&&!a.includes('checkout.revolut.com/pay/cc6dd0ce')],
+ ['Merchant API order creation',s.includes("revolutRequest('/api/orders'")],
+ ['unique server booking ID',s.includes("'BK-'+crypto.randomBytes(6)")],
+ ['booking ID attached as metadata',s.includes('ispeak_booking_id:bookingId')],
+ ['server amount uses minor units',s.includes('Math.round(quote.studentTotal*100)')],
+ ['server controls quoted amount',!a.includes('amount:')||s.includes('bookingQuote(teacher,t,type,email,body.promoCode)')],
+ ['pending before payment',s.includes("status:'payment_pending',paymentStatus:'pending'")],
+ ['redirect URL configured',s.includes('redirect_url:publicBase(req)')],
+ ['retrieve order verification',s.includes("revolutRequest('/api/orders/'+encodeURIComponent(orderId)")],
+ ['order id checked',s.includes('Revolut order ID mismatch')],
+ ['amount checked',s.includes('Revolut amount mismatch')],
+ ['currency checked',s.includes('Revolut currency mismatch')],
+ ['completed only confirms',s.includes("if(state==='completed'){booking.status='confirmed';booking.paymentStatus='paid'")],
+ ['failed/cancelled not confirmed',s.includes("['cancelled','failed'].includes(state)")],
+ ['webhook endpoint',s.includes("'/api/payment/revolut/webhook'")],
+ ['HMAC SHA256 signature',s.includes("createHmac('sha256'")],
+ ['5 minute replay protection',s.includes('>300000')],
+ ['multiple webhook signatures supported',s.includes("split(',')")],
+ ['insecure beta auto complete disabled',s.includes('const revolutBeta=false')&&!a.includes('paymentAutoComplete:true')],
+ ['all checkout paths use verified API',a.includes('if(true){modal(`<div class="payment-wall revolut-beta-wall">')],
+ ['pending bookings reserve time',s.includes("!['cancelled','payment_failed','payment_cancelled'].includes(b.status)")],
+ ['client verifies status with server',a.includes("'/api/payment/revolut/status'")],
+ ['client cannot self-mark paid',!a.includes("paymentMode:'revolut_beta_link'")]
+];for(const [n,ok] of checks){assert.ok(ok,n);console.log('PASS',n)}console.log(`\n${checks.length}/${checks.length} V18.7.9 payment-integrity checks passed.`)

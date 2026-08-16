@@ -1,0 +1,6 @@
+iSpeak Confidence V18.7.5
+
+- Fixed Revolut checkout opening twice. The student payment button now creates exactly one external checkout navigation and disables itself after the first click.
+- Removed the old window.open + fallback-navigation pattern that could open Revolut in a new tab and also navigate the iSpeak tab.
+- Preserves V18.7.4 full-viewport student booking, schedule and classroom UI.
+- Note: the "Booking ID" field is hosted by the current Revolut payment link. iSpeak cannot remove a required field configured on Revolut's checkout page. Remove that required field in the Revolut Business payment-link settings, or replace the link with a payment link that does not require it.

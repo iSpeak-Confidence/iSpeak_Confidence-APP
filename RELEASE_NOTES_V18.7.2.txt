@@ -1,0 +1,10 @@
+iSpeak Confidence V18.7.2 — Booking Payment Safety & Larger Student Windows
+
+- Revolut checkout no longer creates a lesson before payment.
+- Backing out/cancelling Revolut creates no booking.
+- Student must return and explicitly confirm payment completion; booking is then created as awaiting verification.
+- Pending-verification lessons are excluded from Virtual Classroom and classroom access is locked until verified.
+- Book Trial/lesson window enlarged on desktop and mobile.
+- My Schedule enlarged on desktop and mobile.
+- Virtual Classroom centre popup enlarged on desktop and mobile.
+- Service-worker cache bumped to V18.7.2.

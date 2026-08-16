@@ -1,0 +1,38 @@
+iSpeak Confidence V18.8.11 — Publish Readiness Repair
+
+Teacher Academy
+- Restored polished card-based 120-hour / 20-module Teacher Academy layout.
+- Certificate preview is visible before completion and clearly marked locked.
+- Teacher certificate uses the approved teacher display name.
+- Completed teacher certificate can be downloaded as a real SVG file and printed/saved as PDF from the browser.
+
+Student Certificates
+- Added editable learner name before certificate creation.
+- Student completion certificate downloads as a personalized SVG and remains printable/emailable.
+
+Teacher Portal
+- Replaced language dropdown with clickable 7-language flag menu.
+- Calendar, Availability, Lessons, Virtual Classroom, Students, Messages, Academy, Lesson Rate and Profile remain separate.
+- Availability edits weekly open hours; Calendar shows booked lessons.
+- Teachers do not receive student email addresses in portal booking/message payloads.
+
+Lessons & Payments
+- Student lesson price fixed at $13 USD / 50 minutes.
+- Teachers cannot alter the student lesson price.
+- No trial offer, promo code, welcome discount or beta price remains in active app code.
+- Only the approved iSpeak Revolut payment link is used.
+- Legacy direct booking, dynamic Revolut order creation and browser test-payment routes are retired.
+- Flow remains: student messages teacher -> teacher confirms time -> teacher sends payment link -> teacher confirms payment -> teacher adds lesson to schedule.
+
+Classroom Access
+- Teacher entry opens 15 minutes before scheduled start.
+- Student entry opens 10 minutes before scheduled start.
+- Server enforces the timing and UI tells each role the exact opening time.
+- Calendar, lesson details, schedule and classroom centre buttons stay locked before the permitted time.
+
+QA
+- JavaScript syntax checks passed for app.js and server.js.
+- V18.8.11 publish-readiness QA: 35/35 checks passed.
+- Runtime server boot verified.
+- /api/status verified as V18.8.11.
+- Retired checkout/booking endpoints verified HTTP 410.

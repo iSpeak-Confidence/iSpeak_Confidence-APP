@@ -1134,9 +1134,18 @@ let studyBlockStartedAt=0;
 function studyId(unitIndex,dayIndex,sessionIndex){return `${state.language}-u${unitIndex+1}-d${dayIndex+1}-s${sessionIndex+1}`}
 function completeStudy(unitIndex,dayIndex,sessionIndex){
  const id=studyId(unitIndex,dayIndex,sessionIndex),lang=state.language,wasComplete=courseComplete(lang);
- if(!state.studyCompleted.includes(id)){state.studyCompleted.push(id);const elapsed=studyBlockStartedAt?Math.max(1,Math.min(60,Math.round((Date.now()-studyBlockStartedAt)/60000))):1;state.studyMinutes=(state.studyMinutes||0)+elapsed;state.xp+=25;state.coins=(state.coins||0)+5;const skillKey=studyTypes[sessionIndex]?.key||'learn';recordLearningEvidence(skillKey,true,{independent:['transfer','grammar','conversation','mastery'].includes(skillKey),transfer:skillKey==='transfer',source:'guided-block'});const d=today();state.activity[d]=(state.activity[d]||0)+1;if(state.lastDay!==d){const y=new Date();y.setDate(y.getDate()-1);const yd=`${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;state.streak=state.lastDay===yd?(state.streak||0)+1:1;state.lastDay=d}}
- updateQuestProgress('lesson',1);save();toast('Learning activity complete • +25 XP');
+ const wasAlreadyDone=state.studyCompleted.includes(id);
+ if(!wasAlreadyDone){state.studyCompleted.push(id);const elapsed=studyBlockStartedAt?Math.max(1,Math.min(60,Math.round((Date.now()-studyBlockStartedAt)/60000))):1;state.studyMinutes=(state.studyMinutes||0)+elapsed;state.xp+=25;state.coins=(state.coins||0)+5;const skillKey=studyTypes[sessionIndex]?.key||'learn';recordLearningEvidence(skillKey,true,{independent:['transfer','grammar','conversation','mastery'].includes(skillKey),transfer:skillKey==='transfer',source:'guided-block'});const d=today();state.activity[d]=(state.activity[d]||0)+1;if(state.lastDay!==d){const y=new Date();y.setDate(y.getDate()-1);const yd=`${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;state.streak=state.lastDay===yd?(state.streak||0)+1:1;state.lastDay=d}}
+ updateQuestProgress('lesson',1);save();
+ const lastBlock=sessionIndex>=studyTypes.length-1;
+ const units=longCourse.languages[lang]?.units||[];
+ const lastUnit=unitIndex>=units.length-1;
+ if(!wasAlreadyDone)toast(lastBlock&&!lastUnit?`Lesson ${unitIndex+1} complete • Lesson ${unitIndex+2} unlocked`:'Learning activity complete • +25 XP');
  if(!wasComplete&&courseComplete(lang)){maybeAwardCertificate(lang);return}
+ // Progress forward automatically. Blocks 1–7 open the next block; mastery opens the next lesson.
+ // This shared handler powers all seven language courses, so progression behaves consistently everywhere.
+ if(!lastBlock){openStudySession(unitIndex,dayIndex,sessionIndex+1);return}
+ if(!lastUnit){openStudyDay(unitIndex+1,0);return}
  openStudyDay(unitIndex,dayIndex);
 }
 function openLongUnit(unitIndex){
@@ -1156,10 +1165,50 @@ function sourceBlock(u){
  return `<details class="source-material"><summary>📖 Supplied Khmer source material for this unit</summary><pre>${esc(u.source.slice(0,3600))}</pre></details>`;
 }
 function meaningfulProduction(value,minChars=18){
- const text=String(value||'').normalize('NFC').trim();if(text.length<minChars)return false;
+ const text=String(value||'').normalize('NFC').replace(/[\u200B-\u200D\uFEFF]/g,'').trim();
+ const letters=[...text].filter(ch=>/[\p{L}\p{N}]/u.test(ch));
+ // Chinese, Japanese and Khmer often do not use spaces between words. The old
+ // three-token rule made valid answers in those courses impossible to submit.
+ const compactScript=/[\u1780-\u17FF\u3040-\u30FF\u3400-\u9FFF]/u.test(text);
+ if(compactScript){
+   const needed=Math.max(6,Math.ceil(minChars*.55));
+   if(letters.length<needed)return false;
+   const uniqueChars=new Set(letters.map(ch=>ch.toLocaleLowerCase()));
+   return uniqueChars.size>=Math.min(4,letters.length);
+ }
+ if(text.length<minChars)return false;
  const tokens=text.toLowerCase().match(/[\p{L}\p{N}]+/gu)||[];if(tokens.length<3)return false;
  const unique=new Set(tokens);if(tokens.length>=6&&unique.size/Math.max(1,tokens.length)<0.45)return false;
  const longest=tokens.reduce((m,x)=>Math.max(m,x.length),0);return longest>1;
+}
+function normalizeCourseAnswer(v){
+ // Course production should not fail because of typographic punctuation, spacing,
+ // case or common keyboard variants. Keep the actual letters/scripts intact here.
+ return String(v||'')
+  .normalize('NFKC')
+  .replace(/[\u200B-\u200D\uFEFF]/g,'')
+  .replace(/[’‘`´]/g,"'")
+  .replace(/[.!?？¿؟។、，,;；:：…]+/gu,' ')
+  .replace(/[‐‑‒–—-]+/g,' ')
+  .replace(/\s+/g,' ')
+  .trim()
+  .toLocaleLowerCase();
+}
+function latinAccentFold(v){
+ const text=normalizeCourseAnswer(v);
+ // Only fold combining marks when the answer is Latin-script. Khmer, Arabic,
+ // Chinese and Japanese marks/characters must remain meaningful.
+ return /[A-Za-zÀ-ÖØ-öø-ÿ]/u.test(text)
+  ? text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').normalize('NFC')
+  : text;
+}
+function courseExactAnswerAccepted(field,value){
+ const rawAccepted=[field?.dataset?.exact,field?.dataset?.reading].filter(Boolean);
+ const entered=normalizeCourseAnswer(value);
+ if(!entered)return false;
+ if(rawAccepted.map(normalizeCourseAnswer).includes(entered))return true;
+ const folded=latinAccentFold(value);
+ return rawAccepted.map(latinAccentFold).includes(folded);
 }
 function meaningfulIELTSWriting(text,minWords){
  const words=String(text||'').trim().match(/[A-Za-zÀ-ÖØ-öø-ÿ'-]+/g)||[];if(words.length<minWords)return false;
@@ -1170,8 +1219,8 @@ function finishBlockButton(unitIndex,dayIndex,sessionIndex,requireId=''){
  return `<button class="primary wide finish-study" data-finish="${sessionIndex}" ${requireId?`data-require="${requireId}" disabled`:''}>Complete this learning block</button>`;
 }
 function wireFinish(unitIndex,dayIndex,sessionIndex){
- const btn=$('.finish-study',$('#modalBody'));if(btn&&btn.dataset.require){const field=$('#'+btn.dataset.require);if(field){const normal=v=>String(v||'').normalize('NFC').trim().replace(/[.!?？؟។]+$/,'').replace(/\s+/g,' ').toLowerCase();const check=()=>{const v=String(field.value||'').trim(),exact=field.dataset.exact;btn.disabled=exact?normal(v)!==normal(exact):!meaningfulProduction(v,18)};field.addEventListener('input',check);check()}}
- const b=$('[data-finish]',$('#modalBody'));if(b)b.onclick=()=>completeStudy(unitIndex,dayIndex,sessionIndex);
+ const btn=$('.finish-study',$('#modalBody'));if(btn&&btn.dataset.require){const field=$('#'+btn.dataset.require);if(field){const check=()=>{const v=String(field.value||'').trim(),exact=field.dataset.exact;btn.disabled=exact?!courseExactAnswerAccepted(field,v):!meaningfulProduction(v,18)};field.addEventListener('input',check);field.addEventListener('change',check);check()}}
+ const b=$('[data-finish]',$('#modalBody'));if(b)b.onclick=()=>{if(b.disabled)return;completeStudy(unitIndex,dayIndex,sessionIndex)};
 }
 function openStudySession(unitIndex,dayIndex,sessionIndex){
  studyBlockStartedAt=Date.now();
@@ -1180,7 +1229,7 @@ function openStudySession(unitIndex,dayIndex,sessionIndex){
  const pick=(offset=0)=>anchors.length?anchors[(sessionIndex+offset)%anchors.length]:{target:'',meaning:''};
  const a=pick(0),b=pick(1);
  let body='';
- if(s.key==='learn')body=`<div class="study-plan"><b>${esc(lessonT('guided'))}</b><ol><li>${esc(lessonT('understand'))}</li><li>${esc(lessonT('connect'))}</li><li>${esc(lessonT('useContext'))}</li><li>${esc(lessonT('produceNoCopy'))}</li><li>${esc(lessonT('completeTask'))}</li></ol></div><div class="anchor-grid">${anchors.map(x=>`<div class="anchor-card"><div class="big">${x.target}</div>${x.reading?`<div class="romanization">${esc(x.reading)}</div>`:''}${supportMeaningMarkup(x.meaning,state.language)}<button class="secondary hear-anchor" data-hear="${esc(x.target)}">🔊 Listen</button></div>`).join('')}</div>${sourceBlock(u)}<div class="production-gate"><b>${esc(lessonT('productionCheck'))}</b><p>${esc(lessonT('withoutCopy'))} <strong>${esc(a.support||supportMeaning(a.meaning))}</strong></p><input id="learnProof" data-exact="${esc(a.target)}" autocomplete="off" placeholder="${esc(lessonT('typeTarget'))}"></div>${finishBlockButton(unitIndex,dayIndex,sessionIndex,'learnProof')}`;
+ if(s.key==='learn')body=`<div class="study-plan"><b>${esc(lessonT('guided'))}</b><ol><li>${esc(lessonT('understand'))}</li><li>${esc(lessonT('connect'))}</li><li>${esc(lessonT('useContext'))}</li><li>${esc(lessonT('produceNoCopy'))}</li><li>${esc(lessonT('completeTask'))}</li></ol></div><div class="anchor-grid">${anchors.map(x=>`<div class="anchor-card"><div class="big">${x.target}</div>${x.reading?`<div class="romanization">${esc(x.reading)}</div>`:''}${supportMeaningMarkup(x.meaning,state.language)}<button class="secondary hear-anchor" data-hear="${esc(x.target)}">🔊 Listen</button></div>`).join('')}</div>${sourceBlock(u)}<div class="production-gate"><b>${esc(lessonT('productionCheck'))}</b><p>${esc(lessonT('withoutCopy'))} <strong>${esc(a.support||supportMeaning(a.meaning))}</strong></p><input id="learnProof" data-exact="${esc(a.target)}" ${a.reading?`data-reading="${esc(a.reading)}"`:''} autocomplete="off" placeholder="${esc(lessonT('typeTarget'))}"></div>${finishBlockButton(unitIndex,dayIndex,sessionIndex,'learnProof')}`;
  if(s.key==='listen'){const dp=(longCourse.languages[state.language]?.units||[]).flatMap(x=>studyAnchors(x)).filter(x=>x.target!==a.target&&x.meaning!==a.meaning).slice(Math.max(0,unitIndex*2),Math.max(0,unitIndex*2)+8);const opts=[a.meaning,...dp.map(x=>x.meaning).filter(x=>x!==a.meaning).slice(0,3)].sort(()=>Math.random()-.5);body=`<div class="study-plan"><b>${esc(lessonT('listeningLab'))}</b><p>${esc(lessonT('listenInstruction'))}</p></div><button id="listenA" class="primary wide">🔊 Play expression</button><div class="answer-grid">${opts.map(x=>`<button data-listen-answer="${esc(x)}">${esc(supportMeaning(x,state.language))}</button>`).join('')}</div><p id="listenResult"></p><label>${esc(lessonT('dictation'))}<input id="listenProof" data-exact="${esc(a.target)}" autocomplete="off" placeholder="Type the complete expression"></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'listenProof')}`};
  if(s.key==='speak')body=`<div class="study-plan"><b>${esc(lessonT('speakingLab'))}</b><ol><li>${esc(lessonT('slowRepeat'))}</li><li>${esc(lessonT('shadow'))}</li><li>${esc(lessonT('fromSupport'))}</li><li>${esc(lessonT('changeDetail'))}</li><li>${esc(lessonT('recordBest'))}</li></ol></div><div class="anchor-card">${supportMeaningMarkup(a.meaning,state.language)}<div class="big">${a.target}</div></div><button id="courseSpeak" class="primary wide">🎙️ ${esc(lessonT('speakingCheck'))}</button><p id="courseSpeakResult">Chrome gives the best microphone support.</p><input id="speakProof" data-exact="${esc(a.target)}" type="hidden">${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'speakProof')}`;
  if(s.key==='readwrite')body=`<div class="study-plan"><b>${esc(lessonT('readWrite'))}</b><p>${esc(lessonT('readInstruction'))}</p></div><div class="anchor-grid">${anchors.map(x=>`<div class="anchor-card"><div class="big">${x.target}</div>${x.reading?`<div class="romanization">${esc(x.reading)}</div>`:''}${supportMeaningMarkup(x.meaning,state.language)}</div>`).join('')}</div><label>${esc(lessonT('writeFromMemory'))} <strong>${esc(b.support||supportMeaning(b.meaning))}</strong><input id="studyWriting" data-exact="${esc(b.target)}" autocomplete="off" placeholder="${esc(lessonT('typeTarget'))}"></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'studyWriting')}`;

@@ -1,0 +1,10 @@
+iSpeak Confidence V18.8.10 — Teacher Portal + Single Price Repair
+
+- Restored functional Dashboard/Overview, Lessons, Availability and 120-hour Teacher Academy with 20 modules, applied tasks, final assessment, lesson-plan requirement and printable certificate.
+- Calendar now shows booked lessons; Availability separately edits weekly open teaching times.
+- Teacher-facing student data uses display names; student email addresses are removed from teacher dashboard/chat API responses. Admin tools retain email visibility.
+- Fixed student lesson price at $13 USD for every teacher. Teachers cannot change it.
+- Removed visible trial/promo/discount UI.
+- Single official payment link: https://checkout.revolut.com/pay/7e46147d-6776-4383-a387-5486fc197cee
+- Homework Helper and Make Me Speak UI follow the learner interface language across all 7 supported languages.
+- Classroom entry windows preserved: teacher 15 minutes before; student 10 minutes before.
