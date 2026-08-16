@@ -2120,7 +2120,7 @@ document.addEventListener('click',function(e){
 setTimeout(()=>{const specialRoute=['/admin','/teacher'].includes(location.pathname.replace(/\/+$/,''));if(!specialRoute&&(!state.onboardingDone||Number(state.onboardingVersion||0)<15))openOnboarding()},650);
 
 // PWA registration kept in external JS so the production CSP does not block it.
-if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(err=>console.warn('Service worker registration failed',err)));}
+if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.18',{updateViaCache:'none'});await reg.update()}catch(err){console.warn('Service worker registration failed',err)}});}
 
 
 /* === ISPEAK STORY LIBRARY V18.6.2 === */

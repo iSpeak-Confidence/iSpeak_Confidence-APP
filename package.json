@@ -1,6 +1,6 @@
 {
-  "name": "ispeak-confidence-v18-8-17",
-  "version": "18.8.17",
+  "name": "ispeak-confidence-v18-8-18",
+  "version": "18.8.18",
   "private": true,
   "scripts": {
     "start": "node server.js",

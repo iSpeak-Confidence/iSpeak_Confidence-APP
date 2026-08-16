@@ -1,0 +1,8 @@
+iSpeak Confidence V18.8.18 — Custom Domain Password Reset Cache Fix
+
+- Cache-busts app.js on ispeakconfidence.com so the custom domain cannot keep using an older frontend after deployment.
+- Updates the service worker cache namespace and forces a service-worker update with updateViaCache:none.
+- Keeps the V18.8.17 course validation/progression fixes.
+- Keeps the V18.8.14 email delivery/auth fixes.
+- Adds a safe server log when a password-reset request reaches the API (no code or password is logged).
+- Teacher and student Forgot Password flows continue to use /api/password-reset/request and /api/password-reset/confirm.
