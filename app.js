@@ -1733,7 +1733,23 @@ function openOnboarding(){
 }
 
 function ispeakDeviceId(){let id=localStorage.getItem('isc-device-id');if(!id){id='DEV-'+(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('isc-device-id',id)}return id}
-async function completeNewDeviceVerification(kind,email,onSuccess){modal(`<div class="device-verify-shell"><img src="assets/logo.png" alt="iSpeak Confidence"><span class="eyebrow">NEW DEVICE VERIFICATION</span><h2>Check your email</h2><p>We sent a 6-digit code to <b>${esc(email)}</b>. Enter it to trust this device.</p><label>Verification code<input id="deviceVerifyCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><button id="deviceVerifySubmit" class="primary wide">Verify this device</button><button id="deviceVerifyBack" class="secondary wide">Back</button></div>`);$('#deviceVerifyBack').onclick=()=>kind==='teacher'?teacherAccountLogin():openAccountCentre('login');$('#deviceVerifySubmit').onclick=async()=>{try{const d=await apiJSON('/api/device-verification/confirm',{method:'POST',body:JSON.stringify({kind,email,deviceId:ispeakDeviceId(),code:$('#deviceVerifyCode').value})});await onSuccess(d)}catch(e){toast(e.message||'Verification failed.')}}}
+async function completeNewDeviceVerification(kind,email,onSuccess){
+ modal(`<div class="device-verify-shell"><img src="assets/logo.png" alt="iSpeak Confidence"><span class="eyebrow">NEW DEVICE VERIFICATION</span><h2>Check your email</h2><p>We sent a 6-digit code to <b>${esc(email)}</b>. Enter it to trust this device.</p><label>Verification code<input id="deviceVerifyCode" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code"></label><div id="deviceVerifyStatus" class="portal-login-status" aria-live="polite"></div><button type="button" id="deviceVerifySubmit" class="primary wide">Verify this device</button><button type="button" id="deviceVerifyBack" class="secondary wide">Back</button></div>`);
+ const code=$('#deviceVerifyCode'),btn=$('#deviceVerifySubmit'),status=$('#deviceVerifyStatus');
+ const submit=async()=>{
+  if(btn.disabled)return;
+  const value=String(code.value||'').replace(/\D/g,'').slice(0,6);code.value=value;
+  if(value.length!==6){status.textContent='Enter the complete 6-digit verification code.';code.focus();return}
+  btn.disabled=true;btn.textContent='Verifying…';status.textContent='Checking your verification code…';
+  try{const d=await apiJSON('/api/device-verification/confirm',{method:'POST',body:JSON.stringify({kind,email,deviceId:ispeakDeviceId(),code:value})});status.textContent='Verified. Opening your account…';await onSuccess(d)}
+  catch(e){status.textContent=e.message||'Verification failed. Check the code and try again.';btn.disabled=false;btn.textContent='Verify this device';code.select();}
+ };
+ $('#deviceVerifyBack').addEventListener('click',()=>kind==='teacher'?teacherAccountLogin():openAccountCentre('login'));
+ btn.addEventListener('click',submit);
+ code.addEventListener('input',()=>{code.value=code.value.replace(/\D/g,'').slice(0,6);if(status.textContent)status.textContent='';});
+ code.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submit()}});
+ setTimeout(()=>code.focus(),50);
+}
 function strongPasswordOkay(p){const s=String(p||''),letters=(s.match(/[A-Za-z]/g)||[]).length;return letters>=6&&/[A-Z]/.test(s)&&/\d/.test(s)}
 const STRONG_PASSWORD_HELP='Use at least 6 letters, including 1 uppercase letter, and at least 1 number.';
 
@@ -1764,9 +1780,24 @@ document.addEventListener('click',e=>{
 
 function passwordResetCodeStep(kind,email){
  const teacher=kind==='teacher';
- modal(`<span class="eyebrow">VERIFY YOUR EMAIL</span><h2>Check your email</h2><p>Enter the 6-digit code sent to <b>${esc(email)}</b>. It expires in 10 minutes.</p><label>Verification code<input id="resetCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></label><label>New password<input id="resetNewPassword" type="password" autocomplete="new-password"></label><label>Confirm new password<input id="resetConfirmPassword" type="password" autocomplete="new-password"></label><button id="resetConfirm" class="primary wide">Change password</button><button id="resetResend" class="secondary wide">Send a new code</button><p id="resetMsg" class="muted"></p>`);
- $('#resetResend').onclick=()=>openPasswordReset(kind);$('#resetCode').oninput=e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,6);
- $('#resetConfirm').onclick=async()=>{const code=$('#resetCode').value,password=$('#resetNewPassword').value,confirm=$('#resetConfirmPassword').value,msg=$('#resetMsg'),btn=$('#resetConfirm');if(code.length!==6)return msg.textContent='Enter the 6-digit code.';if(password!==confirm)return msg.textContent='The two passwords do not match.';if(!strongPasswordOkay(password))return msg.textContent=STRONG_PASSWORD_HELP;btn.disabled=true;btn.textContent='Changing…';try{await apiJSON('/api/password-reset/confirm',{method:'POST',body:JSON.stringify({kind,email,code,password})});modal(`<span class="eyebrow">PASSWORD CHANGED</span><h2>Password changed</h2><p>Sign in with your new password.</p><button id="resetDone" class="primary wide">Back to log in</button>`);$('#resetDone').onclick=()=>teacher?teacherAccountLogin():openAccountCentre('login')}catch(e){msg.textContent=e.message||'Could not change password.';btn.disabled=false;btn.textContent='Change password'}};
+ modal(`<span class="eyebrow">VERIFY YOUR EMAIL</span><h2>Check your email</h2><p>Enter the 6-digit code sent to <b>${esc(email)}</b>. It expires in 10 minutes.</p><label>Verification code<input id="resetCode" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="6"></label><label>New password<input id="resetNewPassword" type="password" autocomplete="new-password"></label><label>Confirm new password<input id="resetConfirmPassword" type="password" autocomplete="new-password"></label><button type="button" id="resetConfirm" class="primary wide">Change password</button><button type="button" id="resetResend" class="secondary wide">Send a new code</button><p id="resetMsg" class="portal-login-status" aria-live="polite"></p>`);
+ const code=$('#resetCode'),password=$('#resetNewPassword'),confirm=$('#resetConfirmPassword'),msg=$('#resetMsg'),btn=$('#resetConfirm');
+ const submit=async()=>{
+  if(btn.disabled)return;
+  const value=String(code.value||'').replace(/\D/g,'').slice(0,6);code.value=value;
+  const nextPassword=password.value,confirmed=confirm.value;
+  if(value.length!==6){msg.textContent='Enter the complete 6-digit code.';code.focus();return}
+  if(nextPassword!==confirmed){msg.textContent='The two passwords do not match.';confirm.focus();return}
+  if(!strongPasswordOkay(nextPassword)){msg.textContent=STRONG_PASSWORD_HELP;password.focus();return}
+  btn.disabled=true;btn.textContent='Changing…';msg.textContent='Verifying code and changing password…';
+  try{const d=await apiJSON('/api/password-reset/confirm',{method:'POST',body:JSON.stringify({kind,email,code:value,password:nextPassword})});if(!d?.ok)throw new Error(d?.error||'Password change was not accepted.');modal(`<span class="eyebrow">PASSWORD CHANGED</span><h2>Password changed</h2><p>Sign in with your new password.</p><button type="button" id="resetDone" class="primary wide">Back to log in</button>`);$('#resetDone').addEventListener('click',()=>teacher?teacherAccountLogin():openAccountCentre('login'))}
+  catch(e){msg.textContent=e.message||'Could not change password.';btn.disabled=false;btn.textContent='Change password';code.select();}
+ };
+ $('#resetResend').addEventListener('click',()=>openPasswordReset(kind));
+ code.addEventListener('input',()=>{code.value=code.value.replace(/\D/g,'').slice(0,6);if(msg.textContent)msg.textContent='';});
+ btn.addEventListener('click',submit);
+ for(const field of [code,password,confirm])field.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submit()}});
+ setTimeout(()=>code.focus(),50);
 }
 
 function openAccountCentre(mode='login'){
@@ -2136,7 +2167,7 @@ document.addEventListener('click',function(e){
 setTimeout(()=>{const specialRoute=['/admin','/teacher'].includes(location.pathname.replace(/\/+$/,''));if(!specialRoute&&(!state.onboardingDone||Number(state.onboardingVersion||0)<15))openOnboarding()},650);
 
 // PWA registration kept in external JS so the production CSP does not block it.
-if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.22',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}});}
+if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.25',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}});}
 
 
 /* === ISPEAK STORY LIBRARY V18.6.2 === */

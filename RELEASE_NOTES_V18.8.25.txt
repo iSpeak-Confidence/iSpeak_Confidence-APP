@@ -1,0 +1,8 @@
+iSpeak Confidence V18.8.25 — Nathan Owner Login
+
+- Adds a server-side owner login path for Nathan using Render environment variables.
+- Default owner email: nathandamian712@gmail.com
+- Set NATHAN_OWNER_LOGIN_CODE in Render Environment to the chosen private code.
+- The secret code is never stored in frontend JavaScript or committed to source.
+- First successful owner-code login creates Nathan's approved owner/teacher account if it does not already exist.
+- Existing teacher/student login flows remain unchanged.
