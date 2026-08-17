@@ -1,0 +1,17 @@
+const fs=require('fs');
+let pass=0,fail=0;
+const ok=(name,cond)=>{if(cond){console.log('PASS',name);pass++}else{console.error('FAIL',name);fail++}};
+const html=fs.readFileSync('index.html','utf8'), app=fs.readFileSync('app.js','utf8'), sw=fs.readFileSync('sw.js','utf8');
+ok('index loads V18.8.23 app.js',html.includes('app.js?v=18.8.23'));
+ok('service worker precaches V18.8.23 app.js',sw.includes("'/app.js?v=18.8.23'"));
+ok('service worker uses V18.8.23 cache',sw.includes('ispeak-v18-8-23-button-recovery'));
+ok('no stale V18.8.19 app.js reference',!html.includes('app.js?v=18.8.19')&&!sw.includes('app.js?v=18.8.19'));
+ok('no stale V18.8.21 app.js reference',!html.includes('app.js?v=18.8.21')&&!sw.includes('app.js?v=18.8.21'));
+ok('primary bottom nav exists',/class="bottom-nav"/.test(html)&&['home','learn','practice','ielts','mascots','teachers'].every(v=>html.includes(`data-view="${v}"`)));
+ok('shared data-view click binding exists',app.includes("$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view))"));
+ok('setView activates requested page',app.includes("v.classList.add('active')"));
+ok('menu button handler exists',app.includes("$('#menuBtn').onclick="));
+ok('drawer close handler exists',app.includes("$('#closeDrawer').onclick=closeDrawer"));
+ok('scrim close handler exists',app.includes("$('#scrim').onclick=closeDrawer"));
+ok('modal close handler exists',app.includes("$('#modalClose').onclick="));
+console.log(`\\nV18.8.23 button recovery QA: ${pass}/${pass+fail} passed`); if(fail)process.exit(1);

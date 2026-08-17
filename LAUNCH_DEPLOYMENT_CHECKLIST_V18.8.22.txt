@@ -1,4 +1,4 @@
-iSpeak Confidence V18.8.21 — Production Checklist
+iSpeak Confidence V18.8.22 — Production Checklist
 Set NODE_ENV=production and persistent DATABASE_URL/DATA_DIR.
 Test real SMTP email, Gemini, payment/webhook flow, mobile classroom camera/mic, and backups after deployment.
 Keep ALLOW_LEGACY_ADMIN_PIN=false and ALLOW_EPHEMERAL_PRODUCTION=false.
