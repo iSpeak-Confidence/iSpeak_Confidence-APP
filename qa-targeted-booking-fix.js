@@ -1,0 +1,18 @@
+const fs=require('fs');
+const assert=require('assert');
+const app=fs.readFileSync('app.js','utf8');
+const server=fs.readFileSync('server.js','utf8');
+assert(server.includes("process.env.ISPEAK_MANUAL_PAYMENT_LINK||process.env.REVOLUT_PAYMENT_LINK||process.env.PUBLIC_PAYMENT_LINK"),'payment link env fallback missing');
+assert(server.includes('MANUAL_PAYMENT_LINK_READY'),'payment link validation missing');
+assert(server.includes("if(!MANUAL_PAYMENT_LINK_READY)return json(res,503"),'server must refuse false-success payment link sends');
+assert(app.includes("action:'sendPaymentLink',studentRef"),'teacher payment send action missing');
+assert(app.includes("Could not send the payment link."),'teacher payment send error handling missing');
+assert(app.includes("m.paymentLink?`<button class=\"primary open-payment-link\""),'student clickable payment link missing');
+assert(app.includes("paymentConfirmed:true"),'client payment confirmation flag missing');
+assert(server.includes("if(body.paymentConfirmed!==true)return json(res,400"),'server payment confirmation enforcement missing');
+assert(app.includes("el.addEventListener('input',check)"),'booking controls do not react to input');
+assert(app.includes("el.addEventListener('change',check)"),'booking controls do not react to change');
+assert(app.includes("Ready — payment confirmed. Add the lesson to both schedules."),'booking readiness feedback missing');
+assert(server.includes("Teacher verified payment and added student to schedule."),'booking audit missing');
+assert(server.includes("It is now in your iSpeak schedule."),'student confirmation message missing');
+console.log('Targeted booking/payment fix QA: 13/13 passed');
