@@ -1,9 +1,0 @@
-iSpeak Confidence V18.7.7 — Library Localization, Localized Certificates, Payment Return Safety
-
-- Library landing screen now follows the selected app/interface language for English, Khmer, Mandarin, Spanish, French, Japanese and Arabic.
-- Learning language remains separate: interface controls menus/explanations; learning language controls book/story content.
-- Completion certificates now use the learner's selected interface language for headings, explanatory copy, stats, dates and certificate labels.
-- Downloaded/printed certificate course names are localized too.
-- Certificate emails now carry the selected interface language and localized display course name while server verification continues to validate the real internal course key.
-- Revolut beta checkout now saves the complete lesson selection before opening the hosted checkout link. If the learner returns from Revolut, iSpeak restores the payment-return step so they do not have to choose/book the lesson again.
-- Important limitation: a dashboard-created Revolut Payment Link does not provide iSpeak with verified payment completion or a custom automatic return. True automatic confirmation requires Revolut Merchant API order integration plus payment-status verification/webhooks.

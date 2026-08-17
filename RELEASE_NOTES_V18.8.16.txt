@@ -1,9 +1,0 @@
-iSpeak Confidence V18.8.16 — Learning Block Validation Fix
-
-Fixes:
-- Guided beginner production now accepts either the displayed target-script answer or the displayed reading/romanisation when a reading is explicitly shown.
-- Script-specific dictation, reading/writing, and mastery checks still require the target-language form.
-- Fixed generic production validation that could permanently disable completion for Chinese, Japanese, and Khmer responses because those scripts do not always tokenize with spaces.
-- Completion buttons now re-check on both input and change events and refuse clicks while disabled.
-- Retains V18.8.15 automatic block/lesson progression.
-- Retains V18.8.14 teacher/student verification email authentication fixes.

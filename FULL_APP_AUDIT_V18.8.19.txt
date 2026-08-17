@@ -1,0 +1,71 @@
+iSpeak Confidence V18.8.19 — Full App Audit
+Audit date: 2026-08-16
+Scope: uploaded V18.8.18 source tree (377 files), main frontend/backend, configuration, service worker, QA scripts, auth/email, payments, learning progression, teacher/admin/classroom/library/IELTS/AI surfaces.
+
+CRITICAL / RELEASE-BLOCKING
+1. Forgot-password production click path was not robust. The reset request depended on a per-modal onclick assignment. V18.8.19 replaces it with a document-level capture handler and explicit API-success check.
+2. Production persistence is unsafe unless Render has DATABASE_URL or a persistent DATA_DIR. server.js explicitly warns about this. Without persistence, real accounts/bookings can disappear after restart/redeploy.
+3. There is no real browser end-to-end test suite. Existing QA is mainly source/assertion/runtime API checking; it did not catch the production click failure. Add Playwright/Cypress tests for registration, login, reset email, teacher login, booking/payment, course completion, classroom entry, and mobile flows before calling a release 100% checked.
+4. Service-worker caching has already caused production-vs-host uncertainty. Release caching/versioning needs one controlled strategy, automatic update notification, and an emergency cache-clear path.
+
+HIGH PRIORITY
+5. New-device verification codes are stored in an in-memory Map. A server restart/deploy invalidates pending verification codes. Persist short-lived verification records or use a shared TTL store/database.
+6. Account auth stores one token hash per student/teacher. A new login can invalidate another active device/session. Replace with per-session token records and device/session management.
+7. Password-reset request should have dedicated abuse controls by IP/account/email plus cooldown messaging. Generic rate limiting exists, but auth/email endpoints need explicit tests and observability.
+8. Admin security still supports ADMIN_PORTAL_PIN-based endpoints. Owner-session access is better; phase out shared PIN administration for production and use role-based authenticated admin sessions.
+9. CSP still permits 'unsafe-eval' and inline styles. Tighten CSP after confirming MediaPipe/third-party requirements.
+10. A fixed Revolut checkout URL is hard-coded as a server fallback. Production payment configuration should fail closed if the intended payment configuration is missing, rather than silently using an embedded link.
+11. Payment/booking needs automated reconciliation tests covering abandoned checkout, duplicate webhook, delayed webhook, payment succeeded but booking failed, refund/cancellation, and idempotency.
+12. The application is largely a very large app.js/server.js architecture. Split auth, learning, booking, classroom, library, IELTS, analytics and admin into modules to reduce regression risk.
+13. Error handling often collapses failures into generic messages. Add request IDs and structured server logs so production failures can be traced without exposing secrets.
+14. Add production health/readiness checks for database, SMTP, Gemini and payment configuration, with admin-only diagnostics.
+15. Add automated backup/restore testing for users, teachers, bookings, classroom state and analytics.
+
+MEDIUM PRIORITY / QUALITY
+16. QA scripts are version-fragmented across many old release files. Consolidate into one maintained test suite and archive old release QA outside the deploy bundle.
+17. The production bundle contains a very large number of old release notes, BAT files and QA scripts. Exclude development/release-history files from the deployed runtime artifact.
+18. Accessibility needs a dedicated audit: keyboard-only navigation, focus trapping/restoration in dialogs, labels, contrast, reduced motion, screen-reader announcements, and RTL behavior for Arabic.
+19. Localization needs automated coverage checks across every visible string and all seven interface languages; prevent English fallbacks from silently shipping on localized screens.
+20. Mobile responsive testing should cover teacher cards/photos, dialogs, classroom, keyboard-open states, reader, booking, admin and teacher portal at common phone widths.
+21. Offline/PWA behavior needs explicit product rules. Auth, booking, payment, classroom and AI should clearly show offline states rather than appearing broken.
+22. Analytics should document retention, consent/notice where required, event schema, deletion behavior and bot/internal-test filtering.
+23. AI features need per-feature timeout/retry/fallback UX and cost/rate controls. Do not let a Gemini outage block unrelated app navigation.
+24. Homework Helper needs upload validation, image-size/type limits, clear unreadable-image handling and age-appropriate safety/quality tests.
+25. Classroom needs network-drop/reconnect testing, camera/mic permission recovery, device switching, tab refresh/rejoin, teacher/student disconnect states, and mobile Safari/Chrome testing.
+26. Whiteboard state is capped but should be stress-tested for long lessons and reconnection/conflict behavior.
+27. Certificates should have a stable verification ID/URL if they are intended to be professionally verifiable by employers.
+28. Add account email-change flow with verification and session revocation.
+29. Add user-facing session/device management (view trusted devices, revoke device/session).
+30. Add data export and robust account deletion verification if the service will operate internationally.
+
+LEARNING / CONTENT IMPROVEMENTS
+31. Automated QA confirms 7 languages × 30 lessons × 8 blocks and progression logic, but source-level checks do not prove pedagogical quality. Each language needs native-speaker/content-editor review for accuracy, naturalness, difficulty progression and cultural appropriateness.
+32. Add spaced-repetition/review scheduling based on actual error history rather than only linear completion.
+33. Add a mastery model that can re-surface weak skills without blocking learners unnecessarily.
+34. Add clearer progress recovery when a user switches devices or local/cloud progress conflicts.
+35. Add downloadable/offline lesson content only after licensing and sync rules are explicit.
+36. IELTS practice should keep estimates clearly separated from official scores and should be reviewed against current public IELTS task/scoring requirements before major marketing claims.
+37. Audio quality/coverage should be audited language by language for native pronunciation, text/audio match and licensing provenance.
+
+IMPORTANT FEATURES TO ADD — ONLY HIGH-VALUE ITEMS
+38. Production operations dashboard: service health, failed emails, failed payments/webhooks, booking failures, AI errors and recent deploy/version.
+39. Proper role-based account/session system for student, teacher and admin, including session/device revocation.
+40. Notification center plus reliable transactional email for booking confirmed/changed/cancelled, teacher message, payment status and lesson reminders.
+41. Booking/payment reconciliation panel for admins so no paid student is lost when automation fails.
+42. Teacher availability conflict protection with transactional slot locking/idempotency.
+43. In-app support/report-a-problem flow that automatically includes app version and a safe diagnostic ID.
+44. Automated end-to-end release gate that must pass on desktop + mobile viewport before deployment.
+45. Database backup/restore and migration system before meaningful user growth.
+46. Certificate verification page/ID if certificates are a major product feature.
+47. Moderation/safeguarding workflow for minors and teacher/student interactions, with auditable admin actions and clear retention/access rules.
+
+VERIFIED IN THIS AUDIT
+- Node syntax: app.js and server.js parse successfully.
+- V18.8.12 targeted QA: 14/14 passed.
+- V18.8.15 progression QA: 12/12 passed.
+- V18.8.16 validation QA: 15/15 passed.
+- V18.8.17 punctuation/case QA: 20/20 passed.
+- All seven courses remain represented by the existing QA suite; each has 30 lessons and the shared 8-block progression according to those checks.
+
+IMPORTANT LIMITATION
+A static/source audit and local API checks cannot prove every browser/device/network/payment/email behavior. The previous reset bug is exactly why browser E2E tests are now a release-blocking recommendation. Do not label the app "100% bug free" until those real interaction tests exist and pass in production-like conditions.

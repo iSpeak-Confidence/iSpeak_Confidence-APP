@@ -1,9 +1,0 @@
-iSpeak Confidence V16.0.5 — AI Mock Examiner
-
-- Added Gemini AI marking for IELTS Writing practice and full mock Writing.
-- Uses IELTS-style public criteria: Task Achievement/Response, Coherence & Cohesion, Lexical Resource, Grammar Range & Accuracy.
-- Added AI marking for mock Speaking transcripts: Fluency/Coherence, Lexical Resource and Grammar. Pronunciation is not guessed from text.
-- Every AI score is labelled an estimated mock band, never an official IELTS result.
-- Important responses are scored twice independently. If the two passes differ by 1.0 band or more, a reconciliation pass is run.
-- Feedback includes strengths, priority improvements, next steps and assessment confidence.
-- No AI-cheating detector was added.

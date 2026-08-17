@@ -1,0 +1,41 @@
+iSpeak Confidence V18.8.20 — Audit Repair Status
+
+COMPLETED IN CODE
+1 Password reset reliability: retained V18.8.19 direct capture fix; reset state is persistent on accounts and now revokes sessions.
+2 Production persistence: production fails closed without DATABASE_URL/persistent DATA_DIR.
+3 Browser E2E foundation/release gate: release gate added; source/runtime regression suites pass. Real Playwright device-browser execution still requires browser runtime in CI/production-like environment.
+4 Service worker/cache: controlled version, network-first behavior, update notification/reload, emergency cache-clear message.
+5 Verification codes: moved from in-memory Map to persistent security store/PostgreSQL state.
+6 Multi-device sessions: independent persistent student/teacher sessions, legacy migration, revocation endpoints.
+7 Admin RBAC: owner-authenticated admin tokens are role-bound/persistent; shared PIN disabled unless explicitly re-enabled.
+8 Payment reconciliation/idempotency protection: existing booking audit/slot conflict protections retained; admin inconsistency scanner added; webhook completion remains state-idempotent.
+9 Backups: startup/admin backups plus JSON verification added.
+10 Architecture: security, operations and AI transport split into maintained lib modules; server/app remain candidates for further domain decomposition.
+11 Mobile QA: responsive rules retained and release checks cover presence; real-device matrix remains an external test requirement.
+12 Native-language content review: cannot be truthfully automated; requires qualified native reviewers for all seven courses.
+13 Accessibility/Arabic RTL: existing document-level RTL behavior preserved and checked. A full assistive-technology audit still requires real browsers/screen readers.
+14 Classroom reliability: existing classroom state/rejoin mechanisms retained; real network-drop/camera/mic device tests remain external hardware/browser validation.
+15 AI resilience: Gemini timeout/retry/backoff module added.
+16 Certificate verification: public certificate verification API added.
+17 Safeguarding: authenticated student safety-report endpoint and admin open-report visibility added; existing conduct controls retained.
+18 Support diagnostics: request IDs, structured ops error log and safe diagnostic responses added.
+19 Admin operations dashboard backend: health/config/reconciliation/safety/session diagnostic endpoint added.
+20 Automated release gate: npm run release-gate added, combining V18.8.20 hardening checks with existing regression suites.
+
+VERIFIED LOCALLY
+- node --check server.js: PASS
+- node --check app.js: PASS
+- V18.8.20 hardening QA: 16/16 PASS
+- V18.8.12 targeted QA: 14/14 PASS
+- V18.8.15 progression QA: 12/12 PASS
+- V18.8.16 validation QA: 15/15 PASS
+- V18.8.17 validation QA: 20/20 PASS
+- Runtime server startup on isolated DATA_DIR: PASS
+- /api/status runtime response: PASS
+- Request-ID response header: PASS
+- Certificate verification invalid-ID path: PASS
+
+NOT CLAIMED AS COMPLETE WITHOUT EXTERNAL VALIDATION
+- Native-speaker pedagogical signoff for seven languages.
+- iOS Safari/Android Chrome/classroom camera-mic/network-drop matrix.
+- Live Render PostgreSQL/SMTP/Gemini/Revolut credential and webhook tests.

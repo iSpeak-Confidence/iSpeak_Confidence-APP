@@ -1,8 +1,0 @@
-iSpeak Confidence V18.8.17 — Global Course Answer Normalization Fix
-
-- Fixes the French Lesson 1 production case shown during hosted/mobile testing.
-- Correct answers no longer remain blocked because French typography places a space before ? or !.
-- Guided exact-answer checks now ignore harmless case, punctuation, punctuation spacing, dash style and apostrophe style differences.
-- Latin-script guided checks also tolerate common missing accent marks from mobile keyboards while retaining the stored accented course content.
-- Khmer, Chinese, Japanese and Arabic scripts are not stripped or transliterated by this normalization.
-- Retains V18.8.16 Khmer reading/romanisation acceptance, V18.8.15 next-block/next-lesson progression, and V18.8.14 email-auth fixes.

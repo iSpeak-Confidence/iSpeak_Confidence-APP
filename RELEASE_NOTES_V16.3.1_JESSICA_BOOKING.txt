@@ -1,9 +1,0 @@
-iSpeak Confidence V16.3.1 — Jessica + tutor booking refinement
-
-- Renamed Ngorn Kakteka's public tutor name to Jessica throughout the live app and teacher booking backend.
-- Replaced Jessica's tutor image with the professional portrait embedded in her supplied CV and adjusted framing for the tutor card/profile.
-- Added live "Next available times" directly to every tutor card, similar to tutor marketplaces.
-- Clicking a displayed time opens the booking window with that date/time preselected.
-- Kept the 14-day availability calendar and live slot removal for already-booked lessons.
-- Teacher portal remains available for each teacher to publish weekly availability and manage booking status.
-- Booking time calculations now consistently use Asia/Phnom_Penh on the server.

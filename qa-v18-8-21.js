@@ -1,0 +1,25 @@
+const fs=require('fs'),path=require('path');
+const root=__dirname;
+const server=fs.readFileSync(path.join(root,'server.js'),'utf8');
+const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
+const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
+const env=fs.readFileSync(path.join(root,'.env.example'),'utf8');
+const gitignore=fs.readFileSync(path.join(root,'.gitignore'),'utf8');
+let pass=0,fail=0;
+function t(name,fn){try{if(!fn())throw new Error('assertion failed');console.log('PASS',name);pass++}catch(e){console.error('FAIL',name,'-',e.message);fail++}}
+t('V18.8.21 server version',()=>server.includes("version:'18.8.21'"));
+t('V18.8.21 service worker version',()=>sw.includes('ispeak-v18-8-21-launch')&&sw.includes("version:'18.8.21'"));
+t('production HSTS enabled',()=>server.includes('Strict-Transport-Security'));
+t('registration device becomes trusted',()=>server.includes('trustedDevices:registrationDeviceId?[registrationDeviceId]:[]'));
+t('classroom help uses current hostname',()=>app.includes("esc(location.host||'this site')")&&!app.includes('beside <strong>localhost:3000</strong>'));
+t('legacy admin PIN disabled',()=>env.includes('ALLOW_LEGACY_ADMIN_PIN=false')&&!env.includes('ADMIN_PORTAL_PIN=change-me-before-production'));
+t('secrets/runtime data ignored',()=>['.env','node_modules/','data/','*.log'].every(x=>gitignore.includes(x)));
+t('production persistence fail-closed retained',()=>server.includes('Production persistence is not configured'));
+t('persistent security store retained',()=>server.includes("SECURITY_FILE=path.join(DATA_DIR,'security.json')"));
+t('AI resilience retained',()=>server.includes("require('./lib/ai-client')"));
+t('certificate verification retained',()=>server.includes("pathname==='/api/certificate/verify'"));
+t('safeguarding retained',()=>server.includes("pathname==='/api/report-safety'"));
+t('admin operations retained',()=>server.includes("pathname==='/api/admin/operations'"));
+t('hard-coded payment link absent',()=>!server.includes('https://revolut.me/'));
+t('cache-clear retained',()=>sw.includes('CLEAR_ISPEAK_CACHE'));
+console.log(`\n${pass}/${pass+fail} V18.8.21 launch checks passed`);if(fail)process.exit(1);

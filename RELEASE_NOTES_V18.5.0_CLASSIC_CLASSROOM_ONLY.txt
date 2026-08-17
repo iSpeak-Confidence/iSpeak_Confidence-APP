@@ -1,8 +1,0 @@
-iSpeak Confidence V18.5.0 — Classic Classroom Background
-
-- Virtual classroom background choices simplified to exactly two options: None or iSpeak Classroom.
-- Replaced the previous classroom scene with a warmer classic/professional classroom style.
-- iSpeak Confidence branding is integrated as framed wall decoration.
-- Keeps the working MediaPipe person-mask compositing pipeline from the previous build.
-- Background selection is applied both in pre-join preview and the outgoing classroom video stream.
-- Full V18.5.0 QA: 68 passed, 0 failed.

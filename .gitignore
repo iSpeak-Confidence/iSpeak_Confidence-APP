@@ -1,2 +1,14 @@
 .env
+.env.*
+!.env.example
 node_modules/
+data/
+backups/
+*.log
+*.tmp
+*.bak
+classroom-recordings/
+classroom-files/
+application-uploads/
+.DS_Store
+Thumbs.db

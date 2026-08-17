@@ -1,9 +1,0 @@
-iSpeak Confidence V16.2.0 - Teacher Expansion
-- Base: V16.1.9 Library Final Refinement
-- Added Ngorn Kakteka to the existing teacher showcase and booking flow.
-- Added An Sievly to the existing teacher showcase and booking flow.
-- Added supplied teacher photos as local app assets.
-- Added professional profile summaries based only on supplied CV information.
-- No private phone numbers or email addresses are shown to learners.
-- New teachers do not show a Watch Introduction control because no intro video was supplied.
-- Existing Nathan and Ounnoun cards and intro videos remain unchanged.

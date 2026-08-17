@@ -1,9 +1,0 @@
-iSpeak Confidence V17.4.1 – Buddy Language Sync
-
-- Chat to a Buddy now follows Learning Language everywhere.
-- Top interface-language flag remains independent.
-- Changing learning language switches buddy, target language, starter prompts, speech-recognition language, TTS/chat route, and target-language label.
-- Stale/cloud-loaded mascot state is repaired automatically.
-- Conversation context is cleared when the target language changes so languages do not bleed into each other.
-- Selecting a buddy intentionally changes the learning course to that buddy’s language, keeping the two systems consistent.
-- Buddy room now shows the active learning language and buddy explicitly.

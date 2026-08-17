@@ -1533,7 +1533,7 @@ async function startClassroomDeviceTest(){
  if(ready.length){status?.classList.remove('error');if(status)status.textContent=`✓ ${ready.join(' and ')} ${ready.length===2?'are':'is'} ready`;$('#prejoinPreviewStage')?.classList.toggle('ready',p.camOn);$('#enterISpeakClassroom').disabled=!$('#classroomConsent')?.checked;}
  else{status?.classList.add('error');if(status)status.innerHTML='<b>No camera or microphone is ready.</b><span>You can retry or continue with both off.</span>';$('#enterISpeakClassroom').disabled=true}
  const failures=[];if(videoErr)failures.push(classroomDeviceFailureText(videoErr,'Camera'));if(audioErr)failures.push(classroomDeviceFailureText(audioErr,'Microphone'));
- if(failures.length&&help){help.hidden=false;help.innerHTML=`<b>Device help</b>${failures.map(f=>`<p><strong>${esc(f.title)}</strong><br>${esc(f.detail)}</p>`).join('')}${failures.some(f=>f.type==='denied')?'<ol><li>Click the site-controls icon beside <strong>localhost:3000</strong>.</li><li>Set <strong>Camera</strong> and <strong>Microphone</strong> to <strong>Allow</strong>.</li><li>Reload if Chrome asks, then press <strong>Retry device test</strong>.</li></ol>':''}<small>You can still enter with devices off and use shared files, notes and the whiteboard.</small>`}
+ if(failures.length&&help){help.hidden=false;help.innerHTML=`<b>Device help</b>${failures.map(f=>`<p><strong>${esc(f.title)}</strong><br>${esc(f.detail)}</p>`).join('')}${failures.some(f=>f.type==='denied')?'<ol><li>Click the site-controls icon beside <strong>${esc(location.host||'this site')}</strong>.</li><li>Set <strong>Camera</strong> and <strong>Microphone</strong> to <strong>Allow</strong>.</li><li>Reload if Chrome asks, then press <strong>Retry device test</strong>.</li></ol>':''}<small>You can still enter with devices off and use shared files, notes and the whiteboard.</small>`}
  const audioTrack=p.rawStream.getAudioTracks()[0];if(audioTrack){try{const ac=new (window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser(),source=ac.createMediaStreamSource(new MediaStream([audioTrack]));source.connect(an);an.fftSize=256;const arr=new Uint8Array(an.frequencyBinCount);p.audioContext=ac;const tick=()=>{if(classroomPrejoin!==p)return;an.getByteFrequencyData(arr);const avg=arr.reduce((a,b)=>a+b,0)/Math.max(1,arr.length),level=$('#prejoinMicLevel');if(level)level.style.width=Math.min(100,Math.round(avg/80*100))+'%';p.raf=requestAnimationFrame(tick)};tick()}catch{}}
  const test=$('#startDeviceTest');if(test)test.textContent='Retry device test';
 }
@@ -1743,9 +1743,25 @@ function openPasswordReset(kind='student'){
  const teacher=kind==='teacher';
  modal(`<span class="eyebrow">PASSWORD RECOVERY</span><h2>${teacher?'Reset teacher password':'Reset your password'}</h2><p>Enter the email registered to your account. We will send a 6-digit code.</p><label>Email address<input id="resetEmail" type="email" autocomplete="email"></label><button id="resetSend" class="primary wide">Send verification code</button><button id="resetBack" class="secondary wide">Back</button><p id="resetMsg" class="muted"></p>`);
  $('#resetBack').onclick=()=>teacher?teacherAccountLogin():openAccountCentre('login');
- $('#resetSend').onclick=async()=>{const email=$('#resetEmail').value.trim().toLowerCase(),btn=$('#resetSend'),msg=$('#resetMsg');if(!email)return msg.textContent='Enter your email address.';btn.disabled=true;btn.textContent='Sending…';try{await apiJSON('/api/password-reset/request',{method:'POST',body:JSON.stringify({kind,email})});passwordResetCodeStep(kind,email)}catch(e){msg.textContent=e.message||'Could not send reset code.';btn.disabled=false;btn.textContent='Send verification code'}};
+ $('#resetSend').dataset.resetKind=kind;
  setTimeout(()=>$('#resetEmail')?.focus(),50);
 }
+async function sendPasswordResetFromButton(btn){
+ if(!btn||btn.disabled)return;
+ const kind=btn.dataset.resetKind==='teacher'?'teacher':'student',email=$('#resetEmail')?.value.trim().toLowerCase()||'',msg=$('#resetMsg');
+ if(!email){if(msg)msg.textContent='Enter your email address.';return}
+ btn.disabled=true;btn.textContent='Sending…';if(msg)msg.textContent='Contacting iSpeak…';
+ try{
+  const d=await apiJSON('/api/password-reset/request',{method:'POST',body:JSON.stringify({kind,email})});
+  if(!d?.ok)throw new Error(d?.error||'Reset request was not accepted.');
+  passwordResetCodeStep(kind,email);
+ }catch(e){if(msg)msg.textContent=e.message||'Could not send reset code.';btn.disabled=false;btn.textContent='Send verification code'}
+}
+document.addEventListener('click',e=>{
+ const btn=e.target.closest?.('#resetSend');if(!btn)return;
+ e.preventDefault();e.stopImmediatePropagation();sendPasswordResetFromButton(btn);
+},true);
+
 function passwordResetCodeStep(kind,email){
  const teacher=kind==='teacher';
  modal(`<span class="eyebrow">VERIFY YOUR EMAIL</span><h2>Check your email</h2><p>Enter the 6-digit code sent to <b>${esc(email)}</b>. It expires in 10 minutes.</p><label>Verification code<input id="resetCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></label><label>New password<input id="resetNewPassword" type="password" autocomplete="new-password"></label><label>Confirm new password<input id="resetConfirmPassword" type="password" autocomplete="new-password"></label><button id="resetConfirm" class="primary wide">Change password</button><button id="resetResend" class="secondary wide">Send a new code</button><p id="resetMsg" class="muted"></p>`);
@@ -2120,7 +2136,7 @@ document.addEventListener('click',function(e){
 setTimeout(()=>{const specialRoute=['/admin','/teacher'].includes(location.pathname.replace(/\/+$/,''));if(!specialRoute&&(!state.onboardingDone||Number(state.onboardingVersion||0)<15))openOnboarding()},650);
 
 // PWA registration kept in external JS so the production CSP does not block it.
-if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.18',{updateViaCache:'none'});await reg.update()}catch(err){console.warn('Service worker registration failed',err)}});}
+if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.21',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}});}
 
 
 /* === ISPEAK STORY LIBRARY V18.6.2 === */
