@@ -1,0 +1,44 @@
+iSpeak Confidence — Publish Readiness Audit (150-unit curriculum)
+Date: 2026-08-19
+
+PASS
+- 7 languages present
+- 150 units per language
+- 8 blocks per unit
+- 1,200 blocks per language / 8,400 total
+- 8,400 generated study block IDs unique
+- Five-stage progression metadata present
+- Beginner stages avoid forced independent production
+- Later stages introduce controlled then independent production
+- Romanized/native-script validation support retained
+- Future-unit guard / mastery progression checks pass
+- Completion and certificate gating retained for expanded course
+- V18.8.25 button/navigation recovery checks pass
+- Security/production hardening checks pass
+- Existing account/admin/teacher/classroom checks pass
+- Booking/payment targeted regression checks pass
+- Student-name/admin-notification/classroom targeted regression checks pass
+- Teacher message email targeted regression checks pass
+- JavaScript syntax checks pass for app.js, server.js, curriculum files
+- release-gate now includes qa-150-unit-curriculum.js
+- stale 30-unit/240-block QA expectations corrected to 150/1,200
+
+CONTENT DEPTH NOTE
+The 150-unit architecture is 30 core topic cycles x 5 pedagogical phases.
+Exact target repetition inside the five phases is intentional spaced retrieval.
+Unique new target expressions currently measured from new-material phases:
+- English: 172
+- Khmer: 60
+- Mandarin: 120
+- Spanish: 120
+- French: 120
+- Japanese: 120
+- Arabic: 180
+There are zero exact duplicate targets inside the new-material phase sets.
+This is structurally consistent, but the unique language-content density is lower than a genuinely 150-topic comprehensive course. Do not describe it as 150 completely distinct topic units unless more original curriculum content is authored.
+
+ENVIRONMENT LIMITATION
+Full live backend startup was not performed in this isolated audit container because the pg dependency was not available locally and network package installation timed out. Static/server-targeted QA scripts and syntax checks passed. Production deployment should still be smoke-tested with the real Render/Postgres/email/AI environment before public release.
+
+GOOGLE PLAY
+As of 2026-08-19, new apps/updates submitted on or after 2026-08-31 must target Android 16 / API 36 or higher. Android wrapper/AAB work remains separate from this web-app curriculum audit.

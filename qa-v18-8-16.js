@@ -1,7 +1,7 @@
 const fs=require('fs');
 const vm=require('vm');
 const app=fs.readFileSync('app.js','utf8');
-const curriculumText=fs.readFileSync('curriculum-data.js','utf8');
+const curriculumText=fs.readFileSync('curriculum-data.js','utf8')+'\n'+fs.readFileSync('curriculum-expansion-v17-4.js','utf8');
 let pass=0, fail=0;
 function t(name,ok){if(ok){console.log('PASS',name);pass++}else{console.error('FAIL',name);fail++}}
 // Structural checks against the real production code.
@@ -21,8 +21,8 @@ const sandbox={window:{}}; vm.createContext(sandbox); vm.runInContext(curriculum
 const cur=sandbox.window.ISC_CURRICULUM;
 const langs=['english','khmer','mandarin','spanish','french','japanese','arabic'];
 t('All seven language courses remain present', langs.every(l=>cur.languages[l]));
-t('All seven courses still contain 30 lessons', langs.every(l=>cur.languages[l].units.length===30));
-t('Curriculum still declares 240 blocks per language', cur.activityCountPerLanguage===240);
+t('All seven courses still contain 150 units', langs.every(l=>cur.languages[l].units.length===150));
+t('Curriculum still declares 1200 blocks per language', cur.activityCountPerLanguage===1200);
 // Exact regression for the screenshot: Khmer lesson 1 shows Suosdei as the reading for សួស្តី.
 const first=cur.languages.khmer.units[0].anchors[0];
 const raw=String(first.meaning||''); const reading=raw.includes(' / ')?raw.split(' / ')[0]:String(first.reading||'');

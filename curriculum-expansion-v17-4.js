@@ -158,4 +158,52 @@ C.languages.arabic.units[28].anchors.push(...[{"target": "ما أقصده هو �
 C.languages.arabic.units[29].anchors.push(...[{"target": "حتى إذا نسيت كلمة أستطيع شرح الفكرة بطريقة أخرى", "meaning": "Even if I forget a word, I can explain the idea another way."}, {"target": "أستطيع تغيير أسلوبي حسب الموقف", "meaning": "I can adapt my style to the situation."}]);
 C.version='17.4.0-learning-depth-phase2';
 C.depthExpansion={phase:2,khmerUntouched:true,targetsPerExpandedUnit:2};
+
+// V18.8.25 learning audit: Khmer and Arabic originally inherited generic
+// can-do/transfer metadata whose topics did not consistently match their actual
+// unit anchors. Keep their supplied language content intact, but make the
+// learner-facing outcome truthful to each unit's real topic.
+['khmer','arabic'].forEach(lang=>{
+  (C.languages[lang]?.units||[]).forEach((u,i)=>{
+    const topic=String(u.title||`Unit ${i+1}`).trim();
+    u.canDo=`Understand, recognise and use the taught ${topic.toLowerCase()} language at the level of support expected in this stage of the course.`;
+    u.transfer=`Use the expressions taught in ${topic} in a new but closely related situation. Early units use guided choices; independent responses are introduced only in later stages.`;
+  });
+});
+})();
+
+// V18.8.25 — 150-unit spiral curriculum architecture.
+// This deliberately does NOT fabricate unverified translations. Each original
+// language unit becomes a five-step learning cycle using its own vetted target
+// material: Explore -> Hear & Say -> Build -> Use -> Master. Reappearance inside
+// a cycle is intentional spaced retrieval, not duplicate "new" content.
+(function(){
+const C=window.ISC_CURRICULUM;if(!C)return;
+const phases=[
+ {key:'explore',label:'Explore & Understand',goal:'Learn the new meaning, sound and form with full support.',stage:'foundation'},
+ {key:'sound',label:'Hear & Say',goal:'Strengthen listening and pronunciation before recall is expected.',stage:'foundation'},
+ {key:'build',label:'Build & Recall',goal:'Retrieve the taught language with controlled support and sentence building.',stage:'supported'},
+ {key:'use',label:'Use in Context',goal:'Use the language in a realistic situation with reduced support.',stage:'developing'},
+ {key:'master',label:'Master & Transfer',goal:'Combine comprehension, recall and communication in a fresh context.',stage:'independent'}
+];
+Object.entries(C.languages||{}).forEach(([lang,L])=>{
+ const base=(L.units||[]).slice(0,30),expanded=[];
+ base.forEach((u,baseIndex)=>phases.forEach((p,phaseIndex)=>{
+   const n=baseIndex*5+phaseIndex+1;
+   expanded.push({...u,id:n,baseUnit:baseIndex+1,phase:p.key,learningStage:p.stage,
+     title:`${u.title} — ${p.label}`,
+     goal:`${p.goal} ${u.goal||''}`.trim(),
+     canDo: phaseIndex<2?`Recognise, understand and pronounce the taught ${String(u.title||'language').toLowerCase()} language with support.`:
+       phaseIndex===2?`Recall and build with the taught ${String(u.title||'language').toLowerCase()} language using controlled support.`:
+       phaseIndex===3?`Use the taught ${String(u.title||'language').toLowerCase()} language in a realistic guided situation.`:
+       `Use and adapt the ${String(u.title||'language').toLowerCase()} language in a new situation without copying a model answer.`,
+     transfer: phaseIndex<3?`Practise only material already introduced in this five-part learning cycle.`:(u.transfer||`Use the unit language in a closely related real-life situation.`),
+     reviewPolicy:phaseIndex===0?'new-material':phaseIndex===4?'cumulative-mastery':'spaced-retrieval'
+   });
+ }));
+ L.units=expanded;
+});
+C.days=150;C.sessionsPerDay=8;C.programLabel='150-unit complete mastery pathway';C.activityCountPerLanguage=1200;
+C.version='18.8.25-150-unit-spiral-curriculum';
+C.curriculumArchitecture={unitsPerLanguage:150,blocksPerUnit:8,blocksPerLanguage:1200,coreTopicCycles:30,stepsPerCycle:5,principle:'teach-listen-speak-build-use-master with intentional spaced retrieval; no fabricated translations'};
 })();
