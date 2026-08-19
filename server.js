@@ -427,7 +427,7 @@ async function handleAPI(req,res,pathname){
   for(const [teacher,t] of Object.entries(db.teachers||{}))for(const [studentEmail,msgs] of Object.entries(t.studentMessages||{})){
    const arr=Array.isArray(msgs)?msgs:[],last=arr.at(-1),lastStudent=[...arr].reverse().find(x=>x.from==='student'),lastTeacher=[...arr].reverse().find(x=>x.from==='teacher');
    const unanswered=Boolean(lastStudent&&(!lastTeacher||Date.parse(lastStudent.createdAt)>Date.parse(lastTeacher.createdAt)));
-   rows.push({teacher,studentEmail,studentName:threadStudentDisplayName(studentEmail,arr),lastMessage:last||null,unanswered,messageCount:arr.length});
+   rows.push({teacher,studentEmail,studentName:threadStudentDisplayName(studentEmail,arr),lastMessage:last||null,unanswered,messageCount:arr.length,messages:arr.map(m=>({from:m.from,name:m.name||m.from,text:m.text||'',paymentLink:m.paymentLink||'',createdAt:m.createdAt||''}))});
   }
   rows.sort((x,y)=>String(y.lastMessage?.createdAt||'').localeCompare(String(x.lastMessage?.createdAt||'')));
   const adb=loadApplications(),notifications=(adb.teacherMessageNotifications||[]).slice().sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,100);return json(res,200,{threads:rows,unanswered:rows.filter(x=>x.unanswered).length,notifications,notificationCount:notifications.filter(x=>x.status==='unanswered').length});
