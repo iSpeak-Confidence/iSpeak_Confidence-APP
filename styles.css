@@ -1320,3 +1320,91 @@ dialog.booking-dialog .booking-layout{grid-template-columns:minmax(0,1.15fr) min
 
 /* V18.8.29 — verified student-certificate authorization signature */
 .student-cert-award-footer{display:grid;grid-template-columns:1fr 1.35fr 1fr;align-items:end;gap:28px;margin-top:28px;padding-top:22px;border-top:1px solid #d5c39a}.student-cert-award-footer>span{min-width:0}.student-cert-award-footer small{display:block;font:700 9px Arial,sans-serif;letter-spacing:1.4px;color:#687782;text-transform:uppercase}.student-cert-award-footer b{display:block;margin-top:6px;font:700 12px Arial,sans-serif;color:#102f48}.student-cert-authority{text-align:center;display:flex;flex-direction:column;align-items:center}.student-cert-authority .nathan-signature{display:block;width:210px;padding:0 8px 5px;border-bottom:1px solid #102f48;font-family:"Segoe Script","Brush Script MT","Lucida Handwriting",cursive;font-size:27px;font-weight:500;line-height:1.05;color:#102f48;transform:rotate(-2deg);text-decoration:none}.student-cert-authority b{font-size:11px}.student-cert-authority small{margin-top:3px;font-size:7px;letter-spacing:1px}.student-cert-authority em{margin-top:2px;font:600 7px Arial,sans-serif;letter-spacing:1px;color:#159f9a;font-style:normal}.student-cert-id{text-align:right}.student-home-authority{display:flex!important;flex-direction:column;align-items:center;justify-content:end}.student-home-authority i{font-family:"Segoe Script","Brush Script MT","Lucida Handwriting",cursive!important;font-size:14px!important;line-height:1!important;color:#102f48!important;border-bottom:1px solid #102f48;padding:0 7px 2px;transform:rotate(-2deg);font-style:italic!important}.student-home-authority b{font:700 7px Arial,sans-serif!important;color:#102f48!important}.student-home-authority small{font:600 5px Arial,sans-serif!important;letter-spacing:.4px!important;color:#687782!important}.student-cert-date{text-align:left}@media(max-width:700px){.student-cert-award-footer{grid-template-columns:1fr;gap:20px;text-align:center}.student-cert-date,.student-cert-id{text-align:center}.student-cert-authority{order:3}}
+
+/* V18.8.30 — learning click reliability + mobile certificate/layout hardening */
+.finish-study-status{display:block;min-height:18px;margin:-5px 0 12px;text-align:center;font-size:11px;color:#86a7b8}
+.finish-study:not(:disabled){touch-action:manipulation}
+#launchConversation,#backDay,.answer-grid button{touch-action:manipulation}
+.certificate-showcase,.certificate-showcase-copy,.teacher-style-home-cert,.student-home-teacher-paper{min-width:0!important;max-width:100%!important}
+.certificate-showcase{overflow:hidden!important}
+.student-cert-home-preview{min-width:0!important;overflow:hidden!important}
+.student-home-brand div,.student-home-meta span,.certificate-milestones .cert-milestone{min-width:0!important}
+.cert-preview-progress span{overflow-wrap:anywhere}
+@media(max-width:760px){
+ .certificate-showcase{grid-template-columns:minmax(0,1fr)!important;padding:14px!important;gap:18px!important}
+ .certificate-showcase-copy{width:100%!important;overflow:hidden!important}
+ .cert-preview-progress{grid-template-columns:minmax(0,1fr) auto!important;gap:7px 9px!important}
+ .cert-preview-progress>span{grid-column:1/-1!important;white-space:normal!important}
+ .certificate-milestones{grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important}
+ .teacher-style-home-cert{width:100%!important;margin:0 auto!important}
+ .student-home-teacher-paper{width:100%!important;padding:72px 20px 22px!important}
+ .student-home-brand{left:20px!important;top:22px!important;max-width:calc(100% - 105px)!important}
+ .student-home-brand b{font-size:13px!important;line-height:1.1!important}
+ .student-home-ribbon{right:18px!important;top:18px!important;width:55px!important;height:74px!important}
+ .student-home-teacher-paper h3{font-size:17px!important;letter-spacing:1.4px!important;margin:22px 12px 14px!important}
+ .student-home-teacher-paper>strong{width:auto!important;max-width:90%!important;padding:0 12px 5px!important;font-size:26px!important;overflow-wrap:anywhere!important}
+ .student-home-teacher-paper h4{font-size:19px!important;max-width:92%!important}
+ .student-home-meta{grid-template-columns:1fr!important;gap:9px!important}
+ .student-home-stamp{position:relative!important;left:auto!important;bottom:auto!important;transform:rotate(-4deg)!important;display:inline-block!important;margin:12px auto 0!important}
+}
+@media(max-width:480px){
+ .certificate-showcase{padding:12px 10px!important;border-radius:18px!important}
+ .certificate-showcase-copy h2{font-size:23px!important}
+ .certificate-showcase-copy p{font-size:14px!important}
+ .certificate-milestones{grid-template-columns:1fr!important}
+ .certificate-milestones .cert-milestone:last-child{grid-column:auto!important}
+ .student-home-teacher-paper{padding:68px 15px 18px!important;min-height:0!important}
+ .student-home-brand{left:16px!important;gap:5px!important}.student-home-brand img{width:34px!important;height:34px!important}
+ .student-home-brand b{font-size:11px!important}.student-home-brand small{font-size:5px!important}
+ .student-home-ribbon{right:14px!important;width:50px!important;height:68px!important}.student-home-ribbon b{font-size:18px!important}
+ .student-home-teacher-paper h3{font-size:16px!important;line-height:1.25!important;margin-top:20px!important}
+ .student-home-teacher-paper>strong{font-size:24px!important}
+ .student-home-teacher-paper h4{font-size:18px!important;line-height:1.2!important}
+ .student-home-credentials{font-size:8px!important;margin:10px auto!important}
+ .student-home-level{font-size:7px!important;white-space:normal!important}
+ #modal{width:calc(100vw - 10px)!important;max-width:calc(100vw - 10px)!important;margin:auto!important}
+ #modalBody{min-width:0!important;overflow-x:hidden!important}
+ #modalBody .answer-grid,#modalBody .anchor-grid,#modalBody .session-grid{min-width:0!important;width:100%!important}
+ #modalBody .answer-grid button,#modalBody input,#modalBody textarea{max-width:100%!important;min-width:0!important;overflow-wrap:anywhere!important}
+}
+
+
+/* V18.8.31 practice/academy readability + mobile interaction hardening */
+#writingInstruction.feedback{background:#e9fbf3!important;color:#123b31!important;border:1px solid #72c7ac!important;font-size:16px!important;line-height:1.55!important;font-weight:650!important;overflow-wrap:anywhere!important}
+#writingInstruction.feedback b{color:#073f36!important;font-size:1.08em!important}
+.practice-feedback{color:#d9eef6!important;background:#0a2436!important;border:1px solid #2b6078!important;border-radius:12px!important;padding:12px!important;line-height:1.5!important}
+@media(max-width:700px){
+ #modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;max-height:96dvh!important;border-radius:16px!important}
+ #modalBody{padding:22px 14px 30px!important}
+ .writing-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-height:46dvh!important;overflow-y:auto!important;overflow-x:hidden!important}
+ .writing-card{min-width:0!important;padding:12px 8px!important}.writing-card b{font-size:clamp(32px,12vw,52px)!important}.writing-card span{overflow-wrap:anywhere!important}
+ #traceCanvas{height:230px!important;max-width:100%!important}
+ .writing-controls{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ .practice-grid{grid-template-columns:1fr!important}.practice-grid button{min-height:118px!important;width:100%!important;max-width:100%!important}
+ .ielts-level-grid,.ielts-skill-grid,.ielts-unit-list,.mock-list,.mock-sections{grid-template-columns:1fr!important;max-width:100%!important;min-width:0!important}
+ .ielts-dialog,.ielts-dialog>*{max-width:100%!important;min-width:0!important}.ielts-dialog button{white-space:normal!important;overflow-wrap:anywhere!important}
+ .library-paths,.library-grid,.library-ai-tools{grid-template-columns:1fr!important}.library-path,.book-card,.library-ai-card{min-width:0!important;max-width:100%!important}
+}
+
+/* V18.8.38 — Story Series temporarily unavailable */
+.coming-soon-card,
+.coming-soon-card:disabled {
+  cursor: default;
+  opacity: .82;
+}
+.coming-soon-card:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+.coming-soon-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: .45rem;
+  padding: .42rem .8rem;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}

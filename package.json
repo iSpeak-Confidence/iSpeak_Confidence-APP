@@ -1,12 +1,12 @@
 {
-  "name": "ispeak-confidence-v18-8-25",
-  "version": "18.8.25",
+  "name": "ispeak-confidence-v18-8-37",
+  "version": "18.8.38",
   "private": true,
   "scripts": {
     "start": "node server.js",
     "qa": "node qa-v18-8-12.js && node qa-v18-8-15.js && node qa-v18-8-16.js && node qa-v18-8-17.js",
     "qa:hardening": "node qa-v18-8-22.js",
-    "release-gate": "node qa-150-unit-curriculum.js && node qa-learning-progression-v18-8-25.js && node qa-v18-8-25.js && node qa-v18-8-22.js && npm run qa"
+    "release-gate": "node qa-150-unit-curriculum.js && node qa-learning-progression-v18-8-25.js && node qa-certificate-150-unit-gate.js && node qa-student-certificate-previews.js && node qa-student-certificate-teacher-style.js && node qa-v18-8-37-story-direct-controls.js && node qa-v18-8-36-story-render.js && node qa-v18-8-32-mobile-practice.js && node qa-v18-8-32-interactions.js && node qa-v18-8-32-button-audit.js && node qa-v18-8-36-button-recovery.js && npm run qa"
   },
   "engines": {
     "node": ">=18"

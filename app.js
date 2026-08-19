@@ -22,6 +22,34 @@ function analyticsDevice(){return matchMedia('(max-width: 700px)').matches?'mobi
 function trackAnalytics(type,extra={}){const body={type,session:ISPEAK_ANALYTICS_SESSION,page:document.querySelector('.view.active,.page.active')?.id||location.pathname,language:state?.language||'',uiLanguage:state?.uiLanguage||'',device:analyticsDevice(),source:new URLSearchParams(location.search).get('utm_source')||document.referrer?.split('/')[2]||'direct',...extra};fetch('/api/analytics/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true}).catch(()=>{})}
 setTimeout(()=>trackAnalytics('session_start'),1200);
 document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b)return;const target=(b.dataset?.teacher?`teacher:${b.dataset.teacher}`:b.dataset?.view?`nav:${b.dataset.view}`:b.id||b.textContent||b.getAttribute('aria-label')||'control').trim().slice(0,120);trackAnalytics('click',{target});if(b.classList.contains('book-btn'))trackAnalytics('booking_start',{target:b.dataset.teacher||''});if(b.classList.contains('profile-btn'))trackAnalytics('teacher_view',{target:b.dataset.profile||''})},{passive:true});
+
+// V18.8.37 critical interaction router. Installed at the top of the app in capture phase
+// so core navigation cannot depend on later render-time onclick bindings.
+document.addEventListener('click',function ispeakCriticalRouter(e){
+ const t=e.target?.closest?.('button,a');if(!t)return;
+ // Learning completion: the rendered button is the source of truth for its unit/day/block.
+ if(t.classList.contains('finish-study')){
+   e.preventDefault();e.stopImmediatePropagation();
+   if(t.disabled)return;
+   if(!refreshFinishButtonState(t))return;
+   const u=Number(t.dataset.unit),d=Number(t.dataset.day),s=Number(t.dataset.session);
+   if(!Number.isInteger(u)||!Number.isInteger(d)||!Number.isInteger(s))return toast('This learning block could not be identified. Reopen the unit and try again.');
+   t.disabled=true;t.textContent='Saving completion…';
+   try{completeStudy(u,d,s)}catch(err){console.error('Learning block completion failed',err);t.disabled=false;t.textContent='Complete this learning block';toast('Could not save this learning block. Please try again.')}
+   return;
+ }
+ // Library entry points must work on initial load, after rerenders, and on mobile.
+ if(t.matches('[data-view="library"],[data-nav="library"]')){e.preventDefault();e.stopImmediatePropagation();setView('library');return}
+ if(t.id==='openClassicLibrary'){e.preventDefault();e.stopImmediatePropagation();openClassicLibrary();return}
+ if(t.matches('[data-library-home]')){e.preventDefault();e.stopImmediatePropagation();libraryHome();return}
+ if(t.id==='classicLibraryBack'){e.preventDefault();e.stopImmediatePropagation();libraryHome();return}
+ if(t.matches('[data-read]')){e.preventDefault();e.stopImmediatePropagation();openReader(t.dataset.read);return}
+ // IELTS main entry/actions get the same persistent routing.
+ if(t.matches('[data-view="ielts"],[data-nav="ielts"]')){e.preventDefault();e.stopImmediatePropagation();setView('ielts');renderIELTS();return}
+ if(t.id==='ieltsDiagnostic'){e.preventDefault();e.stopImmediatePropagation();openIELTSDiagnostic();return}
+ if(t.id==='ieltsMocks'||t.id==='ieltsMocks2'){e.preventDefault();e.stopImmediatePropagation();openIELTSMocks();return}
+ if(t.dataset.ieltsSkill){e.preventDefault();e.stopImmediatePropagation();openIELTSSkill(t.dataset.ieltsSkill);return}
+},true);
 const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const courseOrderSafe=()=>['khmer','english','mandarin','spanish','french','japanese','arabic'];
 const defaults={schemaVersion:1800,language:'khmer',xp:0,streak:0,completed:[],attempts:0,correct:0,dailyGoal:3,lastDay:'',activity:{},name:'Student',bookings:[],mascot:'jess',voice:true,roomMode:'talk',coins:20,mood:92,energy:88,ownedAccessories:['none'],accessory:'none',placement:{},studyCompleted:[],studyMinutes:0,email:'',certificates:{},unitMastery:{},placementDetail:{},uiLanguage:'english',onboardingDone:false,onboardingVersion:0,learningPlan:{reason:'Conversation',minutes:15,targetDate:'',targetLevel:'Beginner'},quests:{},missionProgress:{},pronunciationHistory:[],account:null,cloudSyncAt:null,khmerNativeSeen:[],libraryNotes:{},skillEvidence:{},errorHistory:[],learnerModel:{},translationFallbacks:{},heroReadingProgress:{},ieltsProgress:{},courseScriptMode:{}};
@@ -1094,10 +1122,55 @@ function openWritingAcademy(){
  update();
 }
 
+function practiceUnitLimit(lang=state.language){
+ const units=longCourse.languages[lang]?.units||[];
+ if(!units.length)return 0;
+ const completed=(state.studyCompleted||[]).filter(x=>x.startsWith(lang+'-u'));
+ let highest=0;
+ for(const id of completed){const m=id.match(/-u(\d+)-/);if(m)highest=Math.max(highest,Number(m[1])||0)}
+ const placement=Math.max(0,Number(state.placementDetail?.[lang]?.unit||0));
+ // Practice follows material the learner has reached. At the very beginning, expose enough
+ // foundation material for a real practice session without opening the whole future course.
+ return Math.min(units.length,Math.max(5,highest+1,placement||1));
+}
 function unitPool(lang=state.language){
- const units=longCourse.languages[lang]?.units||[];const all=[];
- units.slice(0,Math.max(3,state.placementDetail?.[lang]?.unit||3)).forEach(u=>(u.anchors||[]).forEach(a=>all.push({target:String(a.target||''),meaning:String(a.meaning||''),unit:u.title})));
- return all.filter(x=>x.target&&x.meaning);
+ const units=longCourse.languages[lang]?.units||[],all=[],limit=practiceUnitLimit(lang);
+ units.slice(0,limit).forEach((u,ui)=>(u.anchors||[]).forEach(a=>all.push({target:String(a.target||''),meaning:String(a.meaning||''),reading:String(a.reading||''),unit:u.title,unitNumber:ui+1})));
+ return all.filter((x,i,a)=>x.target&&x.meaning&&a.findIndex(y=>y.target===x.target&&y.meaning===x.meaning)===i);
+}
+function practiceRoundPool(max=12){
+ const pool=unitPool();
+ const shuffled=pool.map(v=>({v,r:Math.random()})).sort((a,b)=>a.r-b.r).map(x=>x.v);
+ return shuffled.slice(0,Math.min(max,shuffled.length));
+}
+function openSpeakingPracticeRoom(){
+ const l=languages[state.language],items=practiceRoundPool(10);
+ if(!items.length)return toast('Start the course first to unlock speaking practice.');
+ let i=0,attempted=0;
+ const draw=()=>{
+   const x=items[i];
+   modal(`<span class="eyebrow">SPEAKING ROOM • ${i+1}/${items.length}</span><h2>Listen, then say the complete expression</h2><div class="word"><div class="big">${esc(courseDisplayExpression(x))}</div><p>${esc(x.reading||'')}</p><small>${esc(supportMeaning(x.meaning,state.language))}</small></div><button id="practiceHearModel" class="secondary wide">🔊 Hear model</button><button id="practiceSpeakNow" class="primary wide">🎙️ Speak now</button><p id="practiceSpeechFeedback" class="practice-feedback">Say the whole expression naturally.</p><button id="practiceSpeechNext" class="secondary wide" disabled>${i===items.length-1?'Finish room':'Next expression'}</button>`);
+   $('#practiceHearModel').onclick=()=>playVerifiedLanguageAudio(x.target);
+   $('#practiceSpeakNow').onclick=()=>{
+     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+     if(!SR){$('#practiceSpeechFeedback').textContent='Speech recognition is unavailable in this browser. Practise aloud, then continue.';attempted++;$('#practiceSpeechNext').disabled=false;return}
+     const r=new SR();r.lang=l.lang;r.interimResults=false;$('#practiceSpeechFeedback').textContent='Listening…';
+     r.onresult=e=>{const heard=e.results[0][0].transcript||'';$('#practiceSpeechFeedback').textContent=`I heard: “${heard}”`;attempted++;recordLearningEvidence('speech',true,{target:x.target,source:'practice-room'});$('#practiceSpeechNext').disabled=false};
+     r.onerror=e=>{$('#practiceSpeechFeedback').textContent=e.error==='not-allowed'?'Microphone permission is blocked. Allow microphone access in your browser, then try again.':e.error==='audio-capture'?'No working microphone was found. Check your microphone/device settings.':e.error==='no-speech'?'No speech was detected. Try again and speak clearly.':'Speech recognition could not complete this attempt. Try again.';$('#practiceSpeechNext').disabled=false};
+     try{r.start()}catch(e){$('#practiceSpeechFeedback').textContent='The microphone could not start. Check browser microphone permission.';$('#practiceSpeechNext').disabled=false}
+   };
+   $('#practiceSpeechNext').onclick=()=>{if(i<items.length-1){i++;draw();return}state.xp+=Math.max(10,attempted*2);save();$('#modal').close();toast(`Speaking room complete • ${items.length} expressions`)};
+ };draw();
+}
+function openListeningPracticeRoom(){
+ const items=practiceRoundPool(10);if(items.length<2)return toast('Start the course first to unlock listening practice.');
+ if(state.language==='khmer')return openKhmerNativeListening();
+ let i=0,score=0;
+ const draw=()=>{const x=items[i],wrong=unitPool().filter(y=>y.target!==x.target&&y.meaning!==x.meaning).sort(()=>Math.random()-.5).slice(0,3);
+   modal(`<span class="eyebrow">LISTENING ROOM • ${i+1}/${items.length}</span><h2>Listen before reading</h2><p>Play the full expression, choose its meaning, then continue to a new item.</p><button id="practiceListenPlay" class="primary wide">🔊 Play expression</button><div class="answer-grid">${[x,...wrong].sort(()=>Math.random()-.5).map(y=>`<button data-practice-listen="${esc(y.target)}">${esc(supportMeaning(y.meaning,state.language))}</button>`).join('')}</div><p id="practiceListenResult" class="practice-feedback"></p>`);
+   $('#practiceListenPlay').onclick=()=>playVerifiedLanguageAudio(x.target);
+   $$('[data-practice-listen]',$('#modalBody')).forEach(b=>b.onclick=()=>{const ok=b.dataset.practiceListen===x.target;if(ok)score++;recordLearningEvidence('listen',ok,{target:x.target,source:'practice-room'});i++;if(i<items.length)setTimeout(draw,180);else{state.xp+=Math.max(10,score*2);save();modal(`<span class="eyebrow">LISTENING ROOM COMPLETE</span><h2>${score}/${items.length}</h2><p>You completed a full listening set using material from the part of the course you have reached.</p><button id="practiceListenDone" class="primary wide">Done</button>`);$('#practiceListenDone').onclick=()=>$('#modal').close()}});
+ };draw();
 }
 function openGames(){
  const pool=unitPool();if(pool.length<4)return toast('Complete more learning material to unlock games.');
@@ -1193,10 +1266,9 @@ function openKhmerNativeListening(){
  $$('[data-native-audio]',$('#modalBody')).forEach(b=>b.onclick=()=>{if(b.dataset.nativeAudio!==item.audio){$('#nativeResult').textContent='Not correct. Listen to the entire recording again.';return}state.khmerNativeSeen.push(item.audio);state.xp+=8;save();$('#nativeResult').innerHTML='<b>Correct.</b> This recording is now complete and will not be repeated.';setTimeout(openKhmerNativeListening,650)});
 }
 $$('[data-practice]').forEach(b=>b.onclick=()=>{const kind=b.dataset.practice,l=languages[state.language];
- if(kind==='speech')openSpeech({title:'Speaking practice',word:l.speech[0],reading:l.speech[1],meaning:l.speech[2]},`practice-${state.language}`);
+ if(kind==='speech'){openSpeakingPracticeRoom();return}
  if(kind==='cards'){let i=0;const pool=unitPool().filter((x,j,a)=>a.findIndex(y=>y.target===x.target)===j).slice(0,20);const cards=pool.length?pool:l.cards.map(c=>({target:c[0],meaning:c[2],reading:c[1]}));const draw=()=>{const c=cards[i];modal(`<span class="eyebrow">VOCABULARY CHALLENGE • ONE PASS</span><h2>${i+1}/${cards.length}</h2><p>Recall the meaning before revealing it. This item will not loop back into the same session.</p><div class="word"><div class="big">${c.target}</div><p>${c.reading||''}</p><div id="cardMeaning" style="display:none"><b>${esc(c.meaning)}</b></div></div><button id="revealCard" class="secondary">Reveal answer</button><button id="cardNext" class="primary wide">Next new item</button>`);$('#revealCard').onclick=()=>$('#cardMeaning').style.display='block';$('#cardNext').onclick=()=>{i++;if(i>=cards.length){state.xp+=15;save();$('#modal').close();toast('Vocabulary challenge complete +15 XP')}else draw()}};draw()}
- if(kind==='listen'&&state.language==='khmer'){openKhmerNativeListening();return}
- if(kind==='listen'){const pool=unitPool(),x=pool[0]||{target:l.speech[0],meaning:l.speech[2]};modal(`<h2>Listening practice</h2><p>Listen without reading first, then choose the meaning and repeat it aloud.</p><button id="playListen" class="primary wide">🔊 Play phrase</button><div class="answer-grid">${[x.meaning,...pool.slice(1,4).map(y=>y.meaning)].map(c=>`<button data-listen-practice="${esc(c)}">${esc(c)}</button>`).join('')}</div><p id="listenPracticeResult"></p>`);$('#playListen').onclick=()=>{playVerifiedLanguageAudio(x.target)};$$('[data-listen-practice]',$('#modalBody')).forEach(b=>b.onclick=()=>{if(b.dataset.listenPractice===x.meaning){$('#listenPracticeResult').textContent='Correct.';state.xp+=5;save()}else{$('#listenPracticeResult').textContent='Not quite. Listen to the complete phrase again, then continue with new material.'}})}
+ if(kind==='listen'){openListeningPracticeRoom();return}
  if(kind==='pronunciation'){const p=unitPool();if(p.length)openPronunciationCoach(p[0].target);else toast('Complete some course material first.')}
  if(kind==='writing')openWritingAcademy();
  if(kind==='games')openGames();
@@ -1211,16 +1283,20 @@ function completeStudy(unitIndex,dayIndex,sessionIndex){
  const id=studyId(unitIndex,dayIndex,sessionIndex),lang=state.language,wasComplete=courseComplete(lang);
  const wasAlreadyDone=state.studyCompleted.includes(id);
  if(!wasAlreadyDone){state.studyCompleted.push(id);const elapsed=studyBlockStartedAt?Math.max(1,Math.min(60,Math.round((Date.now()-studyBlockStartedAt)/60000))):1;state.studyMinutes=(state.studyMinutes||0)+elapsed;state.xp+=25;state.coins=(state.coins||0)+5;const skillKey=studyTypes[sessionIndex]?.key||'learn';recordLearningEvidence(skillKey,true,{independent:['transfer','grammar','conversation','mastery'].includes(skillKey),transfer:skillKey==='transfer',source:'guided-block'});const d=today();state.activity[d]=(state.activity[d]||0)+1;if(state.lastDay!==d){const y=new Date();y.setDate(y.getDate()-1);const yd=`${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;state.streak=state.lastDay===yd?(state.streak||0)+1:1;state.lastDay=d}}
- updateQuestProgress('lesson',1);save();
+ updateQuestProgress('lesson',1);
+ // Save completion without a full-app rerender. A global render can rebuild surrounding
+ // learning UI while this dialog is transitioning and was the reason some devices landed
+ // on the unit overview instead of the block list. Persist first, then redraw only this unit.
+ localSave();
+ if(state.account?.token){clearTimeout(__cloudTimer);__cloudTimer=setTimeout(()=>cloudSave().catch(()=>{}),900)}
  const lastBlock=sessionIndex>=studyTypes.length-1;
  const units=longCourse.languages[lang]?.units||[];
  const lastUnit=unitIndex>=units.length-1;
  if(!wasAlreadyDone)toast(lastBlock&&!lastUnit?`Lesson ${unitIndex+1} complete • Lesson ${unitIndex+2} unlocked`:'Learning activity complete • +25 XP');
  if(!wasComplete&&courseComplete(lang)){maybeAwardCertificate(lang);return}
- // Progress forward automatically. Blocks 1–7 open the next block; mastery opens the next lesson.
- // This shared handler powers all seven language courses, so progression behaves consistently everywhere.
- if(!lastBlock){openStudySession(unitIndex,dayIndex,sessionIndex+1);return}
- if(!lastUnit){openStudyDay(unitIndex+1,0);return}
+ // After a block is completed, return exactly one level to this unit's block list.
+ // The completed block is visibly checked there and the next block is unlocked.
+ // Do not jump straight into the next block or all the way back to the unit overview.
  openStudyDay(unitIndex,dayIndex);
 }
 function openLongUnit(unitIndex){
@@ -1329,12 +1405,26 @@ function meaningfulIELTSWriting(text,minWords){
  const sentences=String(text||'').split(/[.!?]+/).map(x=>x.trim()).filter(x=>x.split(/\s+/).length>=5);return sentences.length>=Math.max(3,Math.floor(minWords/80));
 }
 function finishBlockButton(unitIndex,dayIndex,sessionIndex,requireId=''){
- return `<button class="primary wide finish-study" data-finish="${sessionIndex}" ${requireId?`data-require="${requireId}" disabled`:''}>Complete this learning block</button>`;
+ return `<button type="button" class="primary wide finish-study" data-finish="${sessionIndex}" data-unit="${unitIndex}" data-day="${dayIndex}" data-session="${sessionIndex}" ${requireId?`data-require="${requireId}" disabled`:''}>Complete this learning block</button><small class="finish-study-status" aria-live="polite"></small>`;
+}
+function refreshFinishButtonState(btn){
+ if(!btn)return false;
+ const status=btn.nextElementSibling?.classList?.contains('finish-study-status')?btn.nextElementSibling:null;
+ if(!btn.dataset.require){btn.disabled=false;if(status)status.textContent='Ready to complete.';return true}
+ const field=$('#'+btn.dataset.require);if(!field){btn.disabled=true;if(status)status.textContent='Complete the activity above first.';return false}
+ const v=String(field.value||'').trim(),exact=field.dataset.exact;
+ const ready=exact?courseExactAnswerAccepted(field,v):meaningfulProduction(v,18);
+ btn.disabled=!ready;
+ if(status)status.textContent=ready?'Ready — tap Complete this learning block.':'Complete the activity above to continue.';
+ return ready;
 }
 function wireFinish(unitIndex,dayIndex,sessionIndex){
- const btn=$('.finish-study',$('#modalBody'));if(btn&&btn.dataset.require){const field=$('#'+btn.dataset.require);if(field){const check=()=>{const v=String(field.value||'').trim(),exact=field.dataset.exact;btn.disabled=exact?!courseExactAnswerAccepted(field,v):!meaningfulProduction(v,18)};field.addEventListener('input',check);field.addEventListener('change',check);check()}}
- const b=$('[data-finish]',$('#modalBody'));if(b)b.onclick=()=>{if(b.disabled)return;completeStudy(unitIndex,dayIndex,sessionIndex)};
+ const btn=$('.finish-study',$('#modalBody'));if(!btn)return;
+ if(btn.dataset.require){const field=$('#'+btn.dataset.require);if(field){const check=()=>refreshFinishButtonState(btn);field.addEventListener('input',check);field.addEventListener('change',check);check()}else refreshFinishButtonState(btn)}else refreshFinishButtonState(btn);
+ // Completion itself is handled by the capture-phase critical router. Keeping a single
+ // handler prevents duplicate completion/navigation when modal content is rerendered.
 }
+
 function openStudySession(unitIndex,dayIndex,sessionIndex){
  studyBlockStartedAt=Date.now();
  const u=longCourse.languages[state.language].units[unitIndex],s=studyTypes[sessionIndex],anchors=studyAnchors(u),dayNo=unitIndex+1;
@@ -1370,12 +1460,12 @@ function openStudySession(unitIndex,dayIndex,sessionIndex){
   else {const adv=advancedCourseChallenge(unitIndex);body=adv?`<div class="study-plan advanced-course-challenge"><b>Advanced Communication Patterns</b><p>At this level, grammar is used to manage meaning in a real conversation rather than complete an isolated pattern.</p><p><strong>Scenario:</strong> ${esc(adv.prompt)}</p></div><label>Write a second, differently worded response in the target language<textarea id="grammarProof" rows="7" placeholder="Express the same goal naturally in a different way in the target language"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'grammarProof')}`:`<div class="study-plan"><b>${esc(lessonT('grammar'))}</b><p><strong>${esc(lessonT('focus'))}</strong> ${esc(u.grammarFocus||'Use the grammar patterns supported by this unit.')}</p></div><div class="anchor-grid">${anchorCards}</div><label>${esc(lessonT('applyGrammar'))}<textarea id="grammarProof" rows="4" placeholder="Create a new example, not a copied anchor"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'grammarProof')}`}
  }
  if(s.key==='conversation'){
-  if(beginner){body=`<div class="study-plan"><b>Beginner conversation</b><p>First learn to recognise and say useful responses. You do not need to write an original sentence.</p></div><div class="anchor-grid">${anchorCards}</div><button id="launchConversation" class="primary wide">💬 ${esc(lessonT('openBuddy'))}</button><p>After practising aloud, choose a response you could use:</p><div class="answer-grid">${[a,b].filter(x=>x.target).map(x=>`<button type="button" data-conversation-guided="${esc(show(x))}">${esc(show(x))}</button>`).join('')}</div><input id="conversationProof" type="hidden">${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`}
-  else if(guided||developing){body=`<div class="study-plan"><b>Supported conversation</b><p>Practise aloud, then write one taught response. Independent conversation writing begins later.</p></div><div class="anchor-grid">${anchorCards}</div><button id="launchConversation" class="primary wide">💬 ${esc(lessonT('openBuddy'))}</button><label>Write one response you practised<textarea id="conversationProof" rows="3" data-exact="${esc(expected(a))}" placeholder="Use the selected writing system"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`}
-  else {const adv=advancedCourseChallenge(unitIndex);body=adv?`<div class="study-plan advanced-course-challenge"><b>Advanced ${esc(adv.language)} Conversation • ${esc(adv.title)}</b><p>${esc(adv.prompt)}</p><p><strong>Your response must:</strong></p><ul>${adv.requirements.map(r=>`<li>${esc(r)}</li>`).join('')}</ul><p>Communicate the ideas naturally rather than memorising one sentence.</p></div><button id="launchConversation" class="primary wide">💬 Practise this scenario with ${esc(mascotProfiles[languages[state.language].mascot].name)}</button><label>After the conversation, write the response you used in the target language<textarea id="conversationProof" rows="6" placeholder="Write a substantial natural response in the target language"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`:`<div class="study-plan"><b>${esc(lessonT('conversation'))}</b><p>${esc(lessonT('conversationInstruction'))}</p></div><div class="anchor-grid">${anchorCards}</div><button id="launchConversation" class="primary wide">💬 ${esc(lessonT('openBuddy'))}</button><label>${esc(lessonT('afterConversation'))}<textarea id="conversationProof" rows="3"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`}
+  if(beginner){body=`<div class="study-plan"><b>Beginner conversation</b><p>First learn to recognise and say useful responses. You do not need to write an original sentence.</p></div><div class="anchor-grid">${anchorCards}</div><button type="button" id="launchConversation" class="primary wide" data-buddy-unit="${unitIndex}">💬 ${esc(lessonT('openBuddy'))}</button><p>After practising aloud, choose a response you could use:</p><div class="answer-grid">${[a,b].filter(x=>x.target).map(x=>`<button type="button" data-conversation-guided="${esc(show(x))}">${esc(show(x))}</button>`).join('')}</div><input id="conversationProof" type="hidden">${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`}
+  else if(guided||developing){body=`<div class="study-plan"><b>Supported conversation</b><p>Practise aloud, then write one taught response. Independent conversation writing begins later.</p></div><div class="anchor-grid">${anchorCards}</div><button type="button" id="launchConversation" class="primary wide" data-buddy-unit="${unitIndex}">💬 ${esc(lessonT('openBuddy'))}</button><label>Write one response you practised<textarea id="conversationProof" rows="3" data-exact="${esc(expected(a))}" placeholder="Use the selected writing system"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`}
+  else {const adv=advancedCourseChallenge(unitIndex);body=adv?`<div class="study-plan advanced-course-challenge"><b>Advanced ${esc(adv.language)} Conversation • ${esc(adv.title)}</b><p>${esc(adv.prompt)}</p><p><strong>Your response must:</strong></p><ul>${adv.requirements.map(r=>`<li>${esc(r)}</li>`).join('')}</ul><p>Communicate the ideas naturally rather than memorising one sentence.</p></div><button type="button" id="launchConversation" class="primary wide" data-buddy-unit="${unitIndex}">💬 Practise this scenario with ${esc(mascotProfiles[languages[state.language].mascot].name)}</button><label>After the conversation, write the response you used in the target language<textarea id="conversationProof" rows="6" placeholder="Write a substantial natural response in the target language"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`:`<div class="study-plan"><b>${esc(lessonT('conversation'))}</b><p>${esc(lessonT('conversationInstruction'))}</p></div><div class="anchor-grid">${anchorCards}</div><button type="button" id="launchConversation" class="primary wide" data-buddy-unit="${unitIndex}">💬 ${esc(lessonT('openBuddy'))}</button><label>${esc(lessonT('afterConversation'))}<textarea id="conversationProof" rows="3"></textarea></label>${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'conversationProof')}`}
  }
  if(s.key==='mastery')body=`<div class="study-plan"><b>${esc(lessonT('mastery'))}</b><p>${esc(lessonT('masteryInstruction'))}</p></div><button id="startMastery" class="primary wide">🏆 ${esc(lessonT('startMastery'))}</button>${sourceBlock(u)}`;
- modal(`${directionMarkup()}<span class="eyebrow">DAY ${dayNo} • BLOCK ${sessionIndex+1}/8</span><h2>${s.icon} ${s.name}</h2><p>${esc(u.title)} — ${esc(u.goal)}</p>${courseScriptChoiceMarkup(unitIndex)}${body}<button id="backDay" class="secondary wide">← Back to Day ${dayNo}</button>`);
+ modal(`${directionMarkup()}<span class="eyebrow">DAY ${dayNo} • BLOCK ${sessionIndex+1}/8</span><h2>${s.icon} ${s.name}</h2><p>${esc(u.title)} — ${esc(u.goal)}</p>${courseScriptChoiceMarkup(unitIndex)}${body}<button type="button" id="backDay" class="secondary wide" data-back-unit="${unitIndex}" data-back-day="${dayIndex}">← Back</button>`);
  wireCourseScriptChoice(unitIndex,dayIndex,sessionIndex);
  $$('.hear-anchor',$('#modalBody')).forEach(x=>x.onclick=()=>{const t=x.dataset.hear;playVerifiedLanguageAudio(t)});
  if($('#listenA'))$('#listenA').onclick=()=>{playVerifiedLanguageAudio(a.target)};
@@ -1390,9 +1480,9 @@ function openStudySession(unitIndex,dayIndex,sessionIndex){
  if($('#listenProof')&&beginner)$$('[data-listen-answer]',$('#modalBody')).forEach(x=>x.addEventListener('click',()=>{if(x.dataset.listenAnswer===a.meaning){const f=$('#listenProof');f.value='ok';f.dispatchEvent(new Event('input'))}}));
  if($('#startMastery'))$('#startMastery').onclick=()=>openMasteryTest(unitIndex,dayIndex,sessionIndex);
  if($('#courseSpeak'))$('#courseSpeak').onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('#courseSpeakResult').textContent='Speech recognition is unavailable here; practise aloud and use Hold to Talk in the Buddy Room.';return}const r=new SR();r.lang=languages[state.language].lang;r.interimResults=false;$('#courseSpeakResult').textContent='Listening…';r.onresult=e=>{const heard=e.results[0][0].transcript;$('#courseSpeakResult').textContent=`I heard: “${heard}”`;const f=$('#speakProof');if(f){f.value=beginner?'spoken':heard;f.dispatchEvent(new Event('input'))}};r.onerror=()=>$('#courseSpeakResult').textContent='Could not hear clearly. Try again.';r.start()};
- if($('#launchConversation'))$('#launchConversation').onclick=()=>{syncBuddyWithLearningLanguage({clearConversation:true});save();$('#modal').close();setView('mascots');const adv=advancedCourseChallenge(unitIndex);const prompt=adv?`Advanced ${adv.language} conversation challenge: ${adv.prompt} Keep the conversation natural, ask unpredictable follow-up questions, and make me explain, clarify and justify my ideas in the target language. Do not give me a model answer first.`:`Let's practise Unit ${unitIndex+1}: ${u.title}. Please keep me on this topic and make me use today's expressions.`;setTimeout(()=>{const input=$('#chatText');if(input)input.value=prompt},150)};
+ if($('#launchConversation'))$('#launchConversation').onclick=e=>{e.preventDefault();const adv=advancedCourseChallenge(unitIndex);const prompt=adv?`Advanced ${adv.language} conversation challenge: ${adv.prompt} Keep the conversation natural, ask unpredictable follow-up questions, and make me explain, clarify and justify my ideas in the target language. Do not give me a model answer first.`:`Let's practise Unit ${unitIndex+1}: ${u.title}. Please keep me on this topic and make me use today's expressions.`;try{syncBuddyWithLearningLanguage({clearConversation:true})}catch(err){console.error('Buddy language sync failed',err)}const dlg=$('#modal');if(dlg?.open)dlg.close();setView('mascots');try{save()}catch(err){console.error('Could not persist Buddy selection',err)}setTimeout(()=>{const input=$('#chatText');if(input){input.value=prompt;input.focus()}const panel=$('.chat-panel');panel?.scrollIntoView?.({block:'start',behavior:'smooth'})},80)};
  if(s.key!=='mastery')wireFinish(unitIndex,dayIndex,sessionIndex);
- $('#backDay').onclick=()=>openStudyDay(unitIndex,dayIndex);
+ const back=$('#backDay');if(back)back.onclick=e=>{e.preventDefault();openStudyDay(Number(back.dataset.backUnit??unitIndex),Number(back.dataset.backDay??dayIndex))};
 }
 
 $('#startNew').onclick=()=>{state.studyCompleted=state.studyCompleted.filter(x=>!x.startsWith(state.language+'-'));save();toast(`Starting the 150-unit ${languages[state.language].name} pathway from Unit 1.`)};
@@ -2148,6 +2238,7 @@ function openIELTSMocks(){
 function openIELTSMock(id){
  const C=window.ISC_IELTS,m=C.mocks.find(x=>x.id===id);
  ieltsModal(m.name,`<div class="mock-sections"><button data-mock-part="listening"><b>🎧 Listening</b><span>40 questions • 4 parts • ~30 minutes</span></button><button data-mock-part="reading"><b>📖 Reading</b><span>40 questions • 60 minutes</span></button><button data-mock-part="writing"><b>✍️ Writing</b><span>2 tasks • 60 minutes</span></button><button data-mock-part="speaking"><b>🎙️ Speaking</b><span>3 parts • 11–14 minutes</span></button></div>`);
+ const mockDialog=document.querySelector('.ielts-dialog');if(mockDialog)mockDialog.dataset.mockId=m.id;
  document.querySelectorAll('[data-mock-part]').forEach(b=>b.onclick=()=>openMockPart(m,b.dataset.mockPart));
 }
 function renderIELTSAIMark(result,target){
@@ -2277,10 +2368,47 @@ document.addEventListener('click',function(e){
  }
 });
 
+
+// V18.8.32 persistent interaction routing. These controls remain functional even after
+// language changes, rerenders, mobile drawer rebuilds, or modal content replacement.
+document.addEventListener('click',function(e){
+ const practice=e.target.closest('[data-practice]');
+ if(practice){
+   if(typeof practice.onclick==='function')return;
+   e.preventDefault();
+   const kind=practice.dataset.practice;
+   if(kind==='speech')return openSpeakingPracticeRoom();
+   if(kind==='listen')return openListeningPracticeRoom();
+   if(kind==='writing')return openWritingAcademy();
+   if(kind==='games')return openGames();
+   if(kind==='stories')return openStory();
+ }
+ const libView=e.target.closest('[data-view="library"]');
+ if(libView){e.preventDefault();setView('library');libraryHome();return}
+ const classics=e.target.closest('#openClassicLibrary');if(classics){e.preventDefault();openClassicLibrary();return}
+ const diagnostic=e.target.closest('#ieltsDiagnostic');if(diagnostic&&typeof diagnostic.onclick!=='function'){e.preventDefault();openIELTSDiagnostic();return}
+ const mocks=e.target.closest('#ieltsMocks,#ieltsMocks2');if(mocks&&typeof mocks.onclick!=='function'){e.preventDefault();openIELTSMocks();return}
+ const skill=e.target.closest('[data-ielts-skill]');if(skill&&typeof skill.onclick!=='function'){e.preventDefault();openIELTSSkill(skill.dataset.ieltsSkill);return}
+ const skillUnit=e.target.closest('[data-skill-unit]');if(skillUnit&&typeof skillUnit.onclick!=='function'){e.preventDefault();const st=ieltsState();const skillTitle=document.querySelector('.ielts-dialog h2')?.textContent||'';const skillName=(window.ISC_IELTS?.skills||[]).find(x=>skillTitle.startsWith(x))||'Listening';openIELTSBlock(st.level,skillUnit.dataset.skillUnit,skillName.toLowerCase()==='exam strategy'?'strategy':skillName.toLowerCase());return}
+ const unit=e.target.closest('[data-open-ielts-unit]');if(unit&&typeof unit.onclick!=='function'){e.preventDefault();return openIELTSUnit(ieltsState().level,unit.dataset.openIeltsUnit)}
+ const mock=e.target.closest('[data-open-mock]');if(mock&&typeof mock.onclick!=='function'){e.preventDefault();return openIELTSMock(mock.dataset.openMock)}
+ const mockPart=e.target.closest('[data-mock-part]');if(mockPart&&typeof mockPart.onclick!=='function'){e.preventDefault();const C=window.ISC_IELTS,st=ieltsState(),m=(C?.mocks||[]).find(x=>x.id===mockPart.closest('.ielts-dialog')?.dataset?.mockId)||(C?.mocks||[]).find(x=>x.mode===st.mode);if(m)return openMockPart(m,mockPart.dataset.mockPart)}
+});
+
 setTimeout(()=>{const specialRoute=['/admin','/teacher'].includes(location.pathname.replace(/\/+$/,''));if(!specialRoute&&(!state.onboardingDone||Number(state.onboardingVersion||0)<15))openOnboarding()},650);
 
-// PWA registration kept in external JS so the production CSP does not block it.
-if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.25',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}});}
+// Production keeps the PWA service worker. Localhost deliberately does not: repeated
+// development builds must never be masked by an older cached app.js/styles.css.
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+ const isLocalDev=['localhost','127.0.0.1','::1'].includes(location.hostname);
+ window.addEventListener('load',async()=>{
+  if(isLocalDev){
+   try{for(const reg of await navigator.serviceWorker.getRegistrations())await reg.unregister();if('caches' in window)for(const key of await caches.keys())if(key.startsWith('ispeak-'))await caches.delete(key);console.info('iSpeak local test mode: service-worker caches cleared.')}catch(err){console.warn('Could not clear local service-worker cache',err)}
+   return;
+  }
+  try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.37',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}
+ });
+}
 
 
 /* === ISPEAK STORY LIBRARY V18.6.2 === */
@@ -2297,12 +2425,10 @@ function heroLang(){const raw=String(state?.language||localStorage.getItem('lear
 function heroProgressId(l,h,v){return `${l}:${h}:${v}`}
 function heroProg(l,h,v){state.heroReadingProgress=state.heroReadingProgress||{};const id=heroProgressId(l,h,v);if(state.heroReadingProgress[id])return Number(state.heroReadingProgress[id].chapter||0);const legacy=Number(localStorage.getItem(`ispeak_hero_progress_${l}_${h}_${v}`)||0);if(legacy){state.heroReadingProgress[id]={chapter:legacy,updatedAt:new Date().toISOString()};localSave()}return legacy}
 function saveHeroProg(l,h,v,c){state.heroReadingProgress=state.heroReadingProgress||{};state.heroReadingProgress[heroProgressId(l,h,v)]={chapter:Number(c)||1,updatedAt:new Date().toISOString()};save()}
-function showLibraryPane(id){['libraryHub','classicLibraryPane','heroesLibraryPane'].forEach(x=>{const el=document.getElementById(x);if(el)el.hidden=x!==id})}
+function showLibraryPane(id){['libraryHub','classicLibraryPane','heroesLibraryPane'].forEach(x=>{const el=document.getElementById(x);if(!el)return;const active=x===id;el.hidden=!active;el.style.display=active?'':'none';if(active)el.removeAttribute('hidden');else el.setAttribute('hidden','')})}
 function libraryHome(){setTimeout(()=>{const pane=document.getElementById('libraryHub');if(!pane)return;if(!pane.querySelector('.library-ai-tools'))pane.insertAdjacentHTML('afterbegin',`<div class="library-ai-tools"><button id="homeworkHelperBtn" type="button" class="library-ai-card"><b>📚 Homework Helper</b><span>Photo or typed homework · guided help · all 7 languages</span></button><button id="makeMeSpeakBtn" type="button" class="library-ai-card"><b>🎤 Make Me Speak</b><span>Open-ended real-life speaking practice</span></button></div>`);const hh=document.getElementById('homeworkHelperBtn'),ms=document.getElementById('makeMeSpeakBtn');if(hh)hh.onclick=openHomeworkHelper;if(ms)ms.onclick=openMakeMeSpeak},0);showLibraryPane('libraryHub')}
 function openClassicLibrary(){showLibraryPane('classicLibraryPane');renderLibrary()}
-function heroesHome(){showLibraryPane('heroesLibraryPane');const l=heroLang(),c=HERO_LANGS[l],e=document.getElementById('heroesLibraryPane');if(!e)return;e.innerHTML=`<section class="heroes-lib story-series"><div class="heroes-top"><button class="library-back" data-library-home>← Library</button><div><div class="eyebrow">ISPEAK STORY SERIES</div><h1>Choose your hero</h1><p>${c.name} • 14 connected story adventures • every Volume 2 continues Volume 1</p></div></div><div class="hero-grid">${ISPEAK_HEROES.map(h=>`<button class="hero-card story-hero-card" data-hero-shelf="${h.id}"><div class="story-cover-symbol">${h.name.slice(0,1)}</div><div class="hero-body"><span class="story-book-count">2 BOOKS</span><h2>${h.name}</h2><p>${h.personality}</p><span class="power-chip">${h.power}</span><div class="hero-titles"><b>${h.v1}</b><span>→</span><b>${h.v2}</b></div></div></button>`).join('')}</div></section>`}
-function heroShelf(id){const h=ISPEAK_HEROES.find(x=>x.id===id),l=heroLang(),c=HERO_LANGS[l],e=document.getElementById('heroesLibraryPane');if(!h||!e)return;showLibraryPane('heroesLibraryPane');e.innerHTML=`<section class="hero-shelf story-shelf"><button class="library-back" data-all-heroes>← All Heroes</button><div class="story-profile"><div class="story-cover-symbol large">${h.name.slice(0,1)}</div><div><div class="eyebrow">${h.power}</div><h1>${h.name}</h1><p>${h.personality}</p><strong>${h.hook}</strong></div></div><div class="series-order"><span>START HERE</span><i></i><span>CONTINUE THE STORY</span></div><div class="volume-grid">${[1,2].map(v=>heroVolume(h,l,c,v)).join('')}</div></section>`}
-function heroVolume(h,l,c,v){const t=v===1?h.v1:h.v2,p=heroProg(l,h.id,v),locked=l==='km';return`<button class="volume-card story-volume-card" ${locked?'data-khmer-locked':''} data-hero-read="${h.id}" data-volume="${v}" data-chapter="${Math.max(1,p||1)}"><div class="story-book-cover"><span class="vol-tag">${v===1?'VOLUME 1':'VOLUME 2 • SEQUEL'}</span><small>ISPEAK STORY SERIES</small><div class="story-cover-letter">${h.name.slice(0,1)}</div><b>${t}</b><em>${h.name} • ${c.chapters} chapters</em></div><div class="volume-meta"><div><b>${locked?'Khmer edition awaiting approved text':p?'Continue • Chapter '+p:'Start reading'}</b><small>${v===2?'Continues directly from Volume 1':'The story begins here'}</small></div><span>→</span></div></button>`}
+function heroVolume(h,l,c,v){const t=v===1?h.v1:h.v2,p=heroProg(l,h.id,v),locked=l==='km';return`<button class="volume-card story-volume-card" ${locked?'data-khmer-locked onclick="khmerHeroNotice()"':`onclick="heroRead(\'${h.id}\',${v},${Math.max(1,p||1)})"`} data-hero-read="${h.id}" data-volume="${v}" data-chapter="${Math.max(1,p||1)}"><div class="story-book-cover"><span class="vol-tag">${v===1?'VOLUME 1':'VOLUME 2 • SEQUEL'}</span><small>ISPEAK STORY SERIES</small><div class="story-cover-letter">${h.name.slice(0,1)}</div><b>${t}</b><em>${h.name} • ${c.chapters} chapters</em></div><div class="volume-meta"><div><b>${locked?'Khmer edition awaiting approved text':p?'Continue • Chapter '+p:'Start reading'}</b><small>${v===2?'Continues directly from Volume 1':'The story begins here'}</small></div><span>→</span></div></button>`}
 function khmerHeroNotice(){alert('The Khmer Story Series structure is ready at 8 chapters per book. Story text remains locked until approved Khmer learner text is supplied, so unverified Khmer is never published.')}
 const ARC1=['The Day the Signal Changed','A Message With No Sender','The Choice at the Crossing','Power Without Instructions','The Cost of Acting Fast','A Clue Under the Noise','Someone Else Is Watching','Seven Paths Meet','The Choice Nobody Wants','Below the Familiar Streets','The First Real Fight','The Gate Beyond the City'];
 const ARC2=['The Morning After the Gate','A Threat With a Familiar Mark','What the Power Takes Back','Trust Under Pressure','The Plan That Breaks','The Enemy Tells the Truth','One Quiet Decision','When the Team Splits','The Rescue With No Exit','Back to the Beginning','The Last Stand Together','What Opens Next'];
@@ -2317,12 +2443,9 @@ zyad:[['A desert wind circles Zyad even after every flag goes still.','He follow
 function heroChapter(v,n){return(v===1?ARC1:ARC2)[n-1]||`Chapter ${n}`}
 function sceneFor(h,v,ch){const base=HERO_SCENES[h.id],idx=(ch-1)%base.length,cycle=Math.floor((ch-1)/base.length),pair=base[idx];const turns=['The clue changes what the hero thought was true.','A second consequence forces a harder decision.','The trail finally connects to the larger mystery.'];return {a:pair[0],b:pair[1],c:turns[(cycle+v-1)%turns.length]}}
 function storyParagraphs(h,v,ch){const s=sceneFor(h,v,ch),title=heroChapter(v,ch),bridge=v===1?'The mystery is still new, and every choice creates a consequence that will matter later.':'The earlier adventure still matters. The decisions from Volume 1 now shape what happens next.';return [`${s.a} ${h.name} does not rush past the moment. ${s.b} What first looks like a small clue begins to connect with the larger danger surrounding the city.`,`${bridge} ${h.name} studies what has changed and notices that the safest choice is not always the right one. The people nearby are depending on a decision, not a perfect answer.`,`${s.c} A new detail appears just when the group thinks the problem is under control. ${h.name} uses ${h.power} carefully, remembering what went wrong before and refusing to repeat the same mistake.`,`By the end of “${title},” the immediate danger is contained, but the final clue points forward. The next chapter begins from this exact consequence rather than resetting the story.`]}
-function heroRead(id,v,ch){trackAnalytics('story_open',{target:`${id}:v${v}`});const h=ISPEAK_HEROES.find(x=>x.id===id),l=heroLang(),c=HERO_LANGS[l];if(!h)return;if(l==='km')return khmerHeroNotice();ch=Math.min(Math.max(1,Number(ch)||1),c.chapters);saveHeroProg(l,id,v,ch);const t=v===1?h.v1:h.v2,e=document.getElementById('heroesLibraryPane'),paras=storyParagraphs(h,v,ch);showLibraryPane('heroesLibraryPane');e.innerHTML=`<section class="story-reader"><div class="story-toolbar"><button data-hero-shelf="${id}">← ${h.name}</button><div><b>${t}</b><small>Chapter ${ch} of ${c.chapters}</small></div><select aria-label="Choose chapter" data-story-chapter data-hero="${id}" data-volume="${v}">${Array.from({length:c.chapters},(_,i)=>`<option value="${i+1}" ${i+1===ch?'selected':''}>Chapter ${i+1}</option>`).join('')}</select></div><article class="story-page"><div class="chapter-title"><span>CHAPTER ${ch}</span><h1>${heroChapter(v,ch)}</h1></div>${paras.map((p,i)=>`<p${i===0?' class="story-lead"':''}>${p}</p>`).join('')}<div class="story-divider">◆</div><p class="story-next-tease">Continue to discover what this decision changes next.</p></article><div class="manga-nav"><button ${ch===1?'disabled':''} data-story-nav data-hero="${id}" data-volume="${v}" data-chapter="${ch-1}">← Previous</button><span>${ch} / ${c.chapters}</span><button ${ch===c.chapters?'disabled':''} data-story-nav data-hero="${id}" data-volume="${v}" data-chapter="${ch+1}">Next chapter →</button></div></section>`}
 Object.assign(window,{libraryHome,openClassicLibrary,heroesHome,heroShelf,heroRead});
-const openHeroesLibrary=document.getElementById('openHeroesLibrary'),openClassicLibraryBtn=document.getElementById('openClassicLibrary'),classicLibraryBack=document.getElementById('classicLibraryBack');
-if(openHeroesLibrary)openHeroesLibrary.addEventListener('click',heroesHome);if(openClassicLibraryBtn)openClassicLibraryBtn.addEventListener('click',openClassicLibrary);if(classicLibraryBack)classicLibraryBack.addEventListener('click',libraryHome);
-document.addEventListener('click',e=>{const home=e.target.closest('[data-library-home]');if(home){e.preventDefault();return libraryHome()}const all=e.target.closest('[data-all-heroes]');if(all){e.preventDefault();return heroesHome()}const shelf=e.target.closest('[data-hero-shelf]');if(shelf){e.preventDefault();return heroShelf(shelf.dataset.heroShelf)}const locked=e.target.closest('[data-khmer-locked]');if(locked){e.preventDefault();return khmerHeroNotice()}const read=e.target.closest('[data-hero-read]');if(read){e.preventDefault();return heroRead(read.dataset.heroRead,Number(read.dataset.volume),Number(read.dataset.chapter))}const nav=e.target.closest('[data-story-nav]');if(nav&&!nav.disabled){e.preventDefault();return heroRead(nav.dataset.hero,Number(nav.dataset.volume),Number(nav.dataset.chapter))}});
-document.addEventListener('change',e=>{const sel=e.target.closest('[data-story-chapter]');if(sel)return heroRead(sel.dataset.hero,Number(sel.dataset.volume),Number(sel.value))});
+// Library entry buttons are routed by the capture-phase critical router above.
+// Story Series uses direct controls so rendered buttons do not depend on delegated routing.
 
 /* === V18.6.3 MULTILINGUAL STORY SERIES === */
 const STORY_I18N={
@@ -2363,12 +2486,6 @@ function localStoryText(h,v,ch,l){
  return dict[l]||en;
 }
 function storyParagraphsEN(h,v,ch){const s=sceneFor(h,v,ch),title=(v===1?ARC1:ARC2)[ch-1]||`Chapter ${ch}`,bridge=v===1?'The mystery is still new, and every choice creates a consequence that will matter later.':'The earlier adventure still matters. The decisions from Volume 1 now shape what happens next.';return [`${s.a} ${h.name} does not rush past the moment. ${s.b} What first looks like a small clue begins to connect with the larger danger surrounding the city.`,`${bridge} ${h.name} studies what has changed and notices that the safest choice is not always the right one. The people nearby are depending on a decision, not a perfect answer.`,`${s.c} A new detail appears just when the group thinks the problem is under control. ${h.name} uses ${h.power} carefully, remembering what went wrong before and refusing to repeat the same mistake.`,`By the end of “${title},” the immediate danger is contained, but the final clue points forward. The next chapter begins from this exact consequence rather than resetting the story.`]}
-function heroesHome(){showLibraryPane('heroesLibraryPane');const l=heroLang(),c=HERO_LANGS[l],ui=STORY_I18N[l]||STORY_I18N.en,e=document.getElementById('heroesLibraryPane');if(!e)return;e.dir=l==='ar'?'rtl':'ltr';e.innerHTML=`<section class="heroes-lib story-series"><div class="heroes-top"><button class="library-back" data-library-home>${ui.library}</button><div><div class="eyebrow">${ui.series}</div><h1>${ui.choose}</h1><p>${ui.sub(c.chapters)}</p></div></div><div class="hero-grid">${ISPEAK_HEROES.map(h=>`<button class="hero-card story-hero-card" data-hero-shelf="${h.id}"><div class="story-cover-symbol">${h.name.slice(0,1)}</div><div class="hero-body"><span class="story-book-count">${ui.books}</span><h2>${h.name}</h2><p>${h.personality}</p><span class="power-chip">${h.power}</span><div class="hero-titles"><b>${localizedTitle(h,l,1)}</b><span>→</span><b>${localizedTitle(h,l,2)}</b></div></div></button>`).join('')}</div></section>`}
-function heroShelf(id){const h=ISPEAK_HEROES.find(x=>x.id===id),l=heroLang(),c=HERO_LANGS[l],ui=STORY_I18N[l]||STORY_I18N.en,e=document.getElementById('heroesLibraryPane');if(!h||!e)return;showLibraryPane('heroesLibraryPane');e.dir=l==='ar'?'rtl':'ltr';e.innerHTML=`<section class="hero-shelf story-shelf"><button class="library-back" data-all-heroes>${ui.all}</button><div class="story-profile"><div class="story-cover-symbol large">${h.name.slice(0,1)}</div><div><div class="eyebrow">${h.power}</div><h1>${h.name}</h1><p>${h.personality}</p><strong>${h.hook}</strong></div></div><div class="series-order"><span>${ui.start}</span><i></i><span>${ui.continue}</span></div><div class="volume-grid">${[1,2].map(v=>heroVolume(h,l,c,v)).join('')}</div></section>`}
-function heroVolume(h,l,c,v){const ui=STORY_I18N[l]||STORY_I18N.en,t=localizedTitle(h,l,v),p=heroProg(l,h.id,v),locked=l==='km';return`<button class="volume-card story-volume-card" ${locked?'data-khmer-locked':''} data-hero-read="${h.id}" data-volume="${v}" data-chapter="${Math.max(1,p||1)}"><div class="story-book-cover"><span class="vol-tag">${v===1?ui.v1:ui.v2}</span><small>${ui.series}</small><div class="story-cover-letter">${h.name.slice(0,1)}</div><b>${t}</b><em>${h.name} • ${ui.chapters(c.chapters)}</em></div><div class="volume-meta"><div><b>${locked?'Khmer edition awaiting approved text':p?ui.cont(p):ui.startReading}</b><small>${v===2?ui.continues:ui.begins}</small></div><span>→</span></div></button>`}
-function heroRead(id,v,ch){trackAnalytics('story_open',{target:`${id}:v${v}`});const h=ISPEAK_HEROES.find(x=>x.id===id),l=heroLang(),c=HERO_LANGS[l],ui=STORY_I18N[l]||STORY_I18N.en;if(!h)return;if(l==='km')return khmerHeroNotice();ch=Math.min(Math.max(1,Number(ch)||1),c.chapters);saveHeroProg(l,id,v,ch);const t=localizedTitle(h,l,v),e=document.getElementById('heroesLibraryPane'),paras=localStoryText(h,v,ch,l);showLibraryPane('heroesLibraryPane');e.dir=l==='ar'?'rtl':'ltr';e.innerHTML=`<section class="story-reader"><div class="story-toolbar"><button data-hero-shelf="${id}">← ${h.name}</button><div><b>${t}</b><small>${ui.chapter(ch,c.chapters)}</small></div><select aria-label="${ui.chooseChapter}" data-story-chapter data-hero="${id}" data-volume="${v}">${Array.from({length:c.chapters},(_,i)=>`<option value="${i+1}" ${i+1===ch?'selected':''}>${l==='zh'?`第 ${i+1} 章`:l==='ja'?`第${i+1}章`:l==='ar'?`الفصل ${i+1}`:l==='es'?`Capítulo ${i+1}`:l==='fr'?`Chapitre ${i+1}`:`Chapter ${i+1}`}</option>`).join('')}</select></div><article class="story-page"><div class="chapter-title"><span>${l==='zh'?`第 ${ch} 章`:l==='ja'?`第${ch}章`:l==='ar'?`الفصل ${ch}`:l==='es'?`CAPÍTULO ${ch}`:l==='fr'?`CHAPITRE ${ch}`:`CHAPTER ${ch}`}</span><h1>${heroChapter(v,ch,l)}</h1></div>${paras.map((p,i)=>`<p${i===0?' class="story-lead"':''}>${p}</p>`).join('')}<div class="story-divider">◆</div><p class="story-next-tease">${ui.tease}</p></article><div class="manga-nav"><button ${ch===1?'disabled':''} data-story-nav data-hero="${id}" data-volume="${v}" data-chapter="${ch-1}">${ui.previous}</button><span>${ch} / ${c.chapters}</span><button ${ch===c.chapters?'disabled':''} data-story-nav data-hero="${id}" data-volume="${v}" data-chapter="${ch+1}">${ui.next}</button></div></section>`}
-Object.assign(window,{heroesHome,heroShelf,heroRead});
-
 /* V18.6.3 target-language-only story prose: prevents English leakage in non-English books. */
 const HERO_LOCAL={
  zh:{jess:['有趣 • 自信 • 鼓励他人','共鸣之声','一段神秘广播把 Jess 引向一座语言能够改变现实的城市。'],jack:['认真 • 有策略 • 冷静幽默','思维地图','Jack Chen 发现一张会自己改变的地图，以及一座专门打乱所有计划的城市。'],pedro:['勇敢 • 精力充沛 • 冲动','勇气之火','城市灯光开始熄灭时，Pedro 的勇气点燃了一团奇异火焰。'],loulou:['温暖 • 聪明 • 善于社交','心灵连接','Loulou 能看见人与人之间隐藏的联系，直到有人开始切断它们。'],yuki:['害羞 • 观察敏锐 • 专注','专注之霜','一场无声风暴冻结城市时，Yuki 发现了所有人都忽略的细节。'],dariya:['冷静 • 守护他人 • 坚定','守护之盾','Dariya 被选中守护城市地下正在失去封印的古老大门。'],zyad:['好奇 • 大胆 • 爱冒险','风之疾行','Zyad 追随一阵只有他能感受到的风，来到本不该存在的遗迹。']},
@@ -2390,6 +2507,32 @@ function localStoryText(h,v,ch,l){
  }[l];
  return [d.open[phase],d.mid,d.act,d.end];
 }
-function heroesHome(){showLibraryPane('heroesLibraryPane');const l=heroLang(),c=HERO_LANGS[l],ui=STORY_I18N[l]||STORY_I18N.en,e=document.getElementById('heroesLibraryPane');if(!e)return;e.dir=l==='ar'?'rtl':'ltr';e.innerHTML=`<section class="heroes-lib story-series"><div class="heroes-top"><button class="library-back" data-library-home>${ui.library}</button><div><div class="eyebrow">${ui.series}</div><h1>${ui.choose}</h1><p>${ui.sub(c.chapters)}</p></div></div><div class="hero-grid">${ISPEAK_HEROES.map(h=>{const loc=heroLocal(h,l);return `<button class="hero-card story-hero-card" data-hero-shelf="${h.id}"><div class="story-cover-symbol">${h.name.slice(0,1)}</div><div class="hero-body"><span class="story-book-count">${ui.books}</span><h2>${h.name}</h2><p>${loc[0]}</p><span class="power-chip">${loc[1]}</span><div class="hero-titles"><b>${localizedTitle(h,l,1)}</b><span>→</span><b>${localizedTitle(h,l,2)}</b></div></div></button>`}).join('')}</div></section>`}
-function heroShelf(id){const h=ISPEAK_HEROES.find(x=>x.id===id),l=heroLang(),c=HERO_LANGS[l],ui=STORY_I18N[l]||STORY_I18N.en,e=document.getElementById('heroesLibraryPane');if(!h||!e)return;const loc=heroLocal(h,l);showLibraryPane('heroesLibraryPane');e.dir=l==='ar'?'rtl':'ltr';e.innerHTML=`<section class="hero-shelf story-shelf"><button class="library-back" data-all-heroes>${ui.all}</button><div class="story-profile"><div class="story-cover-symbol large">${h.name.slice(0,1)}</div><div><div class="eyebrow">${loc[1]}</div><h1>${h.name}</h1><p>${loc[0]}</p><strong>${loc[2]}</strong></div></div><div class="series-order"><span>${ui.start}</span><i></i><span>${ui.continue}</span></div><div class="volume-grid">${[1,2].map(v=>heroVolume(h,l,c,v)).join('')}</div></section>`}
+function storySafeText(value,fallback=''){try{return String(value==null?fallback:value)}catch(_){return String(fallback)}}
+function storyCoreCards(){return ISPEAK_HEROES.map(h=>`<button type="button" class="hero-card story-hero-card" data-hero-shelf="${h.id}" onclick="heroShelf(this.dataset.heroShelf)"><div class="story-cover-symbol">${storySafeText(h.name).slice(0,1)}</div><div class="hero-body"><span class="story-book-count">2 BOOKS</span><h2>${storySafeText(h.name)}</h2><p>${storySafeText(h.personality)}</p><span class="power-chip">${storySafeText(h.power)}</span><div class="hero-titles"><b>${storySafeText(h.v1)}</b><span>→</span><b>${storySafeText(h.v2)}</b></div></div></button>`).join('')}
+function heroesHome(){
+ const pane=document.getElementById('heroesLibraryPane');if(!pane)return toast('Story Series could not open. Reload the page and try again.');
+ const l=heroLang();let html='';
+ try{
+  const c=HERO_LANGS[l]||HERO_LANGS.en,ui=STORY_I18N[l]||STORY_I18N.en;
+  const subtitle=typeof ui?.sub==='function'?ui.sub(c.chapters):`${c.name||'Language'} • 14 connected story adventures`;
+  const cards=ISPEAK_HEROES.map(h=>{let loc=[h.personality,h.power,h.hook],t1=h.v1,t2=h.v2;try{loc=heroLocal(h,l)||loc;t1=localizedTitle(h,l,1)||h.v1;t2=localizedTitle(h,l,2)||h.v2}catch(_){}return `<button type="button" class="hero-card story-hero-card" data-hero-shelf="${h.id}" onclick="heroShelf(this.dataset.heroShelf)"><div class="story-cover-symbol">${storySafeText(h.name).slice(0,1)}</div><div class="hero-body"><span class="story-book-count">${storySafeText(ui?.books,'2 BOOKS')}</span><h2>${storySafeText(h.name)}</h2><p>${storySafeText(loc?.[0],h.personality)}</p><span class="power-chip">${storySafeText(loc?.[1],h.power)}</span><div class="hero-titles"><b>${storySafeText(t1,h.v1)}</b><span>→</span><b>${storySafeText(t2,h.v2)}</b></div></div></button>`}).join('');
+  html=`<section class="heroes-lib story-series"><div class="heroes-top"><button type="button" class="library-back" data-library-home onclick="libraryHome()">${storySafeText(ui?.library,'← Library')}</button><div><div class="eyebrow">${storySafeText(ui?.series,'ISPEAK STORY SERIES')}</div><h1>${storySafeText(ui?.choose,'Choose your hero')}</h1><p>${storySafeText(subtitle,'14 connected story adventures')}</p></div></div><div class="hero-grid">${cards}</div></section>`;
+ }catch(err){console.error('Localized Story Series render failed; using core renderer',err);html=`<section class="heroes-lib story-series"><div class="heroes-top"><button type="button" class="library-back" data-library-home onclick="libraryHome()">← Library</button><div><div class="eyebrow">ISPEAK STORY SERIES</div><h1>Choose your hero</h1><p>14 connected story adventures • two books for every hero</p></div></div><div class="hero-grid">${storyCoreCards()}</div></section>`}
+ if(!html.includes('data-hero-shelf='))html=`<section class="heroes-lib story-series"><div class="heroes-top"><button type="button" class="library-back" data-library-home onclick="libraryHome()">← Library</button><div><div class="eyebrow">ISPEAK STORY SERIES</div><h1>Choose your hero</h1></div></div><div class="hero-grid">${storyCoreCards()}</div></section>`;
+ pane.dir=l==='ar'?'rtl':'ltr';pane.innerHTML=html;showLibraryPane('heroesLibraryPane');try{window.scrollTo(0,0)}catch(_){}
+}
+function heroShelf(id){
+ const h=ISPEAK_HEROES.find(x=>x.id===id),l=heroLang(),c=HERO_LANGS[l]||HERO_LANGS.en,e=document.getElementById('heroesLibraryPane');if(!h||!e)return;
+ let ui=STORY_I18N.en,loc=[h.personality,h.power,h.hook];try{ui=STORY_I18N[l]||STORY_I18N.en;loc=heroLocal(h,l)||loc}catch(_){}
+ showLibraryPane('heroesLibraryPane');e.dir=l==='ar'?'rtl':'ltr';let vols='';try{vols=[1,2].map(v=>heroVolume(h,l,c,v)).join('')}catch(err){console.error('Localized story shelf failed; using core volumes',err);vols=[1,2].map(v=>{const p=heroProg(l,h.id,v),locked=l==='km',title=v===1?h.v1:h.v2;return `<button type="button" class="volume-card story-volume-card" ${locked?'data-khmer-locked onclick="khmerHeroNotice()"':`onclick="heroRead(\'${h.id}\',${v},${Math.max(1,p||1)})"`} data-hero-read="${h.id}" data-volume="${v}" data-chapter="${Math.max(1,p||1)}"><div class="story-book-cover"><span class="vol-tag">${v===1?'VOLUME 1':'VOLUME 2 • SEQUEL'}</span><small>ISPEAK STORY SERIES</small><div class="story-cover-letter">${storySafeText(h.name).slice(0,1)}</div><b>${storySafeText(title)}</b><em>${storySafeText(h.name)} • ${c.chapters} chapters</em></div><div class="volume-meta"><div><b>${locked?'Khmer edition awaiting approved text':p?'Continue • Chapter '+p:'Start reading'}</b><small>${v===2?'Continues directly from Volume 1':'The story begins here'}</small></div><span>→</span></div></button>`}).join('')}
+ e.innerHTML=`<section class="hero-shelf story-shelf"><button type="button" class="library-back" data-all-heroes onclick="heroesHome()">${storySafeText(ui?.all,'← All Heroes')}</button><div class="story-profile"><div class="story-cover-symbol large">${storySafeText(h.name).slice(0,1)}</div><div><div class="eyebrow">${storySafeText(loc?.[1],h.power)}</div><h1>${storySafeText(h.name)}</h1><p>${storySafeText(loc?.[0],h.personality)}</p><strong>${storySafeText(loc?.[2],h.hook)}</strong></div></div><div class="series-order"><span>${storySafeText(ui?.start,'START HERE')}</span><i></i><span>${storySafeText(ui?.continue,'CONTINUE THE STORY')}</span></div><div class="volume-grid">${vols}</div></section>`
+}
+function heroRead(id,v,ch){
+ try{trackAnalytics('story_open',{target:`${id}:v${v}`})}catch(_){}
+ const h=ISPEAK_HEROES.find(x=>x.id===id),l=heroLang(),c=HERO_LANGS[l]||HERO_LANGS.en;if(!h)return;if(l==='km')return khmerHeroNotice();ch=Math.min(Math.max(1,Number(ch)||1),c.chapters);try{saveHeroProg(l,id,v,ch)}catch(_){}
+ const e=document.getElementById('heroesLibraryPane');if(!e)return;showLibraryPane('heroesLibraryPane');e.dir=l==='ar'?'rtl':'ltr';let ui=STORY_I18N.en,title=v===1?h.v1:h.v2,chapterTitle=`Chapter ${ch}`,paras=[];
+ try{ui=STORY_I18N[l]||STORY_I18N.en;title=localizedTitle(h,l,v)||title;chapterTitle=heroChapter(v,ch,l)||chapterTitle;paras=localStoryText(h,v,ch,l)}catch(err){console.error('Localized story reader failed; using core story text',err);try{paras=storyParagraphsEN(h,v,ch)}catch(_){paras=storyParagraphs(h,v,ch)};chapterTitle=(v===1?ARC1:ARC2)[ch-1]||chapterTitle}
+ if(!Array.isArray(paras)||!paras.length){try{paras=storyParagraphsEN(h,v,ch)}catch(_){paras=storyParagraphs(h,v,ch)}}
+ e.innerHTML=`<section class="story-reader"><div class="story-toolbar"><button type="button" data-hero-shelf="${h.id}" onclick="heroShelf(this.dataset.heroShelf)">← ${storySafeText(h.name)}</button><div><b>${storySafeText(title)}</b><small>${storySafeText(typeof ui?.chapter==='function'?ui.chapter(ch,c.chapters):`Chapter ${ch} of ${c.chapters}`)}</small></div><select aria-label="${storySafeText(ui?.chooseChapter,'Choose chapter')}" data-story-chapter data-hero="${h.id}" data-volume="${v}" onchange="heroRead(this.dataset.hero,Number(this.dataset.volume),Number(this.value))">${Array.from({length:c.chapters},(_,i)=>`<option value="${i+1}" ${i+1===ch?'selected':''}>${storySafeText(typeof ui?.chapter==='function'?ui.chapter(i+1,c.chapters):`Chapter ${i+1}`)}</option>`).join('')}</select></div><article class="story-page"><div class="chapter-title"><span>${storySafeText(typeof ui?.chapter==='function'?ui.chapter(ch,c.chapters):`CHAPTER ${ch}`)}</span><h1>${storySafeText(chapterTitle)}</h1></div>${paras.map((p,i)=>`<p${i===0?' class="story-lead"':''}>${storySafeText(p)}</p>`).join('')}<div class="story-divider">◆</div><p class="story-next-tease">${storySafeText(ui?.tease,'Continue to discover what this decision changes next.')}</p></article><div class="manga-nav"><button type="button" ${ch===1?'disabled':''} data-story-nav data-hero="${h.id}" data-volume="${v}" data-chapter="${ch-1}" onclick="if(!this.disabled)heroRead(this.dataset.hero,Number(this.dataset.volume),Number(this.dataset.chapter))">${storySafeText(ui?.previous,'← Previous')}</button><span>${ch} / ${c.chapters}</span><button type="button" ${ch===c.chapters?'disabled':''} data-story-nav data-hero="${h.id}" data-volume="${v}" data-chapter="${ch+1}" onclick="if(!this.disabled)heroRead(this.dataset.hero,Number(this.dataset.volume),Number(this.dataset.chapter))">${storySafeText(ui?.next,'Next chapter →')}</button></div></section>`
+}
 Object.assign(window,{heroesHome,heroShelf,heroRead});

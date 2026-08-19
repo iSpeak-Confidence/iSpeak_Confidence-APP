@@ -7,8 +7,8 @@ const env=fs.readFileSync(path.join(root,'.env.example'),'utf8');
 const gitignore=fs.readFileSync(path.join(root,'.gitignore'),'utf8');
 let pass=0,fail=0;
 function t(name,fn){try{if(!fn())throw new Error('assertion failed');console.log('PASS',name);pass++}catch(e){console.error('FAIL',name,'-',e.message);fail++}}
-t('V18.8.33 server version',()=>server.includes("version:'18.8.33'"));
-t('V18.8.33 service worker version',()=>sw.includes('ispeak-v18-8-33-critical-routing')&&sw.includes("version:'18.8.33'"));
+t('V18.8.36 server version',()=>server.includes("version:'18.8.36'"));
+t('V18.8.36 service worker version',()=>sw.includes('ispeak-v18-8-36-critical-routing')&&sw.includes("version:'18.8.36'"));
 t('production HSTS enabled',()=>server.includes('Strict-Transport-Security'));
 t('registration device becomes trusted',()=>server.includes('trustedDevices:registrationDeviceId?[registrationDeviceId]:[]'));
 t('classroom help uses current hostname',()=>app.includes("esc(location.host||'this site')")&&!app.includes('beside <strong>localhost:3000</strong>'));
@@ -22,4 +22,4 @@ t('safeguarding retained',()=>server.includes("pathname==='/api/report-safety'")
 t('admin operations retained',()=>server.includes("pathname==='/api/admin/operations'"));
 t('hard-coded payment link absent',()=>!server.includes('https://revolut.me/'));
 t('cache-clear retained',()=>sw.includes('CLEAR_ISPEAK_CACHE'));
-console.log(`\n${pass}/${pass+fail} V18.8.33 launch checks passed`);if(fail)process.exit(1);
+console.log(`\n${pass}/${pass+fail} V18.8.36 launch checks passed`);if(fail)process.exit(1);

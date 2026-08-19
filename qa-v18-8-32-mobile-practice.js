@@ -1,0 +1,18 @@
+const fs=require('fs');
+const app=fs.readFileSync('app.js','utf8'), css=fs.readFileSync('styles.css','utf8'), html=fs.readFileSync('index.html','utf8');
+let pass=0,fail=0;const t=(n,v)=>{if(v){console.log('PASS',n);pass++}else{console.error('FAIL',n);fail++}};
+t('completion button carries unit context',app.includes('data-unit="${unitIndex}"')&&app.includes('data-session="${sessionIndex}"'));
+t('completion button is explicit non-submit button',app.includes('type="button" class="primary wide finish-study"'));
+t('completion handler still refuses disabled button',app.includes("if(t.disabled)return;")&&app.includes("t.classList.contains('finish-study')"));
+t('completion returns one level to current block list',app.includes('completeStudy(u,d,s)')&&app.includes('openStudyDay(unitIndex,dayIndex);')&&!app.includes('openStudySession(unitIndex,dayIndex,sessionIndex+1)'));
+t('hard-coded Back to Day label removed',!app.includes('← Back to Day ${dayNo}')&&app.includes('>← Back</button>'));
+t('back button carries current unit/day context',app.includes('data-back-unit="${unitIndex}"')&&app.includes('data-back-day="${dayIndex}"'));
+t('Buddy practice uses explicit button type',app.includes('type="button" id="launchConversation"'));
+t('Buddy practice closes modal and changes view',app.includes("dlg?.open)dlg.close();setView('mascots')"));
+t('Buddy practice focuses prompt input',app.includes('input.value=prompt;input.focus()'));
+t('mobile certificate grid cannot force desktop width',css.includes('grid-template-columns:minmax(0,1fr)!important')&&css.includes('.certificate-showcase-copy{width:100%!important'));
+t('mobile progress metadata wraps',css.includes('.cert-preview-progress>span{grid-column:1/-1!important'));
+t('phone milestone cards collapse to one column',css.includes('.certificate-milestones{grid-template-columns:1fr!important'));
+t('phone learning modal prevents horizontal overflow',css.includes('#modalBody{min-width:0!important;overflow-x:hidden!important'));
+t('fresh app cache version loaded',html.includes('app.js?v=18.8.37')&&html.includes('styles.css?v=18.8.37'));
+console.log(`\nV18.8.37 mobile/learning regression QA: ${pass}/${pass+fail} passed`);process.exit(fail?1:0);

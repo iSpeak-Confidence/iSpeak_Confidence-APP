@@ -1,0 +1,28 @@
+iSpeak Confidence V18.8.32 — release audit
+
+Release-blocking fixes in this build
+- Learning block completion now records the exact block, marks it complete, unlocks the next block, and returns one level to the current unit's 8-block list.
+- Completion no longer jumps directly into the next block or skips to the next unit screen.
+- Classic Library and iSpeak Story Series use unconditional fallback routing plus direct handlers; old bound-marker dependency removed.
+- Existing V18.8.31 Practice depth, Writing Academy contrast, IELTS routing, mobile certificate and mobile layout fixes retained.
+- App/service-worker cache version bumped to 18.8.32 to prevent phones from keeping stale V18.8.31 code.
+
+Verification performed
+- Full release-gate PASS.
+- 7 languages x 150 units x 8 learning blocks = 8,400 curriculum blocks PASS.
+- Learning progression, input validation and completion gating PASS.
+- Student certificate gates/previews/signature styling PASS.
+- V18.8.32 mobile/learning regression 14/14 PASS.
+- V18.8.32 Practice/IELTS/Library interaction source regression 10/10 PASS.
+- V18.8.32 button/action audit 17/17 PASS.
+- Button recovery 17/17 PASS.
+- Launch/security checks 15/15 PASS.
+- Targeted booking/payment 13/13 PASS.
+- Student-name/admin/classroom 24/24 PASS.
+- Teacher-message/email 14/14 PASS.
+- All project JavaScript syntax checks PASS.
+- Local server /, app.js, styles.css, curriculum-data.js, ielts-data.js, manifest and a processed Library book returned HTTP 200.
+- Static index audit found no button ID with no application reference.
+
+Browser-test limitation
+The available Chromium binary is organization-policy blocked from opening localhost/private test URLs, so an automated real-browser click-through could not be completed in this environment. This is not represented as a pass. Real-phone/manual tapping of the corrected Library and learning-completion paths remains the final deployment check.

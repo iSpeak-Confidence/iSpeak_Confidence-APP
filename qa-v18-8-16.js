@@ -10,12 +10,12 @@ t('Exact validator accepts target plus displayed reading', app.includes('field?.
 t('Unicode answer normalization is compatibility-safe', app.includes("normalize('NFKC')"));
 t('Validation rechecks while typing', app.includes("addEventListener('input',check)"));
 t('Validation also rechecks on field change', app.includes("addEventListener('change',check)"));
-t('Disabled completion cannot execute handler', app.includes('if(b.disabled)return;completeStudy'));
+t('Disabled completion cannot execute handler', app.includes("if(t.disabled)return;")&&app.includes("t.classList.contains('finish-study')"));
 t('Khmer compact-script production supported', app.includes('\\u1780-\\u17FF'));
 t('Japanese compact-script production supported', app.includes('\\u3040-\\u30FF'));
 t('Chinese compact-script production supported', app.includes('\\u3400-\\u9FFF'));
-t('V18.8.15 next-block advance retained', app.includes('openStudySession(unitIndex,dayIndex,sessionIndex+1)'));
-t('V18.8.15 next-lesson advance retained', app.includes('openStudyDay(unitIndex+1,0)'));
+t('Completion returns to block list', app.includes('openStudyDay(unitIndex,dayIndex);')&&!app.includes('openStudySession(unitIndex,dayIndex,sessionIndex+1)'));
+t('Completion does not skip to next lesson', app.includes('openStudyDay(unitIndex,dayIndex);')&&!app.includes('openStudyDay(unitIndex+1,0)'));
 // Load the actual curriculum object and verify all seven course datasets remain complete.
 const sandbox={window:{}}; vm.createContext(sandbox); vm.runInContext(curriculumText,sandbox);
 const cur=sandbox.window.ISC_CURRICULUM;

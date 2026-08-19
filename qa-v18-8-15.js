@@ -14,8 +14,8 @@ ok('Curriculum declares 1200 blocks per language',C.activityCountPerLanguage===1
 const ids=[];for(const lang of expected)for(let u=1;u<=150;u++)for(let s=1;s<=8;s++)ids.push(`${lang}-u${u}-d1-s${s}`);
 ok('All 8,400 language block IDs are unique',ids.length===8400&&new Set(ids).size===8400);
 ok('Completion saves study progress',app.includes('state.studyCompleted.push(id)')&&app.includes("save();"));
-ok('Blocks 1-7 advance automatically',app.includes('if(!lastBlock){openStudySession(unitIndex,dayIndex,sessionIndex+1);return}'));
-ok('Block 8 advances to next lesson',app.includes('if(!lastUnit){openStudyDay(unitIndex+1,0);return}'));
+ok('Blocks 1-7 return to current block list',app.includes('openStudyDay(unitIndex,dayIndex);')&&!app.includes('if(!lastBlock){openStudySession(unitIndex,dayIndex,sessionIndex+1);return}'));
+ok('Block 8 also returns to current block list after marking complete',app.includes('openStudyDay(unitIndex,dayIndex);')&&!app.includes('if(!lastUnit){openStudyDay(unitIndex+1,0);return}'));
 ok('Next lesson unlock still requires prior 8 blocks',app.includes(".length>=8")&&app.includes('previousDone'));
 ok('Completion persistence is synced to account API',server.includes("'studyCompleted'")&&server.includes("'/api/account/progress'"));
 ok('Final course completion still awards certificate',app.includes('if(!wasComplete&&courseComplete(lang)){maybeAwardCertificate(lang);return}'));

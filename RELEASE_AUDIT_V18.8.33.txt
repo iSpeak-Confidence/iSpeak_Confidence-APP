@@ -1,0 +1,28 @@
+iSpeak Confidence V18.8.33 — critical routing and localhost reliability audit
+
+ROOT CAUSES FIXED
+- Learning completion no longer calls the full-app render while the lesson dialog is transitioning. It persists the exact block, then redraws only the current 8-block list.
+- Critical learning completion, Library and IELTS entry actions are routed by a capture-phase listener installed near the start of app.js, before later render-time bindings.
+- Localhost no longer registers the production service worker. Existing iSpeak service workers/caches are removed during local testing so an older app.js cannot masquerade as the current build.
+- Production retains the V18.8.33 service worker/cache.
+
+VERIFIED CURRENT RELEASE TESTS
+- 7 languages × 150 units × 8 blocks = 8,400 learning blocks.
+- Current release gate: PASS.
+- V18.8.33 critical runtime regression: PASS.
+- Mobile/learning regression: PASS.
+- Practice/IELTS/Library interaction regression: PASS.
+- Button/action source audit: PASS.
+- Certificate gates/previews: PASS.
+- Booking/payment targeted QA: PASS.
+- Student-name/admin/classroom targeted QA: PASS.
+- Teacher-message/email targeted QA: PASS.
+- All JavaScript syntax checks: PASS.
+- Local server assets and /api/status V18.8.33: PASS.
+- All 13 bundled classic-library data files exist and parse with readable chapters/pages.
+
+IMPORTANT HONEST LIMITATION
+Automated Chromium in this environment does not successfully load localhost, so a real browser/touchscreen click-through cannot be truthfully claimed here. The build intentionally disables service-worker caching on localhost so the user's real-device test now tests the exact extracted files.
+
+CONTENT DEPTH FINDING
+English has 172 unique target expressions, Mandarin/Spanish/French/Japanese 120 each, Arabic 180. Khmer currently has 60 unique supplied/approved targets distributed through the 150-unit spiral. This is a content-depth limitation, not hidden as a passing claim.
