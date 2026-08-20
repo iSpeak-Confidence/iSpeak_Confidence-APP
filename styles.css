@@ -1408,3 +1408,10 @@ dialog.booking-dialog .booking-layout{grid-template-columns:minmax(0,1.15fr) min
   letter-spacing: .05em;
   text-transform: uppercase;
 }
+
+/* Google Play account-deletion access: styled to match Profile & Settings without changing existing controls. */
+.settings .settings-link{display:block;background:#fff;border:1px solid var(--line);padding:17px;border-radius:15px;text-align:left;text-decoration:none;color:inherit}
+.settings .settings-link b{float:right}
+.settings .danger-link{border-color:rgba(220,38,38,.38)}
+.settings .danger-link:hover{border-color:#dc2626}
+@media (prefers-color-scheme:dark){.settings .settings-link{background:#0a1a2a;border-color:var(--v13-line);color:#fff}.settings .settings-link b{color:#9edfdc}}

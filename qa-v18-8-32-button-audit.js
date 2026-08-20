@@ -1,14 +1,14 @@
 const fs=require('fs');
 const html=fs.readFileSync('index.html','utf8'),app=fs.readFileSync('app.js','utf8');
 let pass=0,fail=0;const t=(n,v)=>{console.log((v?'PASS':'FAIL'),n);v?pass++:fail++};
-const staticIds=[...html.matchAll(/<button\b[^>]*\bid=["']([A-Za-z0-9_-]+)["']/gi)].map(m=>m[1]);
+const staticIds=[...html.matchAll(/<button\b([^>]*)\bid=["']([A-Za-z0-9_-]+)["']([^>]*)>/gi)].filter(m=>!(/\bdisabled\b/i.test(m[1]+m[3])&&/aria-disabled=["']true["']/i.test(m[1]+m[3]))).map(m=>m[2]);
 const directInline=new Set([...html.matchAll(/<button\b[^>]*\bid=["']([A-Za-z0-9_-]+)["'][^>]*\bonclick=/gi)].map(m=>m[1]));
 const unreferenced=staticIds.filter(id=>!directInline.has(id)&&!new RegExp(`(?:#|['\"]|getElementById\\(['\"])${id.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}`).test(app));
 t('all static button IDs have application references',unreferenced.length===0);
 t('shared navigation route is bound',app.includes("$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view))"));
 t('practice controls route through shared handler',app.includes("$$('[data-practice]').forEach"));
 t('library classic route uses capture router',app.includes("if(t.id==='openClassicLibrary')"));
-t('library story route uses direct entry control',/id="openHeroesLibrary"[^>]*onclick="heroesHome\(\)"/.test(html));
+t('library story entry is intentionally disabled Coming Soon',/id="openHeroesLibrary"[^>]*disabled[^>]*aria-disabled="true"/.test(html));
 t('classic library route is capture-phase persistent',app.includes("openClassicLibrary();return")&&app.includes('},true);'));
 t('story library route is independent of delegated routing',!/if\(t\.id==='openHeroesLibrary'\)/.test(app)&&/onclick="heroShelf\(this\.dataset\.heroShelf\)"/.test(app));
 t('library back route is persistent',app.includes("t.id==='classicLibraryBack'"));
@@ -20,6 +20,6 @@ t('learning completion persists exact block ID',app.includes('state.studyComplet
 t('learning completion returns one page to block list',app.includes('openStudyDay(unitIndex,dayIndex);')&&!app.includes('openStudySession(unitIndex,dayIndex,sessionIndex+1)'));
 t('completed block is visibly rendered done',app.includes("study-session ${done?'done':''}"));
 t('next block unlock depends on previous completion',app.includes("const priorDone=i===0||state.studyCompleted.includes(studyId(unitIndex,dayIndex,i-1))"));
-t('current app asset cache busting is 18.8.37',html.includes('app.js?v=18.8.37')&&html.includes('styles.css?v=18.8.37'));
+t('current app asset cache busting is 18.8.38',html.includes('app.js?v=18.8.38')&&html.includes('styles.css?v=18.8.38'));
 if(unreferenced.length)console.error('Unreferenced button IDs:',unreferenced.join(', '));
-console.log(`\nV18.8.37 button/action audit: ${pass}/${pass+fail} passed`);process.exit(fail?1:0);
+console.log(`\nV18.8.38 button/action audit: ${pass}/${pass+fail} passed`);process.exit(fail?1:0);

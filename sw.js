@@ -1,4 +1,4 @@
-const CACHE='ispeak-v18-8-37-story-direct-controls';
+const CACHE='ispeak-v18-8-38-play-ready';
 const CORE=['/','/index.html','/styles.css?v=18.8.38','/app.js?v=18.8.38','/curriculum-data.js','/curriculum-expansion-v17-4.js','/ielts-data.js','/language-support-v17-5.js','/khmer-commonvoice-data.js','/manifest.webmanifest','/assets/logo.png','/assets/icon-192.png','/assets/icon-512.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()).then(()=>self.clients.matchAll().then(cs=>cs.forEach(c=>c.postMessage({type:'ISPEAK_UPDATED',version:'18.8.38'}))))));

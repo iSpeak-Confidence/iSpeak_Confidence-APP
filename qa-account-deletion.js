@@ -1,0 +1,11 @@
+const fs=require('fs');let pass=0,fail=0;const t=(n,v)=>{if(v){console.log('PASS',n);pass++}else{console.error('FAIL',n);fail++}};
+const html=fs.readFileSync('index.html','utf8'),page=fs.readFileSync('delete-account.html','utf8'),js=fs.readFileSync('delete-account.js','utf8'),server=fs.readFileSync('server.js','utf8'),sitemap=fs.readFileSync('sitemap.xml','utf8');
+t('Profile & Settings has deletion entry',html.includes('href="/delete-account.html"')&&html.includes('Delete account & data'));
+t('Public deletion page identifies iSpeak Confidence',page.includes('Delete your account and data')&&page.includes('iSpeak Confidence'));
+t('Public page supports normal account login',js.includes("'/api/account/login'")&&js.includes("'/api/device-verification/confirm'"));
+t('Deletion requires an authenticated bearer token',js.includes('Authorization:`Bearer ${token}`')&&server.includes("const a=authUser(req);if(!a)return json(res,401"));
+t('Server deletion revokes student sessions',server.includes("revokeAllSessions('student',email)"));
+t('Server deletion removes teacher/student private threads',server.includes('delete t.studentMessages[email]'));
+t('Server deletion removes student support threads',server.includes("key.startsWith(email+'|')"));
+t('Deletion URL is discoverable in sitemap',sitemap.includes('https://ispeakconfidence.com/delete-account.html'));
+console.log(`\nAccount-deletion QA: ${pass}/${pass+fail} passed`);process.exit(fail?1:0);

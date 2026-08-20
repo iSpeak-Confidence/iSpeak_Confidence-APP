@@ -1,0 +1,21 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.ispeakconfidence.app'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.ispeakconfidence.app'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '18.8.38'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}

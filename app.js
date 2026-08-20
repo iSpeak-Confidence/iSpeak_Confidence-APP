@@ -2406,7 +2406,7 @@ if('serviceWorker' in navigator && location.protocol!=='file:'){
    try{for(const reg of await navigator.serviceWorker.getRegistrations())await reg.unregister();if('caches' in window)for(const key of await caches.keys())if(key.startsWith('ispeak-'))await caches.delete(key);console.info('iSpeak local test mode: service-worker caches cleared.')}catch(err){console.warn('Could not clear local service-worker cache',err)}
    return;
   }
-  try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.37',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}
+  try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.38',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}
  });
 }
 

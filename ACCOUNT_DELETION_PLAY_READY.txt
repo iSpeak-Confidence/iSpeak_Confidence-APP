@@ -1,0 +1,21 @@
+iSpeak Confidence — Google Play account deletion update
+
+Added without redesigning unrelated app features:
+- Public deletion page: /delete-account.html
+- Profile & Settings link: Delete account & data
+- Secure student sign-in and new-device email verification on deletion page
+- Permanent authenticated deletion of student account and cloud learning data
+- Revocation of active student sessions after deletion
+- Removal of private student/teacher and support message threads
+- Disclosure that completed lesson/payment/safety/legal records may be retained where required
+- Teacher/applicant deletion request route through iSpeak Confidence Support
+- Sitemap entry for the public deletion page
+
+Verification completed:
+- Full release-gate: PASS
+- Hardening audit: 15/15 PASS
+- Account-deletion targeted QA: 8/8 PASS
+- Runtime test: public page served, test account created, authenticated delete succeeded, deleted session rejected afterward
+
+Google Play Delete account URL after deployment:
+https://ispeakconfidence.com/delete-account.html

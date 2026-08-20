@@ -464,7 +464,13 @@ async function handleAPI(req,res,pathname){
    a.u.state=publicState(body.state);const syncedName=String(a.u.state?.name||'').trim().replace(/\s+/g,' ');if(syncedName.length>=2&&syncedName.toLowerCase()!=='student')a.u.displayName=syncedName.slice(0,120);a.u.updatedAt=new Date().toISOString();saveUsers(a.db);return json(res,200,{updatedAt:a.u.updatedAt});
  }
  if(pathname==='/api/account'&&req.method==='DELETE'){
-   const a=authUser(req);if(!a)return json(res,401,{error:'Sign in required.'});delete a.db.users[a.email];saveUsers(a.db);return json(res,200,{deleted:true});
+   const a=authUser(req);if(!a)return json(res,401,{error:'Sign in required.'});
+   const email=a.email;
+   // Delete the active student account, cloud learning state, private message threads and all active sessions.
+   // Completed lesson/payment/safety records are intentionally retained where needed for accounting, disputes or safeguarding.
+   const tdb=loadTeachers();for(const t of Object.values(tdb.teachers||{})){if(t?.studentMessages&&Object.prototype.hasOwnProperty.call(t.studentMessages,email))delete t.studentMessages[email]}saveTeachers(tdb);
+   const adb=loadApplications();if(adb.supportMessages&&typeof adb.supportMessages==='object'){for(const key of Object.keys(adb.supportMessages))if(key.startsWith(email+'|'))delete adb.supportMessages[key]}saveApplications(adb);
+   revokeAllSessions('student',email);delete a.db.users[email];saveUsers(a.db);return json(res,200,{deleted:true});
  }
 
  if(pathname==='/api/device-verification/confirm'&&req.method==='POST'){

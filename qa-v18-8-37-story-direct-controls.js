@@ -5,7 +5,7 @@ pass('single heroesHome definition',(app.match(/^function heroesHome/gm)||[]).le
 pass('single heroShelf definition',(app.match(/^function heroShelf/gm)||[]).length===1);
 pass('single heroRead definition',(app.match(/^function heroRead/gm)||[]).length===1);
 pass('seven unique hero records', [...app.matchAll(/\{id:'(jess|jack|pedro|loulou|yuki|dariya|zyad)'/g)].map(x=>x[1]).sort().join(',')==='dariya,jack,jess,loulou,pedro,yuki,zyad');
-pass('Story Series entry has direct click',/id="openHeroesLibrary"[^>]*onclick="heroesHome\(\)"/.test(html));
+pass('Story Series entry is intentionally Coming Soon',/id="openHeroesLibrary"[^>]*coming-soon-card[^>]*disabled[^>]*aria-disabled="true"/.test(html)&&/Coming Soon/.test(html));
 pass('hero cards have direct click',/data-hero-shelf="\$\{h\.id\}" onclick="heroShelf\(this\.dataset\.heroShelf\)"/.test(app));
 pass('hero shelf return has direct click',/data-all-heroes onclick="heroesHome\(\)"/.test(app));
 pass('volume cards directly open reader',/onclick="heroRead\(/.test(app));
@@ -13,6 +13,6 @@ pass('reader hero-back direct click',/data-hero-shelf="\$\{h\.id\}" onclick="her
 pass('chapter selector direct change',/onchange="heroRead\(this\.dataset\.hero,Number\(this\.dataset\.volume\),Number\(this\.value\)\)"/.test(app));
 pass('chapter buttons direct click',/data-story-nav[\s\S]{0,220}onclick="if\(!this\.disabled\)heroRead/.test(app));
 pass('Story Series not intercepted by capture router',!(/ispeakCriticalRouter[\s\S]*?if\(t\.id==='openHeroesLibrary'\)/.test(app)));
-pass('current app cache bust',/app\.js\?v=18\.8\.37/.test(html)&&/styles\.css\?v=18\.8\.37/.test(html));
-pass('current service worker cache',/ispeak-v18-8-37-story-direct-controls/.test(fs.readFileSync('sw.js','utf8')));
+pass('current app cache bust',/app\.js\?v=18\.8\.38/.test(html)&&/styles\.css\?v=18\.8\.38/.test(html));
+pass('current service worker cache',/ispeak-v18-8-38-play-ready/.test(fs.readFileSync('sw.js','utf8')));
 if(checks.some(x=>!x[1]))process.exit(1); console.log(`Story direct-control QA: ${checks.length}/${checks.length} passed`);

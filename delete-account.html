@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="index,follow">
+  <title>Delete your account | iSpeak Confidence</title>
+  <meta name="description" content="Delete your iSpeak Confidence student account and cloud learning data.">
+  <link rel="icon" href="/assets/icon-192.png">
+  <link rel="stylesheet" href="/delete-account.css">
+</head>
+<body>
+  <main class="delete-shell">
+    <a class="brand" href="/" aria-label="Back to iSpeak Confidence"><img src="/assets/logo.png" alt="iSpeak Confidence"><span>iSpeak Confidence</span></a>
+    <section class="card" aria-labelledby="deleteTitle">
+      <span class="eyebrow">ACCOUNT & PRIVACY</span>
+      <h1 id="deleteTitle">Delete your account and data</h1>
+      <p>This page is available even if you do not have the Android app installed. Sign in to the student account you want to delete. After confirmation, the account, cloud learning progress, active sign-in sessions and private student-to-teacher/support message threads are permanently removed.</p>
+      <div class="notice"><b>Records that may be retained</b><p>Completed lesson, payment, safety, fraud-prevention or legal records may be retained only where reasonably required for accounting, disputes, safety or legal obligations. They are not kept as an active learning account.</p></div>
+
+      <form id="loginForm" novalidate>
+        <label>Email address<input id="email" type="email" autocomplete="username" required maxlength="100"></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" required maxlength="200"></label>
+        <button id="loginBtn" class="primary" type="submit">Continue securely</button>
+      </form>
+
+      <form id="verifyForm" hidden novalidate>
+        <p>We sent a 6-digit verification code to your email because this is a new device.</p>
+        <label>Verification code<input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required></label>
+        <button id="verifyBtn" class="primary" type="submit">Verify account</button>
+        <button id="startOver" class="secondary" type="button">Start over</button>
+      </form>
+
+      <section id="confirmPanel" hidden>
+        <h2>Final confirmation</h2>
+        <p id="signedInAs"></p>
+        <label class="confirm-row"><input id="confirmDelete" type="checkbox"> <span>I understand this permanently deletes my iSpeak Confidence student account and cloud learning data.</span></label>
+        <button id="deleteBtn" class="danger" type="button" disabled>Delete my account permanently</button>
+      </section>
+
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+      <hr>
+      <h2>Teacher or teacher-applicant account?</h2>
+      <p>Teacher accounts are managed separately because lesson, payment and safeguarding records may require administrative review. Request deletion through <a href="mailto:ispeakconfidence@gmail.com?subject=Teacher%20account%20deletion%20request">iSpeak Confidence Support</a> using the email address on your teacher account.</p>
+      <p class="links"><a href="/privacy.html">Privacy Policy</a><span>•</span><a href="/terms.html">Terms of Use</a><span>•</span><a href="/">Back to iSpeak Confidence</a></p>
+    </section>
+  </main>
+  <script src="/delete-account.js"></script>
+</body>
+</html>
