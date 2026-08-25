@@ -1,0 +1,8 @@
+V18.8.54 lesson Listen-button hotfix
+
+- Routes dynamically rendered lesson/practice Listen buttons through the top-level capture-phase interaction router.
+- Dedicated Play expression buttons now carry their own target audio text instead of relying on fragile render-time onclick closures.
+- Anchor-card Listen buttons use the same delegated playback path.
+- Preserves the working V18.8.53 server/native/browser audio fallback chain.
+- Cache/service worker bumped to 18.8.54.
+- Android versionCode 9 / versionName 18.8.54.

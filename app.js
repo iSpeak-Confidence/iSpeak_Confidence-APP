@@ -38,6 +38,15 @@ document.addEventListener('click',function ispeakCriticalRouter(e){
    try{completeStudy(u,d,s)}catch(err){console.error('Learning block completion failed',err);t.disabled=false;t.textContent='Complete this learning block';toast('Could not save this learning block. Please try again.')}
    return;
  }
+ // V18.8.54: dynamically-rendered lesson/practice audio controls use capture-phase routing.
+ // This avoids modal rerenders or mobile/WebView event quirks swallowing render-time onclick handlers.
+ if(t.matches('[data-play-language-audio],.hear-anchor')){
+   e.preventDefault();e.stopImmediatePropagation();
+   const spoken=String(t.dataset.playLanguageAudio||t.dataset.hear||'').trim();
+   if(!spoken)return toast('This audio item could not be identified. Reopen the activity and try again.');
+   Promise.resolve(playVerifiedLanguageAudio(spoken)).catch(err=>{console.error('Language audio control failed',err);toast('Audio could not start. Please try again.')});
+   return;
+ }
  // Library and Story Series entry points must work on initial load, after rerenders, and on mobile.
  // Keep these in the capture router so a stale/duplicate bubble handler cannot swallow the tap.
  if(t.matches('[data-view="library"],[data-nav="library"]')){e.preventDefault();e.stopImmediatePropagation();setView('library');libraryHome();return}
@@ -1342,8 +1351,7 @@ function openListeningPracticeRoom(){
  if(state.language==='khmer')return openKhmerNativeListening();
  let i=0,score=0;
  const draw=()=>{const x=items[i],wrong=unitPool().filter(y=>y.target!==x.target&&y.meaning!==x.meaning).sort(()=>Math.random()-.5).slice(0,3);
-   modal(`<span class="eyebrow">LISTENING ROOM • ${i+1}/${items.length}</span><h2>Listen before reading</h2><p>Play the full expression, choose its meaning, then continue to a new item.</p><button id="practiceListenPlay" class="primary wide">🔊 Play expression</button><div class="answer-grid">${[x,...wrong].sort(()=>Math.random()-.5).map(y=>`<button data-practice-listen="${esc(y.target)}">${esc(supportMeaning(y.meaning,state.language))}</button>`).join('')}</div><p id="practiceListenResult" class="practice-feedback"></p>`);
-   $('#practiceListenPlay').onclick=()=>playVerifiedLanguageAudio(x.target);
+   modal(`<span class="eyebrow">LISTENING ROOM • ${i+1}/${items.length}</span><h2>Listen before reading</h2><p>Play the full expression, choose its meaning, then continue to a new item.</p><button id="practiceListenPlay" class="primary wide" data-play-language-audio="${esc(x.target)}">🔊 Play expression</button><div class="answer-grid">${[x,...wrong].sort(()=>Math.random()-.5).map(y=>`<button data-practice-listen="${esc(y.target)}">${esc(supportMeaning(y.meaning,state.language))}</button>`).join('')}</div><p id="practiceListenResult" class="practice-feedback"></p>`);
    $$('[data-practice-listen]',$('#modalBody')).forEach(b=>b.onclick=()=>{const ok=b.dataset.practiceListen===x.target;if(ok)score++;recordLearningEvidence('listen',ok,{target:x.target,source:'practice-room'});i++;if(i<items.length)setTimeout(draw,180);else{state.xp+=Math.max(10,score*2);save();modal(`<span class="eyebrow">LISTENING ROOM COMPLETE</span><h2>${score}/${items.length}</h2><p>You completed a full listening set using material from the part of the course you have reached.</p><button id="practiceListenDone" class="primary wide">Done</button>`);$('#practiceListenDone').onclick=()=>$('#modal').close()}});
  };draw();
 }
@@ -1617,7 +1625,7 @@ function openStudySession(unitIndex,dayIndex,sessionIndex){
  }
  if(s.key==='listen'){
   const dp=(longCourse.languages[state.language]?.units||[]).slice(0,unitIndex+1).flatMap(x=>studyAnchors(x)).filter(x=>x.target!==a.target&&x.meaning!==a.meaning).slice(-12),opts=[a.meaning,...dp.map(x=>x.meaning).filter(x=>x!==a.meaning).slice(0,3)].sort(()=>Math.random()-.5);
-  body=`<div class="study-plan"><b>${esc(lessonT('listeningLab'))}</b><p>${beginner?'Listen and choose the meaning. No dictation yet.':esc(lessonT('listenInstruction'))}</p></div><button id="listenA" class="primary wide">🔊 Play expression</button><div class="answer-grid">${opts.map(x=>`<button data-listen-answer="${esc(x)}">${esc(supportMeaning(x,state.language))}</button>`).join('')}</div><p id="listenResult"></p>${beginner?`<input id="listenProof" data-exact="ok" type="hidden">`:`<label>${esc(lessonT('dictation'))}<input id="listenProof" data-exact="${esc(expected(a))}" autocomplete="off" placeholder="${esc(courseScriptMode()==='romanized'?'Type what you heard using the English alphabet':'Type the complete expression')}"></label>`}${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'listenProof')}`;
+  body=`<div class="study-plan"><b>${esc(lessonT('listeningLab'))}</b><p>${beginner?'Listen and choose the meaning. No dictation yet.':esc(lessonT('listenInstruction'))}</p></div><button id="listenA" class="primary wide" data-play-language-audio="${esc(a.target)}">🔊 Play expression</button><div class="answer-grid">${opts.map(x=>`<button data-listen-answer="${esc(x)}">${esc(supportMeaning(x,state.language))}</button>`).join('')}</div><p id="listenResult"></p>${beginner?`<input id="listenProof" data-exact="ok" type="hidden">`:`<label>${esc(lessonT('dictation'))}<input id="listenProof" data-exact="${esc(expected(a))}" autocomplete="off" placeholder="${esc(courseScriptMode()==='romanized'?'Type what you heard using the English alphabet':'Type the complete expression')}"></label>`}${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'listenProof')}`;
  }
  if(s.key==='speak')body=`<div class="study-plan"><b>${esc(lessonT('speakingLab'))}</b><ol><li>${esc(lessonT('slowRepeat'))}</li><li>${esc(lessonT('shadow'))}</li><li>${esc(lessonT('fromSupport'))}</li>${beginner?'':'<li>'+esc(lessonT('changeDetail'))+'</li>'}<li>${esc(lessonT('recordBest'))}</li></ol></div><div class="anchor-card">${supportMeaningMarkup(a.meaning,state.language)}<div class="big">${esc(show(a))}</div>${a.reading&&courseScriptMode()==='native'?`<div class="romanization">${esc(a.reading)}</div>`:''}</div><button id="courseSpeak" class="primary wide">🎙️ ${esc(lessonT('speakingCheck'))}</button><p id="courseSpeakResult">${beginner?'Listen, copy and repeat. Perfect spelling is not required here.':'Chrome gives the best microphone support.'}</p><input id="speakProof" ${beginner?'data-exact="spoken"':'data-exact="'+esc(a.target)+'"'} type="hidden">${sourceBlock(u)}${finishBlockButton(unitIndex,dayIndex,sessionIndex,'speakProof')}`;
  if(s.key==='readwrite'){
@@ -1642,8 +1650,6 @@ function openStudySession(unitIndex,dayIndex,sessionIndex){
  if(s.key==='mastery')body=`<div class="study-plan"><b>${esc(lessonT('mastery'))}</b><p>${esc(lessonT('masteryInstruction'))}</p></div><button id="startMastery" class="primary wide">🏆 ${esc(lessonT('startMastery'))}</button>${sourceBlock(u)}`;
  modal(`${directionMarkup()}<span class="eyebrow">DAY ${dayNo} • BLOCK ${sessionIndex+1}/8</span><h2>${s.icon} ${s.name}</h2><p>${esc(u.title)} — ${esc(u.goal)}</p>${courseScriptChoiceMarkup(unitIndex)}${body}<button type="button" id="backDay" class="secondary wide" data-back-unit="${unitIndex}" data-back-day="${dayIndex}">← Back</button>`);
  wireCourseScriptChoice(unitIndex,dayIndex,sessionIndex);
- $$('.hear-anchor',$('#modalBody')).forEach(x=>x.onclick=()=>{const t=x.dataset.hear;playVerifiedLanguageAudio(t)});
- if($('#listenA'))$('#listenA').onclick=()=>{playVerifiedLanguageAudio(a.target)};
  $$('[data-listen-answer]',$('#modalBody')).forEach(x=>x.onclick=()=>$('#listenResult').textContent=x.dataset.listenAnswer===a.meaning?(beginner?'Correct — great listening.':'Correct — now type the expression you heard.'):'Not correct. Listen to the whole expression again.');
  $$('[data-build]',$('#modalBody')).forEach(x=>x.onclick=()=>$('#buildResult').textContent=x.dataset.build==='yes'?'Correct. Now produce five new variations.':'Try again.');
  $$('[data-beginner-proof]',$('#modalBody')).forEach(x=>x.onclick=()=>{const f=$('#learnProof');f.value=x.dataset.beginnerProof;f.dispatchEvent(new Event('input'));$$('[data-beginner-proof]',$('#modalBody')).forEach(q=>q.classList.toggle('correct',q===x&&courseExactAnswerAccepted(f,x.dataset.beginnerProof)))});
@@ -2555,7 +2561,7 @@ if('serviceWorker' in navigator && location.protocol!=='file:'){
    try{for(const reg of await navigator.serviceWorker.getRegistrations())await reg.unregister();if('caches' in window)for(const key of await caches.keys())if(key.startsWith('ispeak-'))await caches.delete(key);console.info('iSpeak local test mode: service-worker caches cleared.')}catch(err){console.warn('Could not clear local service-worker cache',err)}
    return;
   }
-  try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.53',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}
+  try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.54',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}
  });
 }
 
