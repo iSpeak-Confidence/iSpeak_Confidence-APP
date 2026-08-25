@@ -1,0 +1,21 @@
+const fs=require('fs');
+const files={app:fs.readFileSync('app.js','utf8'),html:fs.readFileSync('index.html','utf8'),sw:fs.readFileSync('sw.js','utf8'),server:fs.readFileSync('server.js','utf8'),gradle:fs.readFileSync('android-app/app/build.gradle','utf8'),main:fs.readFileSync('android-app/app/src/main/java/com/ispeakconfidence/app/MainActivity.java','utf8'),pkg:fs.readFileSync('package.json','utf8')};
+let n=0,fail=0;function check(name,c){n++;if(c)console.log('PASS',name);else{fail++;console.log('FAIL',name)}}
+check('web assets versioned 18.8.50',/styles\.css\?v=18\.8\.50/.test(files.html)&&/app\.js\?v=18\.8\.50/.test(files.html));
+check('service worker cache 18.8.50',/ispeak-v18-8-50-release-audit/.test(files.sw)&&/version:'18\.8\.50'/.test(files.sw));
+check('service worker registration 18.8.50',/\/sw\.js\?v=18\.8\.50/.test(files.app));
+check('offline cache 18.8.50',/ispeak-v18-8-50-core/.test(files.app));
+check('server status 18.8.50',/version:'18\.8\.50'/.test(files.server));
+check('package metadata 18.8.50',/"version": "18\.8\.50"/.test(files.pkg));
+check('Android versionCode 5',/versionCode 5/.test(files.gradle));
+check('Android versionName 18.8.50',/versionName '18\.8\.50'/.test(files.gradle));
+check('Android native audio bridge',/playAudioUrl/.test(files.main)&&/MediaPlayer/.test(files.main));
+check('rotation retained',/onConfigurationChanged/.test(files.main));
+check('writing touch support',/touchstart/.test(files.app)&&/touchmove/.test(files.app));
+check('learning auto-scroll',/scrollIntoView/.test(files.app));
+check('IELTS academic/general routing',/t\.dataset\.ieltsMode==='general'\?'general':'academic'/.test(files.app)&&/data-ielts-mode/.test(files.app)&&/openIELTSLevel\(st\.level\)/.test(files.app));
+check('IELTS 72 units / 576 blocks',/72/.test(files.app)&&/576/.test(files.app));
+check('teacher login const crash absent',!/const token=newToken\(\);\s*token=issueSession/.test(files.server));
+check('passwords scrypt hashed',/crypto\.scryptSync/.test(files.server));
+check('teacher token only stored client-side',!/localStorage\.setItem\([^\n]*(password|credential)/i.test(files.app));
+console.log(`Release audit: ${n-fail}/${n} passed`);process.exit(fail?1:0);

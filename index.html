@@ -30,7 +30,7 @@
 <link rel="icon" href="/assets/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="/assets/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="styles.css?v=18.8.38">
+<link rel="stylesheet" href="styles.css?v=18.8.52">
 </head>
 <body>
 <header class="topbar">
@@ -63,7 +63,7 @@
   <div id="libraryHub" class="library-hub-screen">
     <div class="library-hero-head"><span class="eyebrow">YOUR READING ADVENTURE</span><h1>Choose your next story</h1><p>Original iSpeak story adventures or timeless classics — all inside your learning language.</p></div>
     <div class="library-paths">
-      <button type="button" id="openHeroesLibrary" class="library-path hero-series-path coming-soon-card" disabled aria-disabled="true"><span class="path-kicker">ORIGINAL STORIES</span><div class="path-character-stack two-characters"><img src="assets/mascots/jess-v13-cutout.png" alt="Jess"><img src="assets/mascots/jack-cutout.png" alt="Jack Chen"></div><div class="path-copy"><h2>iSpeak Story Series</h2><p>Original iSpeak story adventures are being prepared for release.</p><span class="coming-soon-label">Coming Soon</span></div></button>
+      <button type="button" id="openHeroesLibrary" data-open-hero-stories="true" class="library-path hero-series-path"><span class="path-kicker">ORIGINAL STORIES</span><div class="path-character-stack two-characters"><img src="assets/mascots/jess-v13-cutout.png" alt="Jess"><img src="assets/mascots/jack-cutout.png" alt="Jack Chen"></div><div class="path-copy"><h2>iSpeak Story Series</h2><p>Follow the official iSpeak Heroes through connected story adventures in your learning language.</p><span>Explore Hero Stories →</span></div></button>
       <button id="openClassicLibrary" class="library-path classic-library-path"><span class="path-kicker">TIMELESS READING</span><div class="classic-books-art"><i></i><i></i><i></i></div><div class="path-copy"><h2>Classic Library</h2><p>Complete classics, graded readers and famous stories for relaxed reading.</p><span>Explore Classics →</span></div></button>
     </div>
     <div class="library-feature-strip"><b>📖 Built for reading, not drilling.</b><span>Your place, bookmarks and reader settings are saved. No forced repetition queue.</span></div>
@@ -144,7 +144,7 @@
     </div>
     <aside id="chatPanel" class="chat-panel open">
       <div class="chathead"><div><span class="eyebrow">LIVE LANGUAGE BUDDY</span><b>Conversation</b><small id="mascotDesc"></small></div><div><button id="voice" class="icon-btn" title="Voice">🔊</button><button id="clear" class="icon-btn" title="Clear">↻</button></div></div>
-      <div class="ai-connect-row"><button id="aiConnect" class="primary">✨ Connect Gemini AI</button><small>Gemini-powered conversation with one fixed mascot voice. No canned fallback replies.</small></div>
+      <div class="ai-connect-row"><strong>✨ Gemini AI connects automatically</strong><small>Start speaking or typing whenever you are ready. No separate connection step is required.</small></div>
       <div id="log" class="log"><div class="empty">Connect Gemini AI, then speak naturally or type. Voice commands also control the mascot: jump, run, sit down, lie down, wave, dance, stand up or stop.</div></div>
       <div id="prompts" class="prompts"></div>
       <form id="chatForm" class="chat-input"><input id="chatText" aria-label="Conversation message" autocomplete="off" placeholder="Type a message…"><button class="send" aria-label="Send">➤</button></form>
@@ -311,10 +311,12 @@
   <article><b>6</b><span>Progressive levels</span></article><article><b>72</b><span>Structured units</span></article>
   <article><b>576</b><span>Core lesson blocks</span></article><article><b>6</b><span>Full mock tests</span></article>
  </div>
- <div class="ielts-mode-tabs"><button class="active" data-ielts-mode="academic">Academic</button><button data-ielts-mode="general">General Training</button></div>
+ <div class="ielts-mode-tabs" role="group" aria-label="IELTS test type"><button type="button" class="active" data-ielts-mode="academic"><b>Academic</b><small>University / professional study</small></button><button type="button" data-ielts-mode="general"><b>General Training</b><small>Work / migration / everyday English</small></button></div>
+ <div id="ieltsModeSummary" class="ielts-mode-summary" aria-live="polite"></div>
  <div class="section-head"><div><span class="eyebrow">YOUR PATH</span><h2>Choose your IELTS level</h2></div></div>
  <div id="ieltsLevels" class="ielts-level-grid"></div>
- <div class="section-head"><div><span class="eyebrow">TRAIN BY SKILL</span><h2>IELTS Skills Lab</h2></div></div>
+ <div id="ieltsLevelCourse" class="ielts-course-panel" aria-live="polite"></div>
+ <div class="section-head"><div><span class="eyebrow">TRAIN BY SKILL</span><h2>IELTS Skills Lab</h2><p id="ieltsSkillsContext" class="muted"></p></div></div>
  <div id="ieltsSkills" class="ielts-skill-grid"></div>
  <div class="ielts-mock-banner"><div><span class="eyebrow">EXAM SIMULATION</span><h2>Mock Test Centre</h2><p>Timed mini mocks plus full Academic and General Training simulations with answer review and score history.</p></div><button class="primary" id="ieltsMocks2">Open Mock Tests</button></div>
  <div class="ielts-official-resources">
@@ -341,7 +343,7 @@
 <button data-view="teachers">Teachers</button>
 <button data-view="library">Library</button>
 <button data-view="progress">Progress</button>
-<button data-view="profile">Profile & Settings</button><button id="supportChatBtn">💬 Support</button></aside><div id="scrim"></div>
+<button data-view="profile">Profile & Settings</button><button id="supportChatBtn">💬 Support</button><button id="ourSocialsBtn">◎ Our Socials</button></aside><div id="scrim"></div>
 
 <dialog id="modal"><button id="modalClose" class="modal-close" aria-label="Close dialog">×</button><div id="modalBody"></div></dialog>
 <dialog id="booking" class="booking-dialog" hidden><form id="bookingForm"><input id="bookDate"><input id="bookTime"><input id="bookType" value="50-minute private lesson"><input id="bookName"><input id="bookEmail"><textarea id="bookMessage"></textarea><div id="bookingDays"></div><div id="bookingSlots"></div><div id="bookingTimeZone"></div><div id="priceSummary"></div><div id="bookingSelection"></div><button id="bookingSubmit" type="submit">Message teacher</button></form></dialog>
@@ -351,6 +353,6 @@
 <script src="ielts-data.js"></script>
 <script src="khmer-commonvoice-data.js"></script>
 <script src="language-support-v17-5.js"></script>
-<script src="app.js?v=18.8.38"></script>
+<script src="app.js?v=18.8.52"></script>
 </body>
 </html>

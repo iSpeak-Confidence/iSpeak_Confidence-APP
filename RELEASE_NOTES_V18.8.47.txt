@@ -1,0 +1,7 @@
+iSpeak Confidence Web V18.8.47
+
+- Added a polished Support hub with Our Socials.
+- Added working YouTube, TikTok and Facebook link actions.
+- Android compatibility uses the existing V18.8.46 WebView external-navigation handler, so the live web update works without replacing the currently submitted Play build.
+- Fixed successful teacher login crashing with an Unexpected server error.
+- Updated web cache/service-worker version to 18.8.47.

@@ -1,0 +1,14 @@
+iSpeak Confidence V18.8.44 — Closed Beta Fixes
+
+Fixed from closed-beta tester feedback:
+- Writing Academy: "Master & next" now accepts normal substantial handwriting on Android/WebView even when the phone emits fewer pointer-move events. Coalesced pointer events and final pointer-up coordinates are recorded.
+- Android course audio: added a native Android TextToSpeech bridge for Play Store WebView builds. Web/browser speech synthesis remains the fallback; verified Khmer human recordings remain unchanged.
+- Admin teacher pricing: admins can now set each approved teacher's student lesson price and teacher pay. Teachers can view these values but cannot edit them.
+- Booking/payment text and booking amounts now use each teacher's current admin-set rate instead of hard-coded $13/$8 values.
+- Teacher public profile displays the current server rate.
+- Play Store metadata bumped to versionCode 2 / versionName 18.8.44.
+- App/service-worker cache bumped to 18.8.44.
+
+Validation:
+- V18.8.44 targeted closed-beta QA: 13/13 passed.
+- Full existing release gate passed.

@@ -1,0 +1,21 @@
+iSpeak Confidence V18.8.45 — Closed Beta Android Build
+
+This release carries forward the V18.8.44 closed-beta fixes and hardens Android audio end-to-end.
+
+Included:
+- Android/WebView writing-canvas Master & next fix.
+- Admin-controlled student lesson price and teacher pay.
+- Native Android TextToSpeech bridge for learning audio.
+- All remaining synthesized IELTS/listening/diagnostic/mock fallbacks now route through the native Android TTS bridge first.
+- Browser/PWA speech synthesis remains as fallback outside the Play build.
+- Khmer learning audio continues to use exact verified human recordings where mapped; it is not replaced by synthetic Khmer speech.
+- Android package remains com.ispeakconfidence.app.
+- Play versionCode remains 2 because versionCode 1 is the existing closed-test build and V18.8.44 was not uploaded.
+- versionName 18.8.45.
+
+Real-device closed-beta validation required after upload:
+1. Open a Latin writing exercise, draw the requested character, tap Master & next repeatedly.
+2. Play learning audio in multiple non-Khmer languages.
+3. Play IELTS Listening, diagnostic and full mock audio.
+4. Confirm microphone/camera permission prompts.
+5. Confirm admin can change teacher student-price/pay and that student-facing booking uses the saved student price.

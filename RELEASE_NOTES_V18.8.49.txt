@@ -1,0 +1,7 @@
+iSpeak Confidence V18.8.49
+
+- Fixed Academic and General Training IELTS mode buttons on Android/mobile by routing them in the capture-phase interaction handler.
+- Selecting Academic or General Training now immediately opens the current IELTS study level, exposing the full structured learning path instead of appearing to do nothing.
+- Added the same hardened routing for IELTS level cards.
+- IELTS course remains 6 levels, 72 units and 576 core lesson blocks across Listening, Reading, Writing, Speaking, Vocabulary, Grammar, Strategy and Mastery.
+- Updated service-worker cache/version so mobile clients receive the corrected controls.

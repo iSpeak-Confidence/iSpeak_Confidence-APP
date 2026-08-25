@@ -5,7 +5,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.content.res.Configuration;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.webkit.JavascriptInterface;
+import android.webkit.CookieManager;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -15,22 +23,110 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends Activity {
     private static final String HOME = "https://ispeakconfidence.com/";
     private WebView webView;
     private PermissionRequest pendingWebPermission;
     private ValueCallback<Uri[]> fileCallback;
+    private TextToSpeech textToSpeech;
+    private MediaPlayer mediaPlayer;
+    private boolean ttsReady=false;
+    private String pendingSpeech="";
+    private String pendingLang="en-US";
 
     private static final int REQ_PERMISSIONS = 1001;
     private static final int REQ_FILE = 1002;
 
+    private class AndroidAudioBridge {
+        @JavascriptInterface public void speak(String text, String languageTag) {
+            final String safeText=text==null?"":text.trim();
+            final String safeLang=(languageTag==null||languageTag.trim().isEmpty())?"en-US":languageTag.trim();
+            if(safeText.isEmpty())return;
+            runOnUiThread(() -> speakNative(safeText,safeLang,0.9f));
+        }
+        @JavascriptInterface public void speakWithRate(String text, String languageTag, float rate) {
+            final String safeText=text==null?"":text.trim();
+            final String safeLang=(languageTag==null||languageTag.trim().isEmpty())?"en-US":languageTag.trim();
+            final float safeRate=Math.max(0.5f,Math.min(1.5f,rate));
+            if(safeText.isEmpty())return;
+            runOnUiThread(() -> speakNative(safeText,safeLang,safeRate));
+        }
+        @JavascriptInterface public void playAudioUrl(String url) {
+            final String safeUrl=url==null?"":url.trim();
+            if(safeUrl.isEmpty())return;
+            runOnUiThread(() -> playNativeAudioUrl(safeUrl,"","en-US"));
+        }
+        @JavascriptInterface public void playAudioUrlWithFallback(String url, String fallbackText, String languageTag) {
+            final String safeUrl=url==null?"":url.trim();
+            final String safeText=fallbackText==null?"":fallbackText.trim();
+            final String safeLang=(languageTag==null||languageTag.trim().isEmpty())?"en-US":languageTag.trim();
+            if(safeUrl.isEmpty()){ if(!safeText.isEmpty())runOnUiThread(() -> speakNative(safeText,safeLang,0.9f)); return; }
+            runOnUiThread(() -> playNativeAudioUrl(safeUrl,safeText,safeLang));
+        }
+        @JavascriptInterface public void openExternalUrl(String url) {
+            final String safeUrl=url==null?"":url.trim();
+            if(safeUrl.isEmpty())return;
+            runOnUiThread(() -> { try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(safeUrl))); } catch(Exception ignored) {} });
+        }
+        @JavascriptInterface public boolean isReady() { return ttsReady; }
+        @JavascriptInterface public void stop() {
+            runOnUiThread(() -> { if(textToSpeech!=null) textToSpeech.stop(); stopNativeAudio(); });
+        }
+    }
+
+
+    private void stopNativeAudio(){
+        if(mediaPlayer!=null){
+            try{mediaPlayer.stop();}catch(Exception ignored){}
+            try{mediaPlayer.release();}catch(Exception ignored){}
+            mediaPlayer=null;
+        }
+    }
+
+    private void playNativeAudioUrl(String url,String fallbackText,String languageTag){
+        stopNativeAudio();
+        try{
+            mediaPlayer=new MediaPlayer();
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build());
+            mediaPlayer.setDataSource(url);
+            mediaPlayer.setOnPreparedListener(mp -> mp.start());
+            mediaPlayer.setOnCompletionListener(mp -> stopNativeAudio());
+            mediaPlayer.setOnErrorListener((mp,what,extra) -> { stopNativeAudio(); if(fallbackText!=null&&!fallbackText.isEmpty())speakNative(fallbackText,languageTag,0.9f); return true; });
+            mediaPlayer.prepareAsync();
+        }catch(Exception e){ stopNativeAudio(); if(fallbackText!=null&&!fallbackText.isEmpty())speakNative(fallbackText,languageTag,0.9f); }
+    }
+
+    private void speakNative(String text,String languageTag,float rate){
+        if(textToSpeech==null||!ttsReady){pendingSpeech=text;pendingLang=languageTag;return;}
+        Locale locale=Locale.forLanguageTag(languageTag);
+        int result=textToSpeech.setLanguage(locale);
+        if(result==TextToSpeech.LANG_MISSING_DATA||result==TextToSpeech.LANG_NOT_SUPPORTED){
+            // Keep the installed/default engine language rather than silently doing nothing.
+            textToSpeech.setLanguage(Locale.getDefault());
+        }
+        textToSpeech.setSpeechRate(rate);
+        textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null,"ispeak-learning-audio");
+    }
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        textToSpeech=new TextToSpeech(this,status->{
+            ttsReady=status==TextToSpeech.SUCCESS;
+            if(ttsReady&&!pendingSpeech.isEmpty()){
+                String text=pendingSpeech,lang=pendingLang;pendingSpeech="";speakNative(text,lang,0.9f);
+            }
+        });
         webView = new WebView(this); setContentView(webView);
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true); s.setDomStorageEnabled(true); s.setMediaPlaybackRequiresUserGesture(false);
         s.setAllowFileAccess(false); s.setAllowContentAccess(true); s.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+        s.setCacheMode(WebSettings.LOAD_DEFAULT);
+        s.setUserAgentString(s.getUserAgentString()+" iSpeakAndroid/18.8.52");
+        CookieManager cookies=CookieManager.getInstance(); cookies.setAcceptCookie(true); cookies.setAcceptThirdPartyCookies(webView,true);
+        webView.addJavascriptInterface(new AndroidAudioBridge(),"iSpeakAndroid");
         webView.setWebViewClient(new WebViewClient(){
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) {
                 Uri u=req.getUrl(); String host=u.getHost();
@@ -62,6 +158,7 @@ public class MainActivity extends Activity {
         if(savedInstanceState==null) webView.loadUrl(HOME); else webView.restoreState(savedInstanceState);
     }
     @Override protected void onSaveInstanceState(Bundle out){webView.saveState(out);super.onSaveInstanceState(out);}
+    @Override public void onConfigurationChanged(Configuration newConfig){super.onConfigurationChanged(newConfig);if(webView!=null)webView.post(() -> webView.requestLayout());}
     @Override public void onBackPressed(){ if(webView!=null && webView.canGoBack()) webView.goBack(); else super.onBackPressed(); }
     @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -84,5 +181,5 @@ public class MainActivity extends Activity {
         }
         fileCallback.onReceiveValue(uris);fileCallback=null;
     }
-    @Override protected void onDestroy(){if(webView!=null){webView.destroy();webView=null;}super.onDestroy();}
+    @Override protected void onDestroy(){stopNativeAudio();if(textToSpeech!=null){textToSpeech.stop();textToSpeech.shutdown();textToSpeech=null;}if(webView!=null){webView.destroy();webView=null;}super.onDestroy();}
 }

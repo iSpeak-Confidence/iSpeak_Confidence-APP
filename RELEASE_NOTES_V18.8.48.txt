@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.48
+
+Mobile learning reliability fixes:
+- Android rotation now preserves the current WebView/page instead of recreating the activity and returning home.
+- Native Android MediaPlayer bridge added for recorded learning audio.
+- Native Android TTS retained for generated lesson audio.
+- Writing Academy adds touch-event fallback for embedded Android WebViews.
+- Learning-language selection retries layout-aware scrolling to the first/current unit.
+- Android versionCode increased to 4; versionName 18.8.48.

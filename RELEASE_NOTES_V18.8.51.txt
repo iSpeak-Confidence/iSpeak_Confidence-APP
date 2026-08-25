@@ -1,0 +1,10 @@
+iSpeak Confidence V18.8.51
+
+Android login reliability fix
+- Student account login button has an explicit touch-safe handler for Android WebView.
+- Teacher portal login has the same touch-safe handler.
+- Teacher application login now includes the persistent device ID, new-device verification flow, and touch-safe submit.
+- API requests explicitly use same-origin credentials, no-store auth requests, Accept JSON, and clear connectivity errors.
+- Android WebView enables cookies, DOM storage, standard cache behaviour, and an iSpeakAndroid user-agent marker.
+- Removed misleading copy implying teacher credentials are stored locally; only the signed-in session token is retained locally.
+- Android versionCode 6 / versionName 18.8.51.

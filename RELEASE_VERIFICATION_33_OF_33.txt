@@ -1,0 +1,21 @@
+iSpeak Confidence V18.8.52 — Verified Release Package
+
+Source: user-provided iSpeak-Confidence-V18.8.52-IELTS-Linked-Paths.zip
+Final audit: 33/33 passed
+
+This package keeps the verified Android source files required by the audit, including:
+- iSpeakAndroid/18.8.52 user-agent marker
+- native external-link bridge
+- WebView rotation/state preservation
+- Android login touch handling
+- native audio bridge
+
+Web checks include:
+- V18.8.52 cache busting/service worker
+- IELTS Academic/General routing
+- selected-level Skills Lab routing
+- 6 IELTS levels × 12 units
+- level-specific Reading and Writing content
+- learning auto-scroll and mobile writing handling
+
+Generated Android build caches/output and local.properties were removed from this package so they are not accidentally committed to Git.

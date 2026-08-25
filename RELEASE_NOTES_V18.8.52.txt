@@ -1,0 +1,17 @@
+iSpeak Confidence V18.8.52
+
+IELTS path linkage fix
+- Academic and General Training are now visually and functionally distinct on the IELTS page.
+- Academic changes Reading to academic passages and Writing Task 1 to visual-data/diagram work.
+- General Training changes Reading to practical/workplace material and Writing Task 1 to letter writing.
+- Selecting an IELTS level now visibly changes the active course, unit topics, difficulty, and every Skills Lab card.
+- Skills Lab cards show the selected level and sample topics, so Level 2 no longer looks identical to Level 1.
+- The selected level uses only that level's 12 units in Skills Lab; students can still manually switch to any easier/harder level.
+
+Navigation
+- Our Socials is now a separate dashboard/drawer item directly below Support.
+- Socials is no longer embedded inside the Support chat flow.
+
+Release
+- Web cache/version bumped to 18.8.52.
+- Android versionCode 7 / versionName 18.8.52.

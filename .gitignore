@@ -12,3 +12,10 @@ classroom-files/
 application-uploads/
 .DS_Store
 Thumbs.db
+
+# Android generated / machine-specific
+android-app/.gradle/
+android-app/.idea/
+android-app/build/
+android-app/app/build/
+android-app/local.properties

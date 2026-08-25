@@ -1,0 +1,35 @@
+iSpeak Confidence V18.8.45 — Closed Beta Update
+
+Play identity (must not change):
+- applicationId: com.ispeakconfidence.app
+- versionCode: 2
+- versionName: 18.8.45
+- targetSdk: 36
+- minSdk: 26
+
+This source has been checked with the complete existing iSpeak release-gate plus the V18.8.45 Android audio QA.
+
+Signing requirement:
+The AAB uploaded as an update must be signed with the upload key accepted by the existing Google Play app. That private keystore was not present in the files available to this build environment and should not be placed in the source ZIP. Use the same keystore/key alias used to sign versionCode 1 on the Windows PC. If it is lost, use Google Play's upload-key reset process rather than generating an unrelated key and expecting Play to accept it.
+
+Build on Windows / Android Studio:
+1. Deploy the matching V18.8.45 web source first (or at the same time), because the Android shell loads https://ispeakconfidence.com.
+2. Open the android-app folder in Android Studio.
+3. Sync Gradle and install SDK 36 if Android Studio asks.
+4. Build > Generate Signed App Bundle / APK > Android App Bundle.
+5. Select the EXISTING iSpeak upload keystore and key alias.
+6. Build release.
+7. Upload the resulting app-release.aab to the existing Closed testing track.
+
+Do not create a new Play app. Do not change com.ispeakconfidence.app. Do not reuse versionCode 1.
+
+Tester regression checks after rollout:
+- Writing Academy: draw a character, Master & next advances.
+- Learning audio: test English plus at least two other non-Khmer languages.
+- Khmer exact human audio: verify mapped clips still play.
+- IELTS listening, diagnostic and mock audio.
+- Admin: change teacher student lesson price and teacher pay; verify student booking and teacher payment messaging use the new values.
+- Login/progress persistence.
+- Teacher/student messaging.
+- Camera/mic classroom.
+- File upload/download and certificate download.

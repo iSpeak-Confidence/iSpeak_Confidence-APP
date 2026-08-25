@@ -1,0 +1,8 @@
+iSpeak Confidence V18.8.46
+
+- Gemini Buddy Chat now connects automatically. The old manual Connect Gemini button and slow verification generation request are removed.
+- /api/verify is retained only for compatibility and now performs an instant local configuration check.
+- Android/production recorded-audio playback now fetches same-origin recordings into a blob before playback, improving reliability in Android WebView.
+- Khmer verified human recordings fall back to device speech instead of failing silently when a recording cannot play.
+- Placement and native-audio preview controls use the hardened audio playback path.
+- Android Play build advanced to versionCode 3 / versionName 18.8.46.

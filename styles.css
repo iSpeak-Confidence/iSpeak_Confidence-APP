@@ -1415,3 +1415,100 @@ dialog.booking-dialog .booking-layout{grid-template-columns:minmax(0,1.15fr) min
 .settings .danger-link{border-color:rgba(220,38,38,.38)}
 .settings .danger-link:hover{border-color:#dc2626}
 @media (prefers-color-scheme:dark){.settings .settings-link{background:#0a1a2a;border-color:var(--v13-line);color:#fff}.settings .settings-link b{color:#9edfdc}}
+/* V18.8.39 professional profile/flow polish */
+dialog.teacher-profile-dialog{width:min(1180px,96vw)!important;max-width:1180px!important;max-height:94vh!important;border-radius:26px!important}
+dialog.teacher-profile-dialog #modalBody{padding:42px!important;overflow:auto!important}.teacher-profile-page{max-width:1080px;margin:auto}.teacher-profile-dialog .teacher-profile-modal{grid-template-columns:minmax(260px,360px) 1fr;gap:38px}.teacher-profile-dialog .teacher-profile-modal>img{width:100%;height:auto;max-height:500px;aspect-ratio:4/5;object-fit:cover}.teacher-profile-dialog .teacher-profile-modal h2{font-size:clamp(30px,4vw,48px)}.teacher-profile-intro,.teacher-profile-details{font-size:17px;line-height:1.7}.teacher-profile-dialog .teacher-review-section{margin-top:34px;border-top:1px solid #24465d;padding-top:26px}
+.teacher-profile-preview-card.public-style{position:sticky;top:14px;padding:22px;text-align:left;display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:start}.teacher-profile-preview-card.public-style>img{width:180px;height:225px;border-radius:18px;border:0}.teacher-profile-preview-card.public-style h3{font-size:27px;margin:4px 0}.teacher-profile-preview-card.public-style .teacher-rating-summary{margin:8px 0 14px}.teacher-profile-preview-card.public-style p{font-size:15px;line-height:1.6;max-height:220px;overflow:auto}.portal-profile-video{width:100%;max-height:260px;margin-top:16px;border-radius:14px;background:#000}.teacher-preview-copy{min-width:0}.teacher-profile-editor-shell{grid-template-columns:minmax(520px,.95fr) minmax(500px,1.05fr)}
+.avatar{overflow:hidden}.avatar img{width:100%;height:100%;object-fit:contain;background:#0b2635}.student-hero-picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}.student-hero-picker button{border:2px solid #23465d;border-radius:16px;background:#091c2b;color:#fff;padding:10px;display:grid;gap:6px;place-items:center}.student-hero-picker button.selected{border-color:#21d4c8;box-shadow:0 0 0 2px #21d4c833}.student-hero-picker img{width:72px;height:72px;object-fit:contain}.student-hero-picker span{font-size:11px;font-weight:800}
+.admin-review-profile img[data-admin-media]{cursor:zoom-in}.admin-teacher-review>.application-video-preview{max-height:560px;object-fit:contain;border:1px solid #285064;margin:18px 0;background:#000}
+@media(max-width:1050px){.teacher-profile-editor-shell{grid-template-columns:1fr}.teacher-profile-preview-card.public-style{position:static}.teacher-profile-dialog .teacher-profile-modal{grid-template-columns:300px 1fr}}
+@media(max-width:720px){dialog.teacher-profile-dialog #modalBody{padding:58px 16px 26px!important}.teacher-profile-dialog .teacher-profile-modal{grid-template-columns:1fr}.teacher-profile-dialog .teacher-profile-modal>img{max-height:420px}.teacher-profile-preview-card.public-style{grid-template-columns:1fr}.teacher-profile-preview-card.public-style>img{width:100%;height:auto;max-height:380px}.student-hero-picker{grid-template-columns:repeat(2,1fr)}}
+
+/* V18.8.40 Learn-flow focus: briefly show learners exactly where to continue. */
+#path .lesson-card.current-learning-focus{
+  outline:3px solid rgba(24,213,207,.82);
+  outline-offset:4px;
+  box-shadow:0 0 0 8px rgba(24,213,207,.10),0 18px 45px rgba(0,0,0,.16);
+  transition:outline-color .25s ease,box-shadow .25s ease;
+}
+
+/* V18.8.41 — mobile responsiveness hardening (layout-preserving) */
+img,video,canvas,svg{max-width:100%}
+.view>*{min-width:0}
+.hero>*,.buddy-room>*,.teacher-grid>*,.portal-grid>*,.booking-layout>*,.teacher-profile-editor-shell>*{min-width:0}
+button,a,input,select,textarea{touch-action:manipulation}
+
+@media(max-width:760px){
+  body{overflow-x:hidden}
+  .topbar{height:auto;min-height:64px;padding:8px 10px;gap:8px}
+  .topbar>*{min-width:0}
+  .topstats{gap:6px;min-width:0}
+  .topstats span{max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .icon-btn,.modal-close{min-width:44px;min-height:44px;width:44px;height:44px}
+  .view{width:100%;max-width:100%;padding-left:14px;padding-right:14px}
+  .hero-copy,.hero-card,.pet-banner,.coursehead,.progress-card,.profile-card,.teacher-card,.price-note{max-width:100%;min-width:0}
+  .hero-copy{padding:clamp(24px,7vw,36px)}
+  .hero-actions{display:grid;grid-template-columns:1fr;gap:10px}
+  .hero-actions button,.hero-actions a{width:100%;min-height:44px}
+  .coursehead{align-items:flex-start;flex-direction:column;padding:20px}
+  .coursehead .pill{white-space:normal}
+  .language-switch,.mascot-pick,.prompts,.teacher-portal-tabs{-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+  .language-switch button,.prompts button,.teacher-portal-tabs button{min-height:44px}
+  .chat-input{align-items:stretch}
+  .chat-input input{min-width:0;min-height:44px}
+  .send{min-width:44px;min-height:44px;height:auto}
+  .action-dock button{min-height:44px;min-width:44px}
+  .profile-card{min-width:0}
+  .profile-card>*{min-width:0}
+  .settings button,.settings .settings-link{min-height:44px}
+  dialog{max-width:calc(100vw - 12px);max-height:96dvh}
+  #modalBody,#bookingForm{max-width:100%;min-width:0}
+  #modalBody>* ,#bookingForm>*{min-width:0;max-width:100%}
+  input,select,textarea{max-width:100%;min-width:0}
+  .teacher-portal{max-width:calc(100vw - 12px);margin:6px auto;padding:16px}
+  .teacher-portal-head{min-width:0}
+  .teacher-portal-tabs{display:flex;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;padding-bottom:10px}
+  .teacher-portal-tabs button{flex:0 0 auto;white-space:nowrap}
+  .teacher-message-layout,.admin-owner-grid,.analytics-conversion,.library-ai-tools,.helper-grid{min-width:0}
+  .student-message-thread,.oversight-list article{min-width:0;overflow-wrap:anywhere}
+  .student-hero-picker{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .student-hero-picker button{min-width:0;min-height:44px}
+  .portal-profile-video,.application-video-preview{height:auto}
+}
+
+@media(max-width:420px){
+  .view{padding-left:10px;padding-right:10px}
+  h1{font-size:clamp(32px,11vw,42px)}
+  .topstats span{padding:7px 9px;font-size:12px}
+  .node{grid-template-columns:58px minmax(0,1fr);gap:10px}
+  .dot{width:56px;height:56px;font-size:23px;border-width:6px}
+  .node:before{left:28px;top:52px}
+  .lesson{padding:16px}
+  .bottom-nav{min-height:72px;height:calc(72px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+  .bottom-nav button{min-width:0;min-height:56px;padding:6px 2px}
+  #drawer{width:min(280px,88vw);padding:20px 16px}
+  #drawer>button:not(.drawer-close){min-height:44px;padding:12px 8px}
+  .drawer-close{min-width:44px;min-height:44px}
+  .teacher-portal{padding:12px;border-radius:18px}
+  .teacher-portal-head h2{font-size:clamp(26px,9vw,34px)}
+  .teacher-profile-dialog .teacher-profile-modal h2{font-size:clamp(28px,9vw,38px)}
+  .teacher-profile-dialog .teacher-profile-modal>img{max-height:70dvh}
+  .student-hero-picker{gap:8px}
+}
+
+
+/* V18.8.47 Support hub + Our Socials */
+.support-hub{padding:4px 2px 10px}.support-hub>h2{margin:.35rem 0 .35rem;font-size:clamp(1.7rem,4vw,2.35rem)}.support-hub>p{margin:0 0 1.15rem;color:var(--muted,#64748b)}
+.support-hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.support-hub-card{border:1px solid rgba(15,118,110,.16);border-radius:22px;padding:20px;text-align:left;background:linear-gradient(145deg,#f5fffd,#eaf8f5);box-shadow:0 12px 30px rgba(15,23,42,.08);display:grid;gap:7px;min-height:170px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.support-hub-card:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(15,23,42,.12);border-color:rgba(15,118,110,.32)}.support-hub-card.socials-entry{background:linear-gradient(145deg,#f6f3ff,#ecf8ff)}.support-hub-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:rgba(255,255,255,.82);font-size:24px;box-shadow:0 7px 18px rgba(15,23,42,.08)}.support-hub-card b{font-size:1.08rem}.support-hub-card small{color:#64748b;line-height:1.45}.support-hub-card>span:last-child{font-weight:800;color:#0f766e;margin-top:auto}
+.socials-shell{position:relative;overflow:hidden;border-radius:26px;padding:0 0 8px;background:radial-gradient(circle at 10% 0%,rgba(34,211,238,.18),transparent 35%),radial-gradient(circle at 95% 10%,rgba(168,85,247,.18),transparent 34%),linear-gradient(160deg,#f8fbff 0%,#f3fbf8 48%,#fff8fd 100%)}.socials-shell:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(15,23,42,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(15,23,42,.025) 1px,transparent 1px);background-size:24px 24px;pointer-events:none}.socials-hero,.socials-grid,.socials-safe-note{position:relative}.socials-hero{padding:28px 26px 15px}.socials-hero h2{font-size:clamp(2rem,6vw,3rem);margin:.2rem 0 .4rem;letter-spacing:-.035em}.socials-hero p{max-width:620px;color:#536277;line-height:1.6;margin:0}.socials-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:10px 20px 20px}.social-link-card{appearance:none;border:1px solid rgba(15,23,42,.08);border-radius:20px;padding:16px;background:rgba(255,255,255,.86);backdrop-filter:blur(8px);box-shadow:0 10px 26px rgba(15,23,42,.08);display:grid;grid-template-columns:52px 1fr auto;gap:13px;align-items:center;text-align:left;min-height:92px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.social-link-card:hover,.social-link-card:focus-visible{transform:translateY(-2px);box-shadow:0 16px 34px rgba(15,23,42,.13);border-color:rgba(15,118,110,.28);outline:none}.social-icon{display:grid;place-items:center;width:50px;height:50px;border-radius:16px;color:#fff;font-size:24px;font-weight:900;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 18px rgba(15,23,42,.14)}.social-youtube .social-icon{background:linear-gradient(145deg,#ff0033,#c90025)}.social-tiktok .social-icon{background:linear-gradient(145deg,#111827,#020617);text-shadow:2px 1px #25f4ee,-2px -1px #fe2c55}.social-facebook .social-icon{background:linear-gradient(145deg,#1877f2,#0d5dcc);font-family:Arial,sans-serif}.social-copy{display:grid;gap:2px;min-width:0}.social-copy small{text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;font-weight:900;color:#738197}.social-copy b{font-size:1rem;color:#172033;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.social-copy em{font-size:.78rem;color:#64748b;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.social-open{font-size:.78rem;font-weight:900;color:#0f766e;white-space:nowrap}.socials-safe-note{margin:0 20px 12px;padding:11px 14px;border-radius:14px;background:rgba(255,255,255,.72);color:#64748b;font-size:.78rem;text-align:center}
+@media(max-width:680px){.support-hub-grid,.socials-grid{grid-template-columns:1fr}.socials-shell{border-radius:20px}.socials-hero{padding:22px 18px 10px}.socials-grid{padding:8px 12px 14px}.social-link-card{grid-template-columns:48px 1fr auto;padding:13px;min-height:82px}.social-icon{width:46px;height:46px;border-radius:14px}.social-open{font-size:.72rem}.socials-safe-note{margin:0 12px 8px}}
+
+/* V18.8.48 mobile learning reliability */
+.long-unit{scroll-margin-top:96px}.current-learning-focus{outline:3px solid rgba(13,154,154,.35);outline-offset:5px}#traceCanvas,#trace{touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important}
+
+/* V18.8.50 IELTS level-specific course path */
+.ielts-course-panel{margin:18px 0 24px;padding:18px;border:1px solid #1d465d;border-radius:22px;background:linear-gradient(145deg,#081b2b,#0a2436);scroll-margin-top:90px}.ielts-course-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:12px}.ielts-course-head h2{margin:4px 0 6px}.ielts-course-head p{margin:0;color:#a9bdca;max-width:760px}.ielts-path-badge{min-width:190px;padding:12px 14px;border-radius:16px;background:#0d3140;border:1px solid #1d5a67;display:grid;gap:4px}.ielts-path-badge b{color:#54e2db}.ielts-path-badge small{color:#a9bdca}.ielts-current-units{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.ielts-current-unit{display:grid;gap:5px;text-align:left;padding:15px;border:1px solid #1a4258;border-radius:16px;background:#091e30;color:#fff}.ielts-current-unit:hover,.ielts-current-unit:focus{border-color:#20d7cf;transform:translateY(-1px)}.ielts-current-unit>span{font-size:10px;font-weight:900;letter-spacing:.08em;color:#4be0d8}.ielts-current-unit>b{font-size:15px}.ielts-current-unit small,.ielts-current-unit em{font-size:10px;color:#9fb4c3;font-style:normal;line-height:1.4}@media(max-width:900px){.ielts-current-units{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.ielts-course-panel{padding:14px}.ielts-course-head{display:grid}.ielts-path-badge{min-width:0}.ielts-current-units{grid-template-columns:1fr}.ielts-current-unit{min-height:112px}}
+
+
+/* V18.8.52 IELTS path/skill linkage + separate Socials navigation */
+.ielts-mode-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0 10px}.ielts-mode-tabs button{display:grid;gap:3px;text-align:left;padding:14px 16px;border-radius:16px;border:1px solid #1b4157;background:#0a2031;color:#fff}.ielts-mode-tabs button b{font-size:15px}.ielts-mode-tabs button small{color:#9fb4c3;font-size:10px}.ielts-mode-tabs button.active{background:linear-gradient(135deg,#17c9c2,#42ded6);color:#052029;border-color:#5cf1e9;box-shadow:0 0 0 3px rgba(32,215,207,.12)}.ielts-mode-tabs button.active small{color:#0b4b50}.ielts-mode-summary{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;align-items:center;padding:13px 15px;margin-bottom:22px;border-radius:15px;background:#0d2a3c;border:1px solid #1c5365}.ielts-mode-summary b{color:#56e4dc}.ielts-mode-summary span{font-weight:800}.ielts-mode-summary small{grid-column:1/-1;color:#9fb4c3;line-height:1.45}.ielts-skill-card{position:relative;text-align:left;align-content:start;min-height:190px}.ielts-skill-card .ielts-skill-level{color:#56e4dc;font-weight:900;letter-spacing:.05em}.ielts-skill-card strong{font-size:12px;color:#dbeafe}.ielts-skill-card em{margin-top:auto;font-style:normal;color:#56e4dc;font-size:10px;font-weight:800}.ielts-level-card.active:after{content:'Current Skills Lab level';display:block;margin-top:4px;color:#55ddd5;font-size:9px;font-weight:900}.ielts-current-unit em{color:#68e8df}.ielts-course-panel:empty{display:none}@media(max-width:560px){.ielts-mode-tabs{grid-template-columns:1fr}.ielts-mode-summary{grid-template-columns:1fr}.ielts-skill-card{min-height:165px}}

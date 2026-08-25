@@ -1,18 +1,38 @@
-iSpeak Confidence Android / Google Play build
+iSpeak Confidence Android / Google Play closed-beta update
 Package: com.ispeakconfidence.app
-Version code: 1
-Version name: 18.8.38
-Target SDK: 36 (Android 16), chosen because production access will occur after the 31 Aug 2026 Play deadline.
+Version code: 3
+Version name: 18.8.46
+Target SDK: 36
 Minimum SDK: 26
 
-IMPORTANT: This Android shell intentionally points to the existing production app at https://ispeakconfidence.com so there is one source of truth and no duplicated learning/business logic. Existing website behavior was not redesigned.
+IMPORTANT
+- This Android shell loads the production web app at https://ispeakconfidence.com so the website must be deployed with the matching V18.8.46 files before/alongside the Play update.
+- This update adds the native Android TextToSpeech bridge needed for reliable audio in WebView.
+- Do NOT create a new package/application ID.
+- Do NOT create a new signing/upload key if you still have the key used for versionCode 1. Google Play requires updates to be signed with the accepted upload key.
 
-Before uploading to Play:
-1. Open this android-app folder in the latest Android Studio.
-2. Let Gradle sync and install Android SDK 36 if prompted.
-3. Build > Generate Signed App Bundle / APK > Android App Bundle.
-4. Create and securely retain your upload keystore. Do not commit or share it.
-5. Build the release AAB and upload it to Closed testing.
-6. Test on at least one real Android phone: sign-up/login, learning, audio/mic, teacher chat, payment handoff, camera/mic classroom, file upload, certificate download, privacy/terms, back navigation.
+To create the CLOSED TEST AAB on the Windows PC that has the existing upload keystore:
+1. Open this android-app folder in Android Studio.
+2. Let Gradle sync; install Android SDK 36 if prompted.
+3. Build > Generate Signed App Bundle / APK.
+4. Choose Android App Bundle.
+5. Select the SAME keystore/key alias used for the first iSpeak closed-test AAB.
+6. Choose release and generate.
+7. Verify the generated bundle reports:
+   applicationId: com.ispeakconfidence.app
+   versionCode: 3
+   versionName: 18.8.46
+8. Upload app-release.aab to the EXISTING Closed testing track, not a new app.
+9. Review warnings/errors before rollout.
 
-Google Play account requirement shown by Play Console: 12 opted-in closed testers for at least 14 days before production application.
+If the original upload keystore cannot be located, do not generate a random replacement and upload it. Use Play Console's upload-key reset/recovery process instead.
+
+Post-upload real-device checks:
+- Master & next writing progression.
+- Learning audio and IELTS audio.
+- Admin teacher pricing.
+- Login/progress persistence.
+- Teacher/student messaging.
+- Camera/microphone classroom permissions.
+- File upload/download.
+- Privacy/terms/delete-account.

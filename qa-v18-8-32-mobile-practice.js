@@ -14,5 +14,5 @@ t('mobile certificate grid cannot force desktop width',css.includes('grid-templa
 t('mobile progress metadata wraps',css.includes('.cert-preview-progress>span{grid-column:1/-1!important'));
 t('phone milestone cards collapse to one column',css.includes('.certificate-milestones{grid-template-columns:1fr!important'));
 t('phone learning modal prevents horizontal overflow',css.includes('#modalBody{min-width:0!important;overflow-x:hidden!important'));
-t('fresh app cache version loaded',html.includes('app.js?v=18.8.38')&&html.includes('styles.css?v=18.8.38'));
-console.log(`\nV18.8.38 mobile/learning regression QA: ${pass}/${pass+fail} passed`);process.exit(fail?1:0);
+t('fresh app cache version loaded',html.includes('app.js?v=18.8.45')&&html.includes('styles.css?v=18.8.45'));
+console.log(`\nV18.8.45 mobile/learning regression QA: ${pass}/${pass+fail} passed`);process.exit(fail?1:0);

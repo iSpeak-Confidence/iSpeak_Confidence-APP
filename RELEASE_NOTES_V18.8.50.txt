@@ -1,0 +1,31 @@
+iSpeak Confidence V18.8.50 — Mobile + IELTS + full release hardening
+
+Fixes completed in this build:
+- Learning-language selection now retries Android scrolling after the course renders and lands on the learner's first/current incomplete unit.
+- Both Writing Academy and quick Writing Practice canvases now have Android touch fallbacks as well as pointer handling.
+- Android keeps the same WebView/state across rotation instead of recreating the app and returning to Home.
+- Android learning audio uses native TTS; recorded audio uses native MediaPlayer and now falls back to native speech if the recording cannot be prepared.
+- Support > Our Socials keeps the four requested social destinations and Android now has an explicit external-URL bridge.
+- Teacher successful-login const reassignment crash remains fixed; passwords remain server-side hashed.
+
+IELTS correction:
+- Academic / General Training now changes actual study material, not only the Current Study Path label.
+- Academic uses Academic Reading + Academic Writing Task 1; General Training uses practical General Reading + letter Writing Task 1.
+- Listening, Speaking and Task 2 remain shared where the real IELTS formats are shared.
+- Selecting IELTS Level 1–6 now renders that level's own 12-unit course directly on the IELTS page.
+- Selected-level Skills Lab and units use only that level's material; lower/higher level units are not mixed into the chosen course.
+- Android capture-phase routing covers IELTS mode, level, course unit, skill and block controls.
+- IELTS still contains 6 levels × 12 units = 72 units × 8 blocks = 576 study blocks.
+
+Release checks:
+- qa-v18-8-50-final.js: 32/32 passed.
+- npm run release-gate: passed, including 150-unit curriculum, progression, certificate gating, booking/payment, admin/classroom, teacher-message email, account deletion and certificate presentation checks.
+- All 56 JavaScript files pass node --check.
+- Static HTML has no duplicate IDs and all referenced local index assets exist.
+- Local server smoke test returned HTTP 200 and /api/status version 18.8.50.
+
+Android build:
+- versionCode 5
+- versionName 18.8.50
+- A new signed AAB must be generated on the signing PC. The prior V18.8.46 AAB must not be reused.
+- This environment could not run the Gradle compile because the Gradle wrapper distribution is not cached and outbound download access is unavailable. The Android source/config was statically audited, but the final signed-device build still needs to be generated and tested on a real Android phone.

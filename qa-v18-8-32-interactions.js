@@ -8,5 +8,5 @@ t('Practice listen routes to full room',app.includes("if(kind==='listen'){openLi
 t('IELTS persistent routing exists',app.includes('V18.8.37 critical interaction router')&&app.includes("[data-ielts-skill]"));
 t('Library persistent routing exists',app.includes("[data-view=\"library\"]")&&app.includes("#openClassicLibrary"));
 t('Mobile IELTS/library grids collapse to one column',css.includes('.ielts-level-grid,.ielts-skill-grid,.ielts-unit-list,.mock-list,.mock-sections{grid-template-columns:1fr!important')&&css.includes('.library-paths,.library-grid,.library-ai-tools{grid-template-columns:1fr!important'));
-t('New app cache busting is active',html.includes('app.js?v=18.8.38')&&html.includes('styles.css?v=18.8.38'));
-console.log(`\nV18.8.38 interaction QA: ${p}/${p+f} passed`);process.exit(f?1:0);
+t('New app cache busting is active',html.includes('app.js?v=18.8.45')&&html.includes('styles.css?v=18.8.45'));
+console.log(`\nV18.8.45 interaction QA: ${p}/${p+f} passed`);process.exit(f?1:0);
