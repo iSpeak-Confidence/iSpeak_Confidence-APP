@@ -13,5 +13,5 @@ c('login/signup forced localized',app.includes("put('#topLogin','Log In')")&&app
 c('buddy shell localized',app.includes("#mascots .buddy-title h1")&&app.includes("put('#talk b','Hold to talk')"));
 c('view switch reruns localization',/function setView\(name\).*applyFullInterfaceLanguage\(\).*applyInterfaceLanguage\(\)/s.test(app));
 c('new missing-key map all languages',['khmer','mandarin','spanish','french','japanese','arabic'].every(x=>app.includes(`${x}:{`)||app.includes(` ${x}:{`))&&app.includes('const V1859_SURFACE_FIX='));
-c('version 18.8.61',index.includes('18.8.61'));
-console.log(`V18.8.61 surface QA: ${p}/${p+f}`);process.exit(f?1:0);
+c('current release cache bust present',/styles\.css\?v=18\.8\.\d+/.test(index)&&/app\.js\?v=18\.8\.\d+/.test(index));
+console.log(`Language surface QA: ${p}/${p+f}`);process.exit(f?1:0);

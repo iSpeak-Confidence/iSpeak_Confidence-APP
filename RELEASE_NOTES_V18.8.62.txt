@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.62 — Classroom Reliability
+
+- Session-scoped classroom presence/signaling prevents stale WebRTC offers after refresh/rejoin.
+- Student requests renegotiation when teacher is present but media has not connected.
+- Presence state is separated from media state: both joined vs audio/video connected.
+- Remote audio explicitly unmutes/plays with a Tap for sound recovery control for browser autoplay restrictions.
+- Shared lesson files use a room fileRevision so both teacher and student refresh reliably.
+- Mobile classroom is truly stacked: video tiles first, sticky call controls, tools/files/notes/whiteboard below without overlays.
+- Existing V18.8.61 language-state and admin conduct fixes retained.
