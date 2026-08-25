@@ -1,0 +1,7 @@
+iSpeak Confidence V18.8.64 — Large Lesson Plan Classroom
+
+- Removed the shared whiteboard from the live classroom UI.
+- Promoted the in-class Lesson Plan viewer into the former large whiteboard teaching area.
+- PDF and Word lesson plans remain inside the classroom while video/audio stays visible.
+- Mobile uses a large full-width lesson-plan area beneath the video call.
+- Retains V18.8.62 presence, WebRTC/audio recovery and two-way file synchronization.

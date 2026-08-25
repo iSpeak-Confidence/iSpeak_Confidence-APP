@@ -22,6 +22,6 @@ const checks=[
  ['mobile video aspect ratio',/classroom-video-tile\{aspect-ratio:4\/3!important/.test(css)],
  ['mobile tools non-overlay',/live-tools-heading\{position:static!important/.test(css)],
  ['mobile controls sticky',/classroom-controls\{position:sticky!important/.test(css)],
- ['android version bumped',/versionCode 16/.test(gradle)&&/versionName '18\.8\.62'/.test(gradle)]
+ ['android version bumped',/versionCode 17/.test(gradle)&&/versionName '18\.8\.(?:63|64)'/.test(gradle)]
 ];
 let pass=0;for(const [n,ok] of checks){console.log(`${ok?'PASS':'FAIL'} ${n}`);if(ok)pass++}console.log(`${pass}/${checks.length}`);if(pass!==checks.length)process.exit(1);

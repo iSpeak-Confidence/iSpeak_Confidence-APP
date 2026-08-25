@@ -1,0 +1,10 @@
+iSpeak Confidence V18.8.63 — In-Class Lesson Plan Viewer
+
+- Removed the Shared notes panel from the live virtual classroom.
+- Replaced that space with a persistent Lesson plan viewer.
+- PDF lesson plans open inline inside the classroom while teacher/student video remains visible.
+- Word .docx lesson plans render as an inline secure text preview in the same panel.
+- Shared-file list and two-way file synchronization from V18.8.62 are retained.
+- Open/download remains available as an optional separate action.
+- Whiteboard, classroom presence, video/audio reliability, conduct monitoring and V18.8.61 language-state fixes are retained.
+- Mobile viewer sizes responsively for phone screens.

@@ -1,0 +1,22 @@
+const fs=require('fs');
+const app=fs.readFileSync('app.js','utf8');
+const css=fs.readFileSync('styles.css','utf8');
+const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));
+const html=fs.readFileSync('index.html','utf8');
+const sw=fs.readFileSync('sw.js','utf8');
+let pass=0,fail=0;
+function check(name,ok){if(ok){console.log('PASS',name);pass++}else{console.error('FAIL',name);fail++}}
+check('Shared notes panel removed',!app.includes('<b>📝 Shared notes</b>'));
+check('Shared notes textarea removed',!app.includes('id="roomWorkspace"'));
+check('Lesson plan viewer panel exists',app.includes('class="live-tool-panel lesson-plan-panel"'));
+check('Docked preview exists',app.includes('room-file-preview room-file-preview-docked'));
+check('PDF preview remains inline',app.includes('title="Lesson PDF preview"'));
+check('Word preview remains inline',app.includes('docx-text-preview'));
+check('Preview action targets docked viewer',app.includes("$$('[data-room-preview]',host)"));
+check('Viewer clear restores placeholder',app.includes('No lesson plan open'));
+check('Optional open/download retained',app.includes('Open / download'));
+check('Two-way file revision sync retained',app.includes('fileRevision')&&app.includes('updateFiles(d.files||[],d.fileRevision)'));
+check('Whiteboard retained',app.includes('id="roomWhiteboard"')&&app.includes('bindSharedWhiteboard'));
+check('Viewer has responsive CSS',css.includes('.room-file-preview-docked')&&css.includes('@media(max-width:720px)'));
+check('Version is 18.8.63',pkg.version==='18.8.63'&&html.includes('app.js?v=18.8.63')&&sw.includes("version:'18.8.63'"));
+console.log(`\n${pass}/${pass+fail} checks passed`);process.exit(fail?1:0);

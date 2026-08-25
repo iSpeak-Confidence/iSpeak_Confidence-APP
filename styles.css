@@ -1616,3 +1616,19 @@ button,a,input,select,textarea{touch-action:manipulation}
  dialog.classroom-dialog .classroom-controls button{font-size:13px!important}
  dialog.classroom-dialog .whiteboard-wrap{height:280px!important;min-height:280px!important}
 }
+
+/* V18.8.63 in-class lesson plan viewer replaces shared notes */
+.lesson-plan-panel{min-height:0}.room-file-preview-docked{margin-top:0;flex:1;min-height:300px;display:flex;flex-direction:column}.room-file-preview-docked iframe{flex:1;height:100%;min-height:420px}.room-file-preview-docked .docx-text-preview{flex:1;max-height:none;min-height:420px}.lesson-plan-empty,.lesson-plan-loading,.lesson-plan-error{flex:1;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:22px;color:#9fb9c8;border:1px dashed #31566b;border-radius:14px;background:#071522}.lesson-plan-empty b{color:#eaf7fb;font-size:16px}.lesson-plan-empty span{max-width:360px;line-height:1.5}.lesson-plan-loading{color:#7ce5dc}.lesson-plan-error{color:#ffb4b4}.lesson-plan-panel .room-file-preview-head{flex:0 0 auto}.lesson-plan-panel .room-file-preview{overflow:hidden}
+@media(max-width:1150px){.room-file-preview-docked iframe,.room-file-preview-docked .docx-text-preview{min-height:360px}}
+@media(max-width:720px){.room-file-preview-docked iframe,.room-file-preview-docked .docx-text-preview{height:52dvh!important;min-height:320px!important;max-height:520px!important}.lesson-plan-empty,.lesson-plan-loading,.lesson-plan-error{min-height:280px}}
+
+/* V18.8.64 — large lesson-plan teaching area; whiteboard removed */
+dialog.classroom-dialog .classroom-live-tools{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:auto minmax(560px,1fr)!important;gap:14px!important}
+dialog.classroom-dialog .files-panel{min-height:0!important;max-height:none!important}
+dialog.classroom-dialog .lesson-plan-panel-large{min-height:620px!important;height:min(72vh,860px)!important;overflow:hidden!important}
+dialog.classroom-dialog .room-file-preview-large{min-height:0!important;height:100%!important;flex:1!important}
+dialog.classroom-dialog .room-file-preview-large iframe{width:100%!important;height:100%!important;min-height:540px!important;max-height:none!important;border:0!important;border-radius:10px!important;background:#fff!important}
+dialog.classroom-dialog .room-file-preview-large .docx-text-preview{height:100%!important;min-height:540px!important;max-height:none!important;overflow:auto!important}
+dialog.classroom-dialog .lesson-plan-panel-large .lesson-plan-empty,dialog.classroom-dialog .lesson-plan-panel-large .lesson-plan-loading,dialog.classroom-dialog .lesson-plan-panel-large .lesson-plan-error{height:100%!important;min-height:540px!important}
+@media(max-width:900px){dialog.classroom-dialog .classroom-live-tools{grid-template-rows:auto auto!important}dialog.classroom-dialog .lesson-plan-panel-large{height:68dvh!important;min-height:480px!important}dialog.classroom-dialog .room-file-preview-large iframe,dialog.classroom-dialog .room-file-preview-large .docx-text-preview,dialog.classroom-dialog .lesson-plan-panel-large .lesson-plan-empty,dialog.classroom-dialog .lesson-plan-panel-large .lesson-plan-loading,dialog.classroom-dialog .lesson-plan-panel-large .lesson-plan-error{height:100%!important;min-height:430px!important;max-height:none!important}}
+@media(max-width:480px){dialog.classroom-dialog .lesson-plan-panel-large{height:64dvh!important;min-height:430px!important}dialog.classroom-dialog .room-file-preview-large iframe,dialog.classroom-dialog .room-file-preview-large .docx-text-preview{min-height:390px!important}}
