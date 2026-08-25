@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true); s.setDomStorageEnabled(true); s.setMediaPlaybackRequiresUserGesture(false);
         s.setAllowFileAccess(false); s.setAllowContentAccess(true); s.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
-        s.setUserAgentString(s.getUserAgentString()+" iSpeakAndroid/18.8.54");
+        s.setUserAgentString(s.getUserAgentString()+" iSpeakAndroid/18.8.58");
         CookieManager cookies=CookieManager.getInstance(); cookies.setAcceptCookie(true); cookies.setAcceptThirdPartyCookies(webView,true);
         webView.addJavascriptInterface(new AndroidAudioBridge(),"iSpeakAndroid");
         webView.setWebViewClient(new WebViewClient(){

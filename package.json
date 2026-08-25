@@ -1,12 +1,12 @@
 {
-  "name": "ispeak-confidence-v18-8-54",
-  "version": "18.8.54",
+  "name": "ispeak-confidence-v18-8-61",
+  "version": "18.8.61",
   "private": true,
   "scripts": {
     "start": "node server.js",
     "qa": "node qa-v18-8-12.js && node qa-v18-8-15.js && node qa-v18-8-16.js && node qa-v18-8-17.js",
     "qa:hardening": "node qa-v18-8-22.js",
-    "release-gate": "node qa-v18-8-54-final.js && node qa-150-unit-curriculum.js && node qa-learning-progression-v18-8-25.js && node qa-certificate-150-unit-gate.js && node qa-targeted-booking-fix.js && node qa-targeted-name-admin-classroom.js && node qa-targeted-teacher-message-email.js && node qa-account-deletion.js && node qa-student-certificate-previews.js && node qa-student-certificate-teacher-style.js"
+    "release-gate": "node qa-v18-8-61-language-state-sync.js && node qa-v18-8-60-language-surfaces.js && node qa-v18-8-57-global-localization.js && node qa-150-unit-curriculum.js && node qa-learning-progression-v18-8-25.js && node qa-certificate-150-unit-gate.js && node qa-targeted-booking-fix.js && node qa-targeted-name-admin-classroom.js && node qa-targeted-teacher-message-email.js && node qa-account-deletion.js && node qa-student-certificate-previews.js && node qa-student-certificate-teacher-style.js"
   },
   "engines": {
     "node": ">=18"

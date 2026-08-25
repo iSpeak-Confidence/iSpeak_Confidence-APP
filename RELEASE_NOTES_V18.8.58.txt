@@ -1,0 +1,10 @@
+iSpeak Confidence V18.8.58 — Full Language Integrity Fix
+
+- Connected the existing GLOBAL_L10N_8 translations to the live APP_UI_TEXT_EXTRA lookup.
+- Added direct render-time localization for Learn units/modals, Library metadata and AI tool cards, account/recovery/device verification, messages, support and socials.
+- Completed Khmer lesson-support translations instead of falling back to English.
+- Made native-script / romanization controls critical shared controls with explicit unit/day/block IDs, persisted selection and immediate session rerender.
+- Native-script mode now visibly uses native script rather than overlaying romanization; romanized mode uses the selected romanization.
+- Added critical screenshot-language coverage for Mandarin, Spanish, French, Japanese, Arabic and Khmer; English remains the English UI.
+- Retains the V18.8.55 Android native-TTS latency fix and prior shared-code behavior.
+- Web/service-worker/Android release bumped to 18.8.58 (Android versionCode 13).

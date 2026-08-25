@@ -1,0 +1,9 @@
+V18.8.56 global interface-language regression fix
+
+- Fixes desktop drawer and bottom navigation localization by targeting the actual data-view controls.
+- Fixes Home hero action localization without accidentally overwriting the guest sign-up button.
+- Fixes daily-goal localization by targeting .hero-card and generating translated remaining-lesson text for all 7 app languages.
+- Explicitly localizes guest account banner, Library, IELTS Prep, Support and Our Socials shell controls.
+- Reapplies full shell localization after dynamic draw() text updates.
+- Keeps the V18.8.55 native-script defaults and Android native-TTS latency fix intact.
+- Cache/version bumped to 18.8.56; Android versionCode 11.

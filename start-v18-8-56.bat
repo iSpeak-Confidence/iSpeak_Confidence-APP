@@ -1,0 +1,3 @@
+@echo off
+echo Starting iSpeak Confidence V18.8.56...
+npm start

@@ -1,0 +1,7 @@
+iSpeak Confidence V18.8.60
+
+- Added Admin > Teacher conduct & strikes centre.
+- Shows persisted strike counts, warning/suspension/termination actions, reasons, evidence, source and timestamps.
+- Shows classroom AI conduct detections including confidence, evidence, summary and whether a strike was applied.
+- Displays written-rule, Gemini and classroom-monitoring status.
+- No change to existing automatic 1st warning / 2nd suspension / 3rd termination enforcement.

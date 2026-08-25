@@ -1,0 +1,8 @@
+V18.8.55 language + Android audio regression fix
+
+- Learning-language scripts now default to the real native script for Khmer, Mandarin, Japanese and Arabic. Romanization remains available only when the learner explicitly selects it.
+- My Language and Learning Language remain separate state values; changing the support/interface language does not switch the target course language.
+- Android TTS now starts through the already-initialized native Android bridge immediately instead of waiting for the server TTS request first.
+- Recorded Khmer audio continues to use the native Android MediaPlayer path with fallback.
+- Web retains server TTS first with browser speech fallback.
+- Version/cache bumped to 18.8.55; Android versionCode 10.

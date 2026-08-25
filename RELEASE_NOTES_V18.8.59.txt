@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.59 — Full UI Language Surface Fix
+
+- Fixes partial Practice localization: Speaking, Listening, Vocabulary Challenge, Writing, Games, Stories and Chat all follow My Language.
+- Fixes incorrect Library selectors and localizes Story Series / Classic Library hub and controls.
+- Fixes incorrect Teachers selector and localizes teacher page actions, roles, specialties, bios, availability labels and lesson-rate suffixes.
+- Forces Log In / Sign Up / My Account to follow My Language.
+- Localizes Buddy World shell, room tabs, action controls and profile labels.
+- Re-applies localization whenever a view opens, not only when language is changed.
+- Retains native-script / romanization selection behavior and prior Android audio fixes.

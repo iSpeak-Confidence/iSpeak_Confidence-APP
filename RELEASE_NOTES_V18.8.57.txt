@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.57 — full My Language render fix
+
+- Dynamic Learn course chrome now renders directly in the selected My Language.
+- Course header, pathway description, unit metadata, phase titles, progress/status labels no longer fall back to English when My Language is non-English.
+- Student Log In / Sign Up screens render directly in all seven supported My Languages.
+- Login labels, placeholders, show/hide password, forgot-password entry point and basic validation prompts follow My Language.
+- Modal content is localized immediately after injection, not only via the mutation observer.
+- V18.8.55 Android native-TTS latency fix and native-script default behavior are retained.
+- Cache/service worker/server/Android version bumped to 18.8.57 to prevent stale 18.8.56 UI.

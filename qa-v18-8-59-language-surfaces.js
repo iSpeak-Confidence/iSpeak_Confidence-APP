@@ -1,0 +1,17 @@
+const fs=require('fs');const app=fs.readFileSync('app.js','utf8');const index=fs.readFileSync('index.html','utf8');let p=0,f=0;const c=(n,x)=>{if(x){console.log('PASS',n);p++}else{console.error('FAIL',n);f++}};
+c('practice translates speech',app.includes("speech:['Speaking','Microphone feedback']"));
+c('practice translates listening',app.includes("listen:['Listening','Listen & respond']"));
+c('practice translates vocab',app.includes("cards:['Vocabulary Challenge','One-pass recall & production']"));
+c('practice translates chat',app.includes("appTr('Conversation + movement')"));
+c('practice language line localized',app.includes("appTr('Currently practising')"));
+c('library hub selectors correct',app.includes("#libraryHub .library-hero-head h1"));
+c('classic library selector correct',app.includes("#classicLibraryPane .title h1"));
+c('library story cards localized',app.includes("#openHeroesLibrary .path-copy h2")&&app.includes("#openClassicLibrary .path-copy h2"));
+c('teachers selector correct',app.includes("#teachers .teacher-showcase-head h1"));
+c('teacher cards localized',app.includes(".teacher-cinema-card")&&app.includes("appTr('Watch introduction')")&&app.includes("appTr('Message teacher')"));
+c('login/signup forced localized',app.includes("put('#topLogin','Log In')")&&app.includes("put('#topSignup','Sign Up')"));
+c('buddy shell localized',app.includes("#mascots .buddy-title h1")&&app.includes("put('#talk b','Hold to talk')"));
+c('view switch reruns localization',/function setView\(name\).*applyFullInterfaceLanguage\(\).*applyInterfaceLanguage\(\)/s.test(app));
+c('new missing-key map all languages',['khmer','mandarin','spanish','french','japanese','arabic'].every(x=>app.includes(`${x}:{`)||app.includes(` ${x}:{`))&&app.includes('const V1859_SURFACE_FIX='));
+c('version 18.8.59',index.includes('18.8.59'));
+console.log(`V18.8.59 surface QA: ${p}/${p+f}`);process.exit(f?1:0);
