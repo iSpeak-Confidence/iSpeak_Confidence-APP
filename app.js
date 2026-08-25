@@ -549,19 +549,42 @@ function stopDeviceSpeech(){
  try{if(window.iSpeakAndroid&&typeof window.iSpeakAndroid.stop==='function')window.iSpeakAndroid.stop()}catch(e){console.warn('Native Android TTS stop failed',e)}
  try{if('speechSynthesis' in window)speechSynthesis.cancel()}catch(e){}
 }
+function mascotForLanguageTag(languageTag='en-US'){
+ const tag=String(languageTag||'en-US').toLowerCase();
+ if(tag.startsWith('km'))return 'dariya';if(tag.startsWith('zh'))return 'jack';if(tag.startsWith('es'))return 'pedro';if(tag.startsWith('fr'))return 'loulou';if(tag.startsWith('ja'))return 'yuki';if(tag.startsWith('ar'))return 'zayd';return 'jess';
+}
+async function playServerSpeech(text,languageTag='en-US',{quiet=false}={}){
+ const safeText=String(text||'').trim();if(!safeText)return false;
+ try{
+  const mascot=mascotForLanguageTag(languageTag),r=await fetch(`/api/tts/${mascot}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:safeText}),cache:'no-store'});
+  if(!r.ok)throw new Error(`Server TTS HTTP ${r.status}`);
+  const blob=await r.blob(),objectUrl=URL.createObjectURL(blob),a=new Audio(objectUrl);
+  if(currentAudio){try{currentAudio.pause()}catch{};currentAudio=null}
+  currentAudio=a;a.preload='auto';
+  const clean=()=>{try{URL.revokeObjectURL(objectUrl)}catch{};if(currentAudio===a)currentAudio=null};
+  a.onended=clean;a.onerror=()=>clean();
+  await a.play();return true;
+ }catch(e){console.warn('Server speech playback failed',e);if(!quiet)console.info('Falling back to device speech');return false}
+}
 function playDeviceSpeech(text,languageTag='en-US',rate=.9,{quiet=false}={}){
  const safeText=String(text||'').trim(),safeLang=String(languageTag||'en-US').trim()||'en-US';
  if(!safeText)return false; stopDeviceSpeech();
- try{
-  if(window.iSpeakAndroid){
-   if(typeof window.iSpeakAndroid.speakWithRate==='function'){window.iSpeakAndroid.speakWithRate(safeText,safeLang,Number(rate)||.9);return true}
-   if(typeof window.iSpeakAndroid.speak==='function'){window.iSpeakAndroid.speak(safeText,safeLang);return true}
-  }
- }catch(e){console.warn('Native Android TTS bridge failed',e)}
- try{
-  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')throw new Error('Speech synthesis unavailable');
-  const u=new SpeechSynthesisUtterance(safeText);u.lang=safeLang;u.rate=Number(rate)||.9;if(!quiet)u.onerror=()=>toast('Audio is unavailable on this device.');speechSynthesis.speak(u);return true
- }catch(e){if(!quiet)toast('Audio is unavailable on this device.');return false}
+ // Use server-rendered speech first so web Chrome and Android WebView share one reliable path.
+ // If the server/AI voice is unavailable, fall back to the native Android bridge and then browser TTS.
+ (async()=>{
+  if(await playServerSpeech(safeText,safeLang,{quiet:true}))return;
+  try{
+   if(window.iSpeakAndroid){
+    if(typeof window.iSpeakAndroid.speakWithRate==='function'){window.iSpeakAndroid.speakWithRate(safeText,safeLang,Number(rate)||.9);return}
+    if(typeof window.iSpeakAndroid.speak==='function'){window.iSpeakAndroid.speak(safeText,safeLang);return}
+   }
+  }catch(e){console.warn('Native Android TTS bridge failed',e)}
+  try{
+   if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')throw new Error('Speech synthesis unavailable');
+   const u=new SpeechSynthesisUtterance(safeText);u.lang=safeLang;u.rate=Number(rate)||.9;u.onerror=()=>{if(!quiet)toast('Audio is unavailable on this device.')};speechSynthesis.cancel();speechSynthesis.speak(u);
+  }catch(e){if(!quiet)toast('Audio is unavailable on this device.')}
+ })();
+ return true;
 }
 async function playAudioUrl(url,{fallbackText='',languageTag='en-US',quiet=false}={}){
  const src=String(url||'').trim();if(!src)return false;
@@ -2206,7 +2229,7 @@ async function openStudentSupportChat(fromHub=false){if(!state.account?.token)re
 function openOfflineCentre(){
  const online=navigator.onLine;
  modal(`<span class="eyebrow">OFFLINE LEARNING</span><h2>${online?'Ready for offline study':'You are offline'}</h2><p>The app shell, curriculum, IELTS data and local progress can work without a connection after the app has been loaded once. AI chat, cloud sync, tutor requests and server speech features require a connection.</p><button id="cacheOffline" class="primary wide">Prepare app for offline use</button><p class="muted">Your latest local progress remains on this device and syncs after you reconnect and sign in.</p>`);
- $('#cacheOffline').onclick=async()=>{if(!('caches' in window))return toast('Offline cache is not supported here.');try{const c=await caches.open('ispeak-v18-8-52-core');await c.addAll(['/','/index.html','/styles.css','/app.js','/curriculum-data.js','/curriculum-expansion-v17-4.js','/ielts-data.js','/khmer-commonvoice-data.js','/language-support-v17-5.js','/manifest.webmanifest','/assets/logo.png','/assets/icon-192.png','/assets/icon-512.png','/assets/mascots/jess-v13-cutout.png','/assets/mascots/jack-cutout.png','/assets/mascots/pedro-v13-cutout.png','/assets/mascots/loulou-v13-cutout.png','/assets/mascots/yuki-v13-cutout.png','/assets/mascots/dariya-v13-complete-fixed.png','/assets/mascots/zayd-v13-complete-fixed.png','/assets/nathan.jpg','/assets/ounnoun.jpg','/assets/jessica.png','/assets/an-sievly.png']);toast('Core app saved for offline use')}catch{toast('Open the app through the BAT/server first, then try again.')}};
+ $('#cacheOffline').onclick=async()=>{if(!('caches' in window))return toast('Offline cache is not supported here.');try{const c=await caches.open('ispeak-v18-8-53-core');await c.addAll(['/','/index.html','/styles.css','/app.js','/curriculum-data.js','/curriculum-expansion-v17-4.js','/ielts-data.js','/khmer-commonvoice-data.js','/language-support-v17-5.js','/manifest.webmanifest','/assets/logo.png','/assets/icon-192.png','/assets/icon-512.png','/assets/mascots/jess-v13-cutout.png','/assets/mascots/jack-cutout.png','/assets/mascots/pedro-v13-cutout.png','/assets/mascots/loulou-v13-cutout.png','/assets/mascots/yuki-v13-cutout.png','/assets/mascots/dariya-v13-complete-fixed.png','/assets/mascots/zayd-v13-complete-fixed.png','/assets/nathan.jpg','/assets/ounnoun.jpg','/assets/jessica.png','/assets/an-sievly.png']);toast('Core app saved for offline use')}catch{toast('Open the app through the BAT/server first, then try again.')}};
 }
 function openPrivacyCentre(){
  modal(`<span class="eyebrow">PRIVACY & SAFETY</span><h2>Your controls</h2><p><b>Microphone:</b> used only when you choose speaking/audio features. Browser permission is required.</p><p><b>Learning data:</b> guest progress stays on this device. Signed-in progress is stored on the iSpeak server for synchronization.</p><p><b>AI:</b> text/audio submitted to AI features may be sent to the configured AI provider to produce the requested response.</p><p><b>Children:</b> do not collect unnecessary personal information. A production release aimed at children requires age-appropriate consent and store-policy configuration.</p><p><b>Account deletion:</b> signed-in users can permanently delete their account and cloud progress from Account & Cloud Sync.</p><div class="privacy-links"><button id="showPrivacy" class="secondary">Privacy Policy</button><button id="showTerms" class="secondary">Terms of Use</button><button id="reportProblem" class="secondary">Report a problem</button></div>`);
@@ -2532,7 +2555,7 @@ if('serviceWorker' in navigator && location.protocol!=='file:'){
    try{for(const reg of await navigator.serviceWorker.getRegistrations())await reg.unregister();if('caches' in window)for(const key of await caches.keys())if(key.startsWith('ispeak-'))await caches.delete(key);console.info('iSpeak local test mode: service-worker caches cleared.')}catch(err){console.warn('Could not clear local service-worker cache',err)}
    return;
   }
-  try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.52',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}
+  try{const reg=await navigator.serviceWorker.register('/sw.js?v=18.8.53',{updateViaCache:'none'});await reg.update();navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='ISPEAK_UPDATED'&&!sessionStorage.getItem('ispeak-update-reloaded')){sessionStorage.setItem('ispeak-update-reloaded','1');location.reload()}});window.iSpeakClearCache=()=>navigator.serviceWorker.controller?.postMessage({type:'CLEAR_ISPEAK_CACHE'})}catch(err){console.warn('Service worker registration failed',err)}
  });
 }
 

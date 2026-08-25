@@ -1,0 +1,6 @@
+V18.8.53 audio hotfix
+- Routes all generated learning/IELTS speech through the hosted Gemini TTS audio endpoint first.
+- Keeps native Android TTS and browser SpeechSynthesis as fallbacks.
+- Raises TTS text limit for longer IELTS listening scripts.
+- Cache/service worker bumped to 18.8.53.
+- Android versionCode 8 / versionName 18.8.53.
