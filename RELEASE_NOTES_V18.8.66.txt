@@ -1,0 +1,8 @@
+iSpeak Confidence V18.8.66 — Android Login / Signup Fix
+
+Targeted change only:
+- Fix Android WebView student login and new-account signup when WebView omits Origin/Referer on same-origin API POST requests.
+- Added an explicit X-iSpeak-Client header to app API requests.
+- Server accepts the fallback only when both Origin and Referer are absent and this app header is present.
+- Existing browser same-origin checks remain unchanged.
+- No classroom, learning, IELTS, language, audio, navigation, or UI behavior changed.

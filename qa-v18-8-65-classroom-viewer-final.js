@@ -8,10 +8,10 @@ const gradle=fs.readFileSync('android-app/app/build.gradle','utf8');
 const checks=[]; const t=(name,ok)=>checks.push([name,!!ok]);
 
 // Version/cache integrity
-t('V18.8.65 package',pkg.version==='18.8.65');
-t('V18.8.65 asset cache bust',html.includes('app.js?v=18.8.65')&&html.includes('styles.css?v=18.8.65'));
-t('V18.8.65 server status',server.includes("version:'18.8.65'"));
-t('Android V18.8.65',/versionCode 18/.test(gradle)&&/versionName '18\.8\.65'/.test(gradle));
+t('V18.8.67 package',pkg.version==='18.8.67');
+t('V18.8.67 asset cache bust',html.includes('app.js?v=18.8.67')&&html.includes('styles.css?v=18.8.67'));
+t('V18.8.67 server status',server.includes("version:'18.8.67'"));
+t('Android V18.8.67',/versionCode 20/.test(gradle)&&/versionName '18\.8\.67'/.test(gradle));
 
 // Actual live classroom render shape
 const renderStart=app.indexOf('function renderISpeakClassroom');

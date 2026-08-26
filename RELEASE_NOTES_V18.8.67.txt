@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.67 — Classroom Lesson File Support
+
+- Added secure PowerPoint .pptx uploads to Virtual Classroom.
+- Added an in-class PPTX slide-text deck preview in the large lesson viewer.
+- Added JPG, JPEG, PNG and WebP lesson-image upload/preview.
+- Added TXT lesson-file upload/preview.
+- Existing PDF and DOCX upload/preview remains unchanged.
+- Teacher/student classroom file synchronization and secure access checks remain in place.
+- Android versionCode 20 / versionName 18.8.67.
