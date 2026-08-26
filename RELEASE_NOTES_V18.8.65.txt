@@ -1,0 +1,12 @@
+iSpeak Confidence V18.8.65 — Classroom Viewer Final
+
+Targeted classroom-only cleanup based on live two-device testing.
+
+- Shared Notes UI removed from the live classroom.
+- Shared Whiteboard UI and dead client whiteboard code removed.
+- Large Lesson Plan viewer remains the main teaching workspace.
+- PDF and DOCX preview stays inside the classroom.
+- Lesson file upload/list remains shared between teacher and student.
+- V18.8.62 WebRTC presence, reconnection, remote audio recovery and file revision sync retained.
+- Pre-join help text now accurately describes the available classroom tools.
+- No unrelated app feature changes.
