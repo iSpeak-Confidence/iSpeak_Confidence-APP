@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.68 — Classroom Screen Sharing
+
+- Added Share screen / Stop sharing controls for both teachers and students.
+- Desktop/web screen sharing uses the existing WebRTC classroom peer connection, keeps microphone audio live, and automatically restores the camera when sharing stops.
+- Added a native Android MediaProjection fallback because Android WebView does not reliably expose browser getDisplayMedia().
+- Android screen-share frames are authenticated, short-lived, memory-only classroom frames and are shown to the other participant in the existing video tile.
+- Android capture uses a foreground media-projection service and low-bandwidth JPEG frames intended for lesson materials, slides, documents and app demonstrations.
+- Shared screens use contain/fit mode so slides and desktop content are not cropped.
+- Existing camera, microphone, WebRTC signaling, lesson-file viewer, PPTX/PDF/DOCX/image/TXT support, authentication and recording code paths are retained.

@@ -1638,3 +1638,39 @@ dialog.classroom-dialog .lesson-image-preview{height:100%;min-height:540px;displ
 dialog.classroom-dialog .lesson-image-preview img{display:block;max-width:100%;max-height:100%;object-fit:contain}
 @media(max-width:900px){dialog.classroom-dialog .pptx-slide-deck,dialog.classroom-dialog .lesson-image-preview{min-height:430px}dialog.classroom-dialog .pptx-slide{min-height:390px;padding:28px 24px}}
 @media(max-width:480px){dialog.classroom-dialog .pptx-slide-deck,dialog.classroom-dialog .lesson-image-preview{min-height:390px}dialog.classroom-dialog .pptx-slide{min-height:350px;padding:22px 18px}}
+
+/* V18.8.68 classroom screen sharing */
+.classroom-video-tile.screen-sharing video{object-fit:contain!important;background:#02070b}.classroom-video-tile.screen-sharing>span::after{content:' · SCREEN';color:#5ee0d4;font-weight:900}.classroom-controls #roomShareScreen.active{background:#0f766e!important;border-color:#2dd4bf!important}.classroom-controls #roomShareScreen{white-space:nowrap}
+
+.classroom-native-screen{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#02070b;z-index:1}.classroom-video-tile.native-screen-sharing video{visibility:hidden}.classroom-video-tile.native-screen-sharing .classroom-native-screen{display:block!important}.classroom-video-tile.native-screen-sharing>span{z-index:3}.classroom-video-tile.native-screen-sharing .video-wait{display:none!important}
+
+/* V18.8.69 — screen share stays large while both camera tiles remain visible */
+.classroom-stage{position:relative}
+.classroom-shared-screen{position:relative;flex:1;min-height:0;border:1px solid #1f5268;border-radius:18px;overflow:hidden;background:#02070b;box-shadow:0 16px 42px rgba(0,0,0,.28)}
+.classroom-shared-screen[hidden]{display:none!important}
+.classroom-shared-screen video,.classroom-shared-screen>img{width:100%;height:100%;min-height:320px;object-fit:contain;background:#02070b;display:block}
+.classroom-shared-screen-head{position:absolute;left:12px;right:12px;top:12px;z-index:4;display:flex;justify-content:space-between;gap:12px;align-items:center;pointer-events:none}
+.classroom-shared-screen-head b,.classroom-shared-screen-head span{padding:7px 10px;border-radius:10px;background:rgba(0,0,0,.68);font-size:11px;color:#eaf9ff}
+.classroom-shared-screen-head span{color:#6eece3}
+.classroom-shared-screen-wait{position:absolute;inset:0;display:grid;place-items:center;padding:28px;text-align:center;color:#9db8c7;background:radial-gradient(circle at center,#0b2232 0,#02070b 72%)}
+.classroom-stage.screen-share-active{padding-bottom:18px}
+.classroom-stage.screen-share-active .classroom-shared-screen{display:block!important}
+.classroom-stage.screen-share-active .classroom-videos{position:absolute!important;right:30px!important;bottom:88px!important;z-index:8!important;width:min(46%,620px)!important;height:clamp(112px,19vh,190px)!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;pointer-events:auto}
+.classroom-stage.screen-share-active .classroom-video-tile{min-height:0!important;height:100%!important;aspect-ratio:16/9!important;border-radius:14px!important;box-shadow:0 10px 32px rgba(0,0,0,.55);border-color:#2c6075!important;background:#071522!important}
+.classroom-stage.screen-share-active .classroom-video-tile video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important}
+.classroom-stage.screen-share-active .classroom-video-tile>span{left:7px!important;bottom:7px!important;padding:4px 7px!important;font-size:10px!important}
+.classroom-stage.screen-share-active .classroom-video-tile .video-wait{font-size:10px!important;padding:8px!important;text-align:center}
+.classroom-stage.screen-share-active .classroom-controls{position:relative;z-index:10}
+.classroom-stage.screen-share-active .classroom-video-tile.screen-sharing>span::after{content:none!important}
+@media(max-width:900px){
+ dialog.classroom-dialog .classroom-shared-screen video,dialog.classroom-dialog .classroom-shared-screen>img{min-height:260px}
+ dialog.classroom-dialog .classroom-stage.screen-share-active{min-height:430px!important;padding-bottom:90px!important}
+ dialog.classroom-dialog .classroom-stage.screen-share-active .classroom-videos{right:12px!important;bottom:104px!important;width:min(68%,430px)!important;height:clamp(88px,15vh,132px)!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ dialog.classroom-dialog .classroom-stage.screen-share-active .classroom-video-tile{aspect-ratio:16/9!important;min-height:0!important}
+}
+@media(max-width:520px){
+ dialog.classroom-dialog .classroom-stage.screen-share-active{padding-left:8px!important;padding-right:8px!important;padding-bottom:96px!important}
+ dialog.classroom-dialog .classroom-shared-screen video,dialog.classroom-dialog .classroom-shared-screen>img{min-height:220px}
+ dialog.classroom-dialog .classroom-stage.screen-share-active .classroom-videos{right:10px!important;bottom:112px!important;width:calc(100% - 20px)!important;height:96px!important}
+ dialog.classroom-dialog .classroom-stage.screen-share-active .classroom-video-tile>span{font-size:9px!important}
+}

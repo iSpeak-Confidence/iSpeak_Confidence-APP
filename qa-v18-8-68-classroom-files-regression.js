@@ -1,0 +1,18 @@
+const fs=require('fs');
+const app=fs.readFileSync('app.js','utf8'),server=fs.readFileSync('server.js','utf8'),css=fs.readFileSync('styles.css','utf8'),html=fs.readFileSync('index.html','utf8'),sw=fs.readFileSync('sw.js','utf8'),pkg=require('./package.json'),gradle=fs.readFileSync('android-app/app/build.gradle','utf8'),main=fs.readFileSync('android-app/app/src/main/java/com/ispeakconfidence/app/MainActivity.java','utf8');
+const checks=[];const t=(n,v)=>checks.push([n,!!v]);
+t('Version 18.8.68',pkg.version==='18.8.68'&&html.includes('app.js?v=18.8.68')&&sw.includes("version:'18.8.68'")&&gradle.includes('versionCode 21')&&gradle.includes("versionName '18.8.68'")&&main.includes('iSpeakAndroid/18.8.68'));
+t('PPTX accepted in file picker',app.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation,.pptx'));
+t('Images and TXT accepted in file picker',app.includes('image/jpeg,.jpg,.jpeg')&&app.includes('image/png,.png')&&app.includes('image/webp,.webp')&&app.includes('text/plain,.txt'));
+t('PPTX server allow-list',server.includes("'application/vnd.openxmlformats-officedocument.presentationml.presentation':'pptx'"));
+t('PPTX validation',server.includes('validPptx(buf)')&&server.includes("ppt/presentation.xml")&&server.includes("ppt/slides/slide1.xml"));
+t('PPTX preview extraction',server.includes('pptxPreviewSlides')&&server.includes("kind:'pptx'"));
+t('PPTX slide deck renderer',app.includes("d.kind==='pptx'")&&app.includes('pptx-slide-deck')&&app.includes('pptx-slide'));
+t('Image preview route',server.includes("kind:'image'")&&app.includes("d.kind==='pdf'||d.kind==='image'"));
+t('TXT preview route',server.includes("meta.mimeType==='text/plain'")&&server.includes("kind:'text'"));
+t('Existing PDF preview retained',server.includes("meta.mimeType==='application/pdf'")&&app.includes('Lesson PDF preview'));
+t('Existing DOCX preview retained',server.includes('docxPreviewText')&&app.includes('docx-text-preview'));
+t('12MB classroom limit retained',server.includes('buf.length>12_000_000')&&app.includes('f.size>12_000_000'));
+t('Classroom auth retained on file preview/open',server.includes('classroomAccess(req,bookingId)')&&app.includes('classroomAuthHeaders(mode,adminPin)'));
+t('PPTX/image responsive viewer CSS',css.includes('.pptx-slide-deck')&&css.includes('.lesson-image-preview'));
+for(const [n,v] of checks)console.log(`${v?'PASS':'FAIL'} ${n}`);if(checks.some(x=>!x[1]))process.exit(1);console.log(`\n${checks.length}/${checks.length} passed`);

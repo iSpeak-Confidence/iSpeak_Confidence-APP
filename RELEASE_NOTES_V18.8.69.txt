@@ -1,0 +1,9 @@
+iSpeak Confidence V18.8.69 — Screen Share + Both Cameras
+
+- Screen sharing now uses a dedicated WebRTC screen connection on supported browsers instead of replacing the normal camera track.
+- The shared screen becomes the large classroom view while the teacher and student cameras remain visible in two smaller floating video tiles.
+- Microphone/audio remains on the normal classroom connection while screen sharing is active.
+- Stopping screen sharing closes only the screen-share connection and leaves the camera/microphone call intact.
+- Android native MediaProjection sharing now displays in the large shared-screen stage on the receiving device while both camera tiles remain visible.
+- Responsive layout keeps both camera tiles visible during screen sharing on desktop and mobile.
+- Android versionCode 22 / versionName 18.8.69 and web cache-busting updated.

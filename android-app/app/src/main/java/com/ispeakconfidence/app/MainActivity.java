@@ -2,6 +2,7 @@ package com.ispeakconfidence.app;
 
 import android.Manifest;
 import android.app.Activity;
+import android.media.projection.MediaProjectionManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -38,6 +39,9 @@ public class MainActivity extends Activity {
 
     private static final int REQ_PERMISSIONS = 1001;
     private static final int REQ_FILE = 1002;
+    private static final int REQ_SCREEN_CAPTURE = 1003;
+    private String pendingScreenBooking="";
+    private String pendingScreenAuth="";
 
     private class AndroidAudioBridge {
         @JavascriptInterface public void speak(String text, String languageTag) {
@@ -70,12 +74,19 @@ public class MainActivity extends Activity {
             if(safeUrl.isEmpty())return;
             runOnUiThread(() -> { try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(safeUrl))); } catch(Exception ignored) {} });
         }
+        @JavascriptInterface public void startScreenShare(String bookingId, String authToken) {
+            final String b=bookingId==null?"":bookingId.trim(), t=authToken==null?"":authToken.trim(); if(b.isEmpty()||t.isEmpty())return;
+            runOnUiThread(() -> { pendingScreenBooking=b; pendingScreenAuth=t; try { MediaProjectionManager m=(MediaProjectionManager)getSystemService(MEDIA_PROJECTION_SERVICE); startActivityForResult(m.createScreenCaptureIntent(),REQ_SCREEN_CAPTURE); } catch(Exception e){ notifyScreenState("error"); } });
+        }
+        @JavascriptInterface public void stopScreenShare() { runOnUiThread(() -> { try{Intent i=new Intent(MainActivity.this,ScreenShareService.class);i.setAction(ScreenShareService.ACTION_STOP);startService(i);}catch(Exception ignored){} notifyScreenState("stopped"); }); }
         @JavascriptInterface public boolean isReady() { return ttsReady; }
         @JavascriptInterface public void stop() {
             runOnUiThread(() -> { if(textToSpeech!=null) textToSpeech.stop(); stopNativeAudio(); });
         }
     }
 
+
+    private void notifyScreenState(String state){ if(webView!=null)webView.post(() -> webView.evaluateJavascript("window.__ispeakNativeScreenShareState&&window.__ispeakNativeScreenShareState(\""+state+"\")",null)); }
 
     private void stopNativeAudio(){
         if(mediaPlayer!=null){
@@ -124,7 +135,7 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true); s.setDomStorageEnabled(true); s.setMediaPlaybackRequiresUserGesture(false);
         s.setAllowFileAccess(false); s.setAllowContentAccess(true); s.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
-        s.setUserAgentString(s.getUserAgentString()+" iSpeakAndroid/18.8.67");
+        s.setUserAgentString(s.getUserAgentString()+" iSpeakAndroid/18.8.69");
         CookieManager cookies=CookieManager.getInstance(); cookies.setAcceptCookie(true); cookies.setAcceptThirdPartyCookies(webView,true);
         webView.addJavascriptInterface(new AndroidAudioBridge(),"iSpeakAndroid");
         webView.setWebViewClient(new WebViewClient(){
@@ -173,6 +184,11 @@ public class MainActivity extends Activity {
     }
     @Override protected void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode==REQ_SCREEN_CAPTURE){
+            if(resultCode!=RESULT_OK||data==null){notifyScreenState("cancelled");return;}
+            try{Intent svc=new Intent(this,ScreenShareService.class);svc.setAction(ScreenShareService.ACTION_START);svc.putExtra("bookingId",pendingScreenBooking);svc.putExtra("authToken",pendingScreenAuth);svc.putExtra("resultCode",resultCode);svc.putExtra("projectionData",data);if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)startForegroundService(svc);else startService(svc);notifyScreenState("started");}catch(Exception e){notifyScreenState("error");}
+            return;
+        }
         if(requestCode!=REQ_FILE||fileCallback==null)return;
         Uri[] uris=null;
         if(resultCode==RESULT_OK&&data!=null){
