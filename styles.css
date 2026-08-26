@@ -1674,3 +1674,18 @@ dialog.classroom-dialog .lesson-image-preview img{display:block;max-width:100%;m
  dialog.classroom-dialog .classroom-stage.screen-share-active .classroom-videos{right:10px!important;bottom:112px!important;width:calc(100% - 20px)!important;height:96px!important}
  dialog.classroom-dialog .classroom-stage.screen-share-active .classroom-video-tile>span{font-size:9px!important}
 }
+\n\n/* V18.8.70 — mobile classroom flow + reliable screen-share receiving */
+@media(max-width:900px){
+ dialog.classroom-dialog .classroom-stage:not(.screen-share-active){height:auto!important;min-height:0!important;flex:none!important;display:block!important;position:relative!important;contain:layout!important}
+ dialog.classroom-dialog .classroom-stage:not(.screen-share-active) .classroom-videos{height:auto!important;min-height:0!important;flex:none!important;display:grid!important;grid-template-columns:1fr!important;grid-auto-rows:auto!important;gap:10px!important;position:relative!important}
+ dialog.classroom-dialog .classroom-stage:not(.screen-share-active) .classroom-video-tile{position:relative!important;display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:16/9!important;overflow:hidden!important}
+ dialog.classroom-dialog .classroom-stage:not(.screen-share-active) .classroom-video-tile video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important}
+ dialog.classroom-dialog .classroom-stage:not(.screen-share-active) .classroom-controls{position:relative!important;bottom:auto!important;margin-top:8px!important;padding:8px 0 4px!important;background:#030a11!important}
+ dialog.classroom-dialog .classroom-tools{position:relative!important;z-index:1!important;display:flex!important;flex:none!important;clear:both!important;margin:0!important;transform:none!important}
+ dialog.classroom-dialog .live-tools-heading{position:relative!important;top:auto!important;z-index:1!important;margin:0!important}
+}
+@media(max-width:520px){
+ dialog.classroom-dialog .classroom-video-tile{aspect-ratio:16/9!important}
+ dialog.classroom-dialog .classroom-stage{padding:8px!important}
+ dialog.classroom-dialog .classroom-controls{max-width:100%!important}
+}

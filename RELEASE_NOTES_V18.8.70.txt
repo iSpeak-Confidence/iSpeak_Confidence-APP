@@ -1,0 +1,8 @@
+iSpeak Confidence V18.8.70
+
+- Fixes screen sharing not appearing for the remote student when the dedicated screen WebRTC peer cannot connect.
+- Browser screen sharing now includes a short-lived authenticated classroom-server fallback feed while retaining the higher-quality WebRTC screen path.
+- Both camera feeds remain live while a screen is shared.
+- Fixes mobile classroom flow so Live lesson tools cannot overlap the participant camera tiles.
+- Forces compact 16:9 participant tiles on phones and keeps controls/tools in normal document flow.
+- Android versionCode 23 / versionName 18.8.70.
