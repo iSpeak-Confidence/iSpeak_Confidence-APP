@@ -1,0 +1,14 @@
+iSpeak Confidence V18.8.71 — TURN setup for reliable classroom camera + microphone
+
+V18.8.71 fixes the WebRTC negotiation race and retries stuck media connections automatically.
+For reliable camera/microphone calling across mobile carriers, strict NAT and firewalls, production should also have a TURN relay configured in Render.
+
+Render > your iSpeak web service > Environment:
+TURN_URLS=turn:YOUR_HOST:80,turn:YOUR_HOST:80?transport=tcp,turns:YOUR_HOST:443?transport=tcp
+TURN_USERNAME=YOUR_TURN_USERNAME
+TURN_CREDENTIAL=YOUR_TURN_PASSWORD
+
+TURN_URL is still accepted for a single endpoint, but TURN_URLS is preferred.
+Do not commit real TURN credentials into Git or the ZIP.
+
+After setting/changing these environment variables, redeploy the Render service and test teacher + student from two different networks/devices.

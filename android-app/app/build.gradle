@@ -8,8 +8,8 @@ android {
         applicationId 'com.ispeakconfidence.app'
         minSdk 26
         targetSdk 36
-        versionCode 22
-        versionName '18.8.69'
+        versionCode 24
+        versionName '18.8.71'
     }
 
     buildTypes {

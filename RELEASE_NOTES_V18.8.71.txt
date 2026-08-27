@@ -1,0 +1,10 @@
+iSpeak Confidence V18.8.71 — CAMERA + MICROPHONE RELIABILITY
+
+- Fixes the classroom main WebRTC negotiation race that could leave both participants unable to see or hear each other while screen sharing still worked.
+- Makes teacher-led audio/video negotiation deterministic.
+- Adds a unique negotiation ID to offers, answers and ICE candidates so stale signaling from a replaced connection is ignored.
+- Adds a watchdog that retries camera/microphone peer connections that stay stuck in new/connecting/disconnected state.
+- Keeps the separate V18.8.70 screen-sharing WebRTC path and authenticated screen-frame fallback unchanged.
+- Adds support for multiple TURN relay endpoints through TURN_URLS, with TURN_URL retained for backward compatibility.
+- TURN is strongly recommended in production for mobile carriers, strict NAT and firewall networks.
+- Android versionCode 24 / versionName 18.8.71.
