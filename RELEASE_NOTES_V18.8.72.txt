@@ -1,0 +1,12 @@
+iSpeak Confidence V18.8.72 — LEARN AUDIO RELIABILITY
+
+- Removed the network TTS wait from normal Learn audio playback.
+- Spanish, English, Mandarin, French, Japanese and Arabic now start with the
+  installed device/browser language voice immediately.
+- Khmer still prefers an exact verified human recording.
+- Khmer lesson phrases without an exact recording now fall back to Khmer TTS
+  instead of producing no audio.
+- The same repaired language-audio router serves Learn cards, Listening Lab and
+  standalone Listening Practice.
+- Added a seven-language audio regression check and refreshed the web cache.
+- Android versionCode 25 / versionName 18.8.72.

@@ -1,7 +1,7 @@
 const fs=require('fs');
 const app=fs.readFileSync('app.js','utf8'),server=fs.readFileSync('server.js','utf8'),css=fs.readFileSync('styles.css','utf8'),html=fs.readFileSync('index.html','utf8'),sw=fs.readFileSync('sw.js','utf8'),pkg=require('./package.json'),gradle=fs.readFileSync('android-app/app/build.gradle','utf8'),main=fs.readFileSync('android-app/app/src/main/java/com/ispeakconfidence/app/MainActivity.java','utf8');
 const checks=[];const t=(n,v)=>checks.push([n,!!v]);
-t('Version 18.8.71',pkg.version==='18.8.71'&&html.includes('app.js?v=18.8.71')&&sw.includes("version:'18.8.71'")&&gradle.includes('versionCode 24')&&gradle.includes("versionName '18.8.71'")&&main.includes('iSpeakAndroid/18.8.71'));
+t('Version 18.8.73',pkg.version==='18.8.73'&&html.includes('app.js?v=18.8.73')&&sw.includes("version:'18.8.73'")&&gradle.includes('versionCode 26')&&gradle.includes("versionName '18.8.73'")&&main.includes('iSpeakAndroid/18.8.73'));
 t('PPTX accepted in file picker',app.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation,.pptx'));
 t('Images and TXT accepted in file picker',app.includes('image/jpeg,.jpg,.jpeg')&&app.includes('image/png,.png')&&app.includes('image/webp,.webp')&&app.includes('text/plain,.txt'));
 t('PPTX server allow-list',server.includes("'application/vnd.openxmlformats-officedocument.presentationml.presentation':'pptx'"));

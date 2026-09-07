@@ -1,0 +1,10 @@
+iSpeak Confidence V18.8.73 — KHMER LEARN AUDIO
+
+- Fixed silent Khmer Listen buttons inside Teach & Understand on Windows/Chrome.
+- Khmer Learn uses an exact verified recording when one exists.
+- Khmer phrases without an exact recording use the same working server voice as
+  Listening Practice instead of relying on a missing Windows Khmer voice.
+- Other Learn languages use an installed matching voice immediately and fall
+  back to server speech when that language is not installed.
+- Existing standalone Listening Practice behaviour remains unchanged.
+- Android versionCode 26 / versionName 18.8.73.

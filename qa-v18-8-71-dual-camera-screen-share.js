@@ -28,11 +28,11 @@ const checks=[
  ['native remote screen uses main stage',app.includes('c.nativeRemoteScreenOwner=x.role')&&app.includes('shareImage.src=x.dataUrl')],
  ['native frame endpoint kept',server.includes('classroom-screen-frame')],
  ['screen cleanup closes screen peers',app.includes('c.screenPeers?.values?.()')],
- ['version package',pkg.version==='18.8.71'],
- ['version assets',html.includes('app.js?v=18.8.71')&&html.includes('styles.css?v=18.8.71')],
- ['version server',server.includes("version:'18.8.71'")],
- ['version android',gradle.includes('versionCode 24')&&gradle.includes("versionName '18.8.71'")&&main.includes('iSpeakAndroid/18.8.71')],
- ['version service worker',sw.includes('ispeak-v18-8-71')&&sw.includes("version:'18.8.71'")]
+ ['version package',pkg.version==='18.8.73'],
+ ['version assets',html.includes('app.js?v=18.8.73')&&html.includes('styles.css?v=18.8.73')],
+ ['version server',server.includes("version:'18.8.73'")],
+ ['version android',gradle.includes('versionCode 26')&&gradle.includes("versionName '18.8.73'")&&main.includes('iSpeakAndroid/18.8.73')],
+ ['version service worker',sw.includes('ispeak-v18-8-73')&&sw.includes("version:'18.8.73'")]
 ];
 let fail=0;
 for(const[n,ok]of checks){console.log(`${ok?'PASS':'FAIL'} ${n}`);if(!ok)fail++}

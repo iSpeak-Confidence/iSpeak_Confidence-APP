@@ -55,7 +55,8 @@ document.addEventListener('click',function ispeakCriticalRouter(e){
    e.preventDefault();e.stopImmediatePropagation();
    const spoken=String(t.dataset.playLanguageAudio||t.dataset.hear||'').trim();
    if(!spoken)return toast('This audio item could not be identified. Reopen the activity and try again.');
-   Promise.resolve(playVerifiedLanguageAudio(spoken)).catch(err=>{console.error('Language audio control failed',err);toast('Audio could not start. Please try again.')});
+   const instantLearnAudio=t.id!=='practiceListenPlay';
+   Promise.resolve(playVerifiedLanguageAudio(spoken,{preferLocal:instantLearnAudio})).catch(err=>{console.error('Language audio control failed',err);toast('Audio could not start. Please try again.')});
    return;
  }
  // Library and Story Series entry points must work on initial load, after rerenders, and on mobile.
@@ -586,9 +587,11 @@ async function playServerSpeech(text,languageTag='en-US',{quiet=false}={}){
   await a.play();return true;
  }catch(e){console.warn('Server speech playback failed',e);if(!quiet)console.info('Falling back to device speech');return false}
 }
-function playDeviceSpeech(text,languageTag='en-US',rate=.9,{quiet=false}={}){
+function playDeviceSpeech(text,languageTag='en-US',rate=.9,{quiet=false,preferLocal=false}={}){
  const safeText=String(text||'').trim(),safeLang=String(languageTag||'en-US').trim()||'en-US';
- if(!safeText)return false; stopDeviceSpeech();
+ if(!safeText)return false;
+ if(currentAudio){try{currentAudio.pause()}catch{};currentAudio=null}
+ stopDeviceSpeech();
  // Android already has an initialized native TTS engine. Use it immediately so a learner's
  // tap produces speech without waiting for a network TTS round-trip. Web keeps the higher
  // quality server voice first and falls back to browser TTS if needed.
@@ -598,13 +601,27 @@ function playDeviceSpeech(text,languageTag='en-US',rate=.9,{quiet=false}={}){
    if(typeof window.iSpeakAndroid.speak==='function'){window.iSpeakAndroid.speak(safeText,safeLang);return true}
   }
  }catch(e){console.warn('Native Android TTS bridge failed',e)}
- (async()=>{
-  if(await playServerSpeech(safeText,safeLang,{quiet:true}))return;
-  try{
-   if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')throw new Error('Speech synthesis unavailable');
-   const u=new SpeechSynthesisUtterance(safeText);u.lang=safeLang;u.rate=Number(rate)||.9;u.onerror=()=>{if(!quiet)toast('Audio is unavailable on this device.')};speechSynthesis.cancel();speechSynthesis.speak(u);
-  }catch(e){if(!quiet)toast('Audio is unavailable on this device.')}
- })();
+ if(!preferLocal){
+  (async()=>{
+   if(await playServerSpeech(safeText,safeLang,{quiet:true}))return;
+   try{
+    if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')throw new Error('Speech synthesis unavailable');
+    const u=new SpeechSynthesisUtterance(safeText);u.lang=safeLang;u.rate=Number(rate)||.9;u.onerror=()=>{if(!quiet)toast('Audio is unavailable on this device.')};speechSynthesis.cancel();speechSynthesis.speak(u);
+   }catch(e){if(!quiet)toast('Audio is unavailable on this device.')}
+  })();
+  return true;
+ }
+ // Learn-page controls start an installed device voice immediately. Network TTS is fallback only.
+ try{
+  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')throw new Error('Speech synthesis unavailable');
+  const u=new SpeechSynthesisUtterance(safeText);u.lang=safeLang;u.rate=Number(rate)||.9;
+  const voices=speechSynthesis.getVoices(),language=safeLang.toLowerCase();
+  const matchingVoice=voices.find(v=>String(v.lang||'').toLowerCase()===language)||voices.find(v=>String(v.lang||'').toLowerCase().startsWith(language.slice(0,2)));
+  if(voices.length&&!matchingVoice)throw new Error(`No installed ${safeLang} speech voice`);
+  if(matchingVoice)u.voice=matchingVoice;
+  u.onerror=()=>{playServerSpeech(safeText,safeLang,{quiet:true}).then(ok=>{if(!ok&&!quiet)toast('Audio is unavailable on this device.')})};
+  speechSynthesis.speak(u);
+ }catch(e){playServerSpeech(safeText,safeLang,{quiet:true}).then(ok=>{if(!ok&&!quiet)toast('Audio is unavailable on this device.')})}
  return true;
 }
 async function playAudioUrl(url,{fallbackText='',languageTag='en-US',quiet=false}={}){
@@ -640,13 +657,19 @@ async function playAudioUrl(url,{fallbackText='',languageTag='en-US',quiet=false
   if(!quiet)toast('This recording could not play on this device.');return false;
  }
 }
-function playVerifiedLanguageAudio(text){
+function playVerifiedLanguageAudio(text,{preferLocal=false}={}){
  if(state.language==='khmer'){
    const hit=exactKhmerHumanClip(text);
-   if(!hit){toast('No verified human recording matches this exact Khmer text yet.');return false}
+   if(!hit){
+    // Windows/Chrome commonly exposes no Khmer system voice and can accept the
+    // utterance without making sound. Use the same proven server voice as the
+    // working Listening Practice; Android keeps its immediate native bridge.
+    if(window.iSpeakAndroid)return playDeviceSpeech(text,'km-KH',.9,{preferLocal:true});
+    return playServerSpeech(text,'km-KH',{quiet:true}).then(ok=>ok||playDeviceSpeech(text,'km-KH',.9,{preferLocal:true}));
+   }
    playAudioUrl(hit.audio,{fallbackText:text,languageTag:'km-KH'});return true
  }
- return playDeviceSpeech(text,languages[state.language].lang||'en-US',.9);
+ return playDeviceSpeech(text,languages[state.language].lang||'en-US',.9,{preferLocal});
 }
 
 function khmerBeginnerPlacementItems(){
@@ -2936,4 +2959,3 @@ function bootstrapISpeak(){
   setTimeout(bindHeroStoriesEntry,0);
 }
 bootstrapISpeak();
-
